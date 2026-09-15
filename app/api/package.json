@@ -1,0 +1,20 @@
+{
+    "name": "@waiver-warrior/api",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "node --env-file-if-exists=../../.env --import tsx --watch src/index.ts",
+        "start": "node --env-file-if-exists=../../.env --import tsx src/index.ts"
+    },
+    "dependencies": {
+        "@fastify/cors": "^11.1.0",
+        "@waiver-warrior/core": "*",
+        "fastify": "^5.6.1"
+    },
+    "devDependencies": {
+        "@types/node": "^24.5.2",
+        "tsx": "^4.20.5",
+        "typescript": "^5.9.2"
+    }
+}
