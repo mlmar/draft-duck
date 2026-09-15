@@ -1,0 +1,45 @@
+/* Preflight zeros heading size/weight and button chrome. Restore usable defaults so pages do not repeat type utilities. */
+
+section,
+article {
+    /* Page shells keep max-width. Padding is enough for a bare section to breathe. */
+    @apply w-full px-4 py-10;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    @apply font-heading text-foreground;
+}
+
+h1 {
+    /* Matches the home/onboard title. md: is size only. */
+    @apply mb-6 text-3xl font-semibold tracking-tight md:text-5xl;
+}
+
+h2 {
+    @apply mb-4 text-2xl font-semibold tracking-tight md:text-3xl;
+}
+
+h3 {
+    @apply mb-3 text-xl font-semibold md:text-2xl;
+}
+
+h4 {
+    @apply mb-2 text-lg font-medium;
+}
+
+h5 {
+    @apply mb-2 text-base font-medium;
+}
+
+p {
+    @apply mb-4 text-base leading-relaxed text-foreground;
+}
+
+button {
+    /* Same chrome as the unvaried shadcn Button. Variants still override from utilities. */
+    @apply inline-flex h-10 shrink-0 items-center justify-center rounded-lg border border-transparent bg-primary px-4 text-base font-medium whitespace-nowrap text-primary-foreground transition-all outline-none select-none hover:bg-primary/80 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50;
+}
