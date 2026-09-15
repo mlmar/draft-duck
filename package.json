@@ -1,0 +1,29 @@
+{
+    "name": "waiver-warrior",
+    "private": true,
+    "type": "module",
+    "workspaces": [
+        "app/client",
+        "app/api",
+        "app/core"
+    ],
+    "scripts": {
+        "dev:client": "npm run dev -w @waiver-warrior/client",
+        "dev:api": "npm run dev -w @waiver-warrior/api",
+        "test": "npm run test -w @waiver-warrior/core",
+        "format": "prettier --write .",
+        "prepare": "husky"
+    },
+    "lint-staged": {
+        "*.{js,mjs,cjs,ts,tsx,astro,css,json,md}": "prettier --write"
+    },
+    "engines": {
+        "node": ">=22"
+    },
+    "devDependencies": {
+        "husky": "^9.1.7",
+        "lint-staged": "^17.5.1",
+        "prettier": "^3.9.6",
+        "prettier-plugin-astro": "^1.0.0"
+    }
+}

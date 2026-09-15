@@ -1,0 +1,41 @@
+---
+description: Enforce human-designed aesthetic standards and avoid generic AI UI clichés
+globs: '**/*.{tsx,jsx,astro,css}'
+alwaysApply: false
+---
+
+# Design and aesthetic constraints
+
+## Typography and hierarchy
+
+- Avoid flat, evenly-weighted type scales. Enforce high contrast between headings and body text.
+- Use distinct font weights (e.g., pairing `font-medium` or `font-semibold` headers with regular body text).
+- Never let type color default to pure harsh black (`#000000`) on pure white; use muted slate or zinc tokens (e.g., `text-zinc-900` or `text-slate-800`).
+
+## Spacing and layout rhythm
+
+- Avoid evenly distributed, overly spaced card layouts where every element has the exact same padding.
+- Use tight, intentional groupings. Information density should vary depending on the component context.
+- Rely on precise layout constraints (referencing concrete design systems like shadcn/ui or Radix primitives) rather than letting the model guess "modern padding".
+
+## Color tokens and saturation
+
+- Strictly ban overly saturated, glowing AI gradients (e.g., bright neon purple-to-blue default buttons).
+- Limit primary accent colors to a single intentional hue. Neutral backgrounds must use subtle surface shifts (e.g., `bg-zinc-50` over `bg-white`) rather than stark white blocks.
+- Borders must be extremely subtle (`border-zinc-200` or lighter), never heavy or high-contrast grey lines.
+
+## Execution workflow
+
+- Treat initial UI generations as rough wireframes. Focus subsequent refinement passes purely on typography scale, color token discipline, and spacing rhythm rather than structural layout changes.
+
+## Project locks
+
+- Font is Public Sans. Map it as `--font-sans`. Do not add a second display face.
+- Light theme only. No `.dark` block, no theme toggle, no dark-mode first drafts.
+- Primary is `#78A3CF` / `rgb(120, 163, 207)`. Primary-foreground is dark zinc, not white.
+- Body, buttons, and labels are `1rem` (`text-base`) or larger. `text-sm` is for secondary meta only. Avoid `text-xs` for anything a user needs to read.
+- Use rem for type, padding, margin, gap, width, height, and max-width. Use px only for border-radius (`--radius: 8px`). No rem radius. No `rounded-full` pills.
+- No `uppercase` or wide letter-spacing kickers. Hierarchy comes from weight and size.
+- Use shadcn tokens (`bg-background`, `text-foreground`, `text-primary`, `text-muted-foreground`) instead of one-off hex.
+- Mobile-first. Stack with rem spacing. `md:` is for extra width and heading size, not a second layout.
+- Local src imports use `@/`. Cross-package imports stay `@waiver-warrior/core`.

@@ -1,0 +1,21 @@
+{
+    "name": "@waiver-warrior/core",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "scripts": {
+        "test": "vitest run",
+        "test:watch": "vitest"
+    },
+    "dependencies": {
+        "csv-parse": "^6.1.0"
+    },
+    "devDependencies": {
+        "@types/node": "^24.5.2",
+        "typescript": "^5.9.2",
+        "vitest": "^3.2.4"
+    }
+}

@@ -1,0 +1,23 @@
+---
+description: Comment and format all source in a conversational, straightforward style
+alwaysApply: true
+---
+
+# Comments and formatting
+
+Comment source as you write it: files, types, functions, and non-obvious branches.
+
+- Conversational and straightforward. Explain why, not a restatement of the next line.
+- Non verbose. No comment-every-line.
+- No long dashes (no em dash or en dash). Use a comma, period, or hyphen.
+- Format with Prettier (`npm run format`). Do not hand-format.
+
+```ts
+// Bad: restates the code, uses a long dash, and is noisy.
+// Load the CSV — this reads the file from disk
+const raw = await readFile(csvPath, 'utf8')
+
+// Good: says why the branch exists.
+// Basketball-Reference dumps a league-average row. Drop it so ranks stay player-only.
+if (playerId === LEAGUE_AVERAGE_ID) continue
+```
