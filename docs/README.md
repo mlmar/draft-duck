@@ -26,16 +26,19 @@ A first-time user (no account) should be able to:
 
 ## How to read these docs
 
-| Doc                                                | When to open it                                    |
-| -------------------------------------------------- | -------------------------------------------------- |
-| [00-product-and-stack.md](00-product-and-stack.md) | Stack, repo layout, API sketch, non-goals          |
-| [M1-foundation.md](M1-foundation.md)               | Workspaces, Astro home, Fastify health, CSV ingest |
-| [M2-ranking-engine.md](M2-ranking-engine.md)       | Z-score formulas, weights, Vitest goldens          |
-| [M3-onboarding.md](M3-onboarding.md)               | Quiz island and `DraftProfile`                     |
-| [M4-draft-assistant.md](M4-draft-assistant.md)     | Draft session and top 3–5 UI                       |
-| [M5-extensibility.md](M5-extensibility.md)         | NBA adapter, suggestion hook, Yahoo seams          |
+| Doc                                                        | When to open it                                    |
+| ---------------------------------------------------------- | -------------------------------------------------- |
+| [00-product-and-stack.md](00-product-and-stack.md)         | Stack, repo layout, API sketch, non-goals          |
+| [M1-foundation.md](M1-foundation.md)                       | Workspaces, Astro home, Fastify health, CSV ingest |
+| [M2-ranking-engine.md](M2-ranking-engine.md)               | Z-score formulas, weights, Vitest goldens          |
+| [M3-onboarding.md](M3-onboarding.md)                       | Quiz island and `DraftProfile`                     |
+| [M4-draft-assistant.md](M4-draft-assistant.md)             | Draft session and top 3–5 UI                       |
+| [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md) | M4 implementation plan (current tree, own PR)      |
+| [M5-extensibility.md](M5-extensibility.md)                 | NBA adapter, suggestion hook, Yahoo seams          |
 
 Each milestone has **goal, in scope, out of scope, stack/touchpoints, acceptance checks, suggested build order**. M1–M4 are sequential. M5 is “do not paint into a corner” plus later optional work.
+
+Product specs stay in `docs/M1`–`docs/M5`. Implementation plans (how a spec maps onto the current tree) live under [`docs/plans/`](plans/) and each one is its **own PR**. Do not mix plan docs with implementation, tests, or the status-table Done flip. That flip stays in the work PR that closes the milestone.
 
 ## Stack (one line)
 
