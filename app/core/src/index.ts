@@ -1,6 +1,6 @@
 // Public surface for the core package. Apps import from here, not the files below.
 export type { CatKey, CatStance, DraftProfile, PlayerSeason, RankedPlayer } from './types.ts';
-export { CAT_KEYS } from './types.ts';
+export { CAT_KEYS, CAT_LABELS } from './types.ts';
 export type { PlayerStatsProvider } from './provider.ts';
 export { CsvProvider, DEFAULT_MIN_GAMES } from './csv-provider.ts';
 export type { CsvProviderOptions } from './csv-provider.ts';
