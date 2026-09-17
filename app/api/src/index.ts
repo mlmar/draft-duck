@@ -1,7 +1,7 @@
-// Local API for the client. Serves the loaded season board and a health check.
+// Local API for the client. Serves the loaded season board, health, and ranked boards.
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
-import { CsvProvider, type PlayerStatsProvider } from '@waiver-warrior/core';
+import { CsvProvider, rank, rankRequestSchema, type PlayerStatsProvider } from '@waiver-warrior/core';
 import { fileURLToPath } from 'node:url';
 
 const PORT = readPort('API_PORT', 3300);
@@ -21,6 +21,14 @@ await app.register(cors, {
 app.get('/health', async () => ({ ok: true as const }));
 
 app.get('/players', async () => ({ players }));
+
+app.post('/rank', async (request, reply) => {
+    const parsed = rankRequestSchema.safeParse(request.body);
+    if (!parsed.success) {
+        return reply.code(400).send({ error: 'Invalid rank request', issues: parsed.error.issues });
+    }
+    return { players: rank(players, parsed.data.profile) };
+});
 
 await app.listen({ port: PORT, host: '127.0.0.1' });
 

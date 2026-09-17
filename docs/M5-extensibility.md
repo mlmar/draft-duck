@@ -45,9 +45,15 @@ const provider: PlayerStatsProvider = new CsvProvider(csvPath);
 
 Do not import CSV paths inside the ranker.
 
-### Suggestion hook (future)
+### Suggestion hook
 
-Later annotators might add `notes` for “punts FG%” or similar. v1 `RankedPlayer` may include optional `notes?: string` unused. Hook **must not** be the place for z-score logic.
+**Intent:** keep z-score math pure. Narrative (punt reasons, later AI or injury copy) must not live inside the ranker.
+
+`rank()` scores, sorts, assigns 1-based `rank`, then calls `annotate`. The default is identity, so `/rank` today is rank-then-do-nothing. Call identity now instead of skipping `annotate` so `/rank` and later `/draft/recommendations` share one composition point. A real annotator is a bootstrap swap, not a second branch in the z-score loop.
+
+**Later annotator contract:** may set display-only `notes` on `RankedPlayer` (for example “punts FG%”). Must not change `composite`, `rank`, or player order. Must not recompute z-scores. The hook is not where ranking logic lives.
+
+**v1:** do not implement a real annotator. `notes` stays unused.
 
 ### Yahoo — do not leak into v1
 

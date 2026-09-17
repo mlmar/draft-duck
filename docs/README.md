@@ -4,6 +4,18 @@ Category-league fantasy basketball helper: quiz for CAT preferences, rank player
 
 This folder is the living product plan. Build in milestone order. Do not start Yahoo, auth, or AI analysis until v1 is shipped.
 
+## Status
+
+Update this table in the same change that closes a milestone. Do not start a later milestone until the previous one is marked done.
+
+| Milestone          | Status                    |
+| ------------------ | ------------------------- |
+| M1 Foundation      | Done                      |
+| M2 Ranking engine  | Done                      |
+| M3 Onboarding      | Not started               |
+| M4 Draft assistant | Not started               |
+| M5 Extensibility   | Seams only (during M1–M4) |
+
 ## v1 cut
 
 A first-time user (no account) should be able to:
