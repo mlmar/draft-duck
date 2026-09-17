@@ -138,7 +138,7 @@ type SuggestionHook = {
 };
 ```
 
-v1 implementation returns the same array. `/rank` runs annotate after sort.
+v1 implementation returns the same array. `/rank` runs annotate after sort. Usage, intent, and the later annotator contract live in [M5-extensibility.md](M5-extensibility.md).
 
 ## Acceptance checks
 
