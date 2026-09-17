@@ -39,8 +39,8 @@ Same pattern as a static Astro shell with `@astrojs/react`:
 
 - **`output: 'static'`.** Zero-JS pages for marketing / explainers.
 - **File routes** in `src/pages/*.astro`. Astro owns navigation. Do not add TanStack Router or a second Vite SPA under `/app`.
-- **React 19 islands** with `client:load` for the app:
-    - `/onboard` — quiz
+- **React 19 islands** for the app:
+    - `/onboard` — quiz (`client:only="react"`)
     - `/draft` — draft assistant
 - **Keep:** TanStack Query (API calls), Zustand (`localStorage` persist), Tailwind.
 - Quiz/draft may be multi-step React trees _inside_ those two pages. Do not create a new Astro page per quiz question.

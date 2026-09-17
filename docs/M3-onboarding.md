@@ -6,7 +6,7 @@ A first-time user completes a short quiz on `/onboard`, persists a `DraftProfile
 
 ## In scope
 
-- Astro page `/onboard` with one React island (`client:load`)
+- Astro page `/onboard` with one React island (`client:only="react"`)
 - Multi-step quiz **inside** that island (not a new Astro route per question)
 - Default flow below (revisable in copy, not in schema)
 - Zustand store + `localStorage` persist for `DraftProfile`
@@ -65,7 +65,7 @@ After review, show a compact top-10 from `/rank` so the user sees the quiz matte
 - Refresh on `/onboard` restores the profile.
 - Skip intensity and skip swipe still produce a valid profile.
 - “Start” on `/` reaches `/onboard` without a client router.
-- `/onboard` HTML shell is Astro; interactivity is a React island (view source / network: island hydrates, rest of marketing pages stay static).
+- `/onboard` HTML shell is Astro; interactivity is a React island (`client:only="react"`). Marketing pages stay static.
 
 ## Suggested build order
 

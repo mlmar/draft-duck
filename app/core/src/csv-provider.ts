@@ -1,5 +1,3 @@
-import { readFile } from 'node:fs/promises';
-import { parse } from 'csv-parse/sync';
 import type { PlayerStatsProvider } from './provider.ts';
 import type { PlayerSeason } from './types.ts';
 
@@ -29,6 +27,9 @@ export class CsvProvider implements PlayerStatsProvider {
     }
 
     async load(): Promise<PlayerSeason[]> {
+        // Import here so the quiz can use the same core barrel without loading Node fs.
+        const { readFile } = await import('node:fs/promises');
+        const { parse } = await import('csv-parse/sync');
         const raw = await readFile(this.csvPath, 'utf8');
         // Excel and BR exports sometimes prefix a BOM. csv-parse chokes on it as a header.
         const rows = parse(raw.replace(/^\uFEFF/, ''), {

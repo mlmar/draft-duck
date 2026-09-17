@@ -27,6 +27,19 @@ export type PlayerSeason = {
 export const CAT_KEYS = ['pts', 'trb', 'ast', 'stl', 'blk', 'fg3', 'fgPct', 'ftPct', 'tov'] as const;
 export type CatKey = (typeof CAT_KEYS)[number];
 
+// Shared display names so the quiz and later draft UI do not drift.
+export const CAT_LABELS: Record<CatKey, string> = {
+    pts: 'PTS',
+    trb: 'REB',
+    ast: 'AST',
+    stl: 'STL',
+    blk: 'BLK',
+    fg3: '3PM',
+    fgPct: 'FG%',
+    ftPct: 'FT%',
+    tov: 'TOV'
+};
+
 export type CatStance = 'need' | 'neutral' | 'punt';
 
 export type DraftProfile = {

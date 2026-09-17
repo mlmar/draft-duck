@@ -12,7 +12,7 @@ Update this table in the same change that closes a milestone. Do not start a lat
 | ------------------ | ------------------------- |
 | M1 Foundation      | Done                      |
 | M2 Ranking engine  | Done                      |
-| M3 Onboarding      | Not started               |
+| M3 Onboarding      | Done                      |
 | M4 Draft assistant | Not started               |
 | M5 Extensibility   | Seams only (during M1–M4) |
 
