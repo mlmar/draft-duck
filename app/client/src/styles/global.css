@@ -2,6 +2,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
+@import './baseline.css' layer(base);
 
 /* Light-only. No .dark block, so dark: utilities never activate. */
 @theme inline {
