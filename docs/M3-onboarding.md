@@ -17,7 +17,7 @@ A first-time user completes a short quiz on `/onboard`, persists a `DraftProfile
 
 ## Out of scope
 
-- Draft pick tracking and top 3–5 cards (M4)
+- Ranked table and draft assistance (M4)
 - Auction
 - Accounts
 - Tinder-style for every question (one optional swipe pair only)
