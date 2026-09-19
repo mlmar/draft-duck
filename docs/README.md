@@ -1,6 +1,6 @@
 # Waiver Warrior roadmap
 
-Category-league fantasy basketball helper: quiz for CAT preferences, rank players with weighted z-scores, then suggest **top 3–5 remaining** players at each draft pick.
+Category-league fantasy basketball helper: quiz for CAT preferences, rank players with weighted z-scores, then optionally group that board into draft-round buckets.
 
 This folder is the living product plan. Build in milestone order. Do not start Yahoo, auth, or AI analysis until v1 is shipped.
 
@@ -13,7 +13,7 @@ Update this table in the same change that closes a milestone. Do not start a lat
 | M1 Foundation      | Done                      |
 | M2 Ranking engine  | Done                      |
 | M3 Onboarding      | Done                      |
-| M4 Draft assistant | Not started               |
+| M4 Draft assistant | Done                      |
 | M5 Extensibility   | Seams only (during M1–M4) |
 
 ## v1 cut
@@ -21,8 +21,8 @@ Update this table in the same change that closes a milestone. Do not start a lat
 A first-time user (no account) should be able to:
 
 1. Answer a short onboarding quiz (league size, draft type, CAT need / punt).
-2. Get a ranked board from the 2025–26 per-game CSV in [`app/data/`](../app/data/).
-3. Run a mock draft: mark players taken, see the next 3–5 recommendations for _their_ profile.
+2. Get a ranked stats table from the 2025–26 per-game CSV in [`app/data/`](../app/data/).
+3. Edit that profile on `/draft` and optionally turn on draft assistance to see equal round buckets (leftovers in the last round).
 
 ## How to read these docs
 
@@ -32,13 +32,13 @@ A first-time user (no account) should be able to:
 | [M1-foundation.md](M1-foundation.md)                       | Workspaces, Astro home, Fastify health, CSV ingest |
 | [M2-ranking-engine.md](M2-ranking-engine.md)               | Z-score formulas, weights, Vitest goldens          |
 | [M3-onboarding.md](M3-onboarding.md)                       | Quiz island and `DraftProfile`                     |
-| [M4-draft-assistant.md](M4-draft-assistant.md)             | Draft session and top 3–5 UI                       |
-| [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md) | M4 implementation plan (current tree, own PR)      |
+| [M4-draft-assistant.md](M4-draft-assistant.md)             | Ranked table and optional round sections           |
+| [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md) | M4 implementation plan (current tree)              |
 | [M5-extensibility.md](M5-extensibility.md)                 | NBA adapter, suggestion hook, Yahoo seams          |
 
 Each milestone has **goal, in scope, out of scope, stack/touchpoints, acceptance checks, suggested build order**. M1–M4 are sequential. M5 is “do not paint into a corner” plus later optional work.
 
-Product specs stay in `docs/M1`–`docs/M5`. Implementation plans (how a spec maps onto the current tree) live under [`docs/plans/`](plans/) and each one is its **own PR**. Do not mix plan docs with implementation, tests, or the status-table Done flip. That flip stays in the work PR that closes the milestone.
+Product specs stay in `docs/M1`–`docs/M5`. Implementation plans live under [`docs/plans/`](plans/). A plan can land in the same PR as the work that closes the milestone.
 
 ## Stack (one line)
 

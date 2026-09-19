@@ -58,7 +58,7 @@ export function ReviewStep({ value, rankedPlayers, rankError, ranking }: QuizSte
                         ))}
                     </ol>
                     <p className='mb-0 mt-2'>
-                        <LinkButton href='/draft'>Continue to draft</LinkButton>
+                        <LinkButton href='/draft'>Continue to board</LinkButton>
                     </p>
                 </div>
             ) : null}

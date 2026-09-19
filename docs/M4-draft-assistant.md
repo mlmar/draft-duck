@@ -2,89 +2,63 @@
 
 ## Goal
 
-On `/draft`, the user runs a mock draft: at each of **their** picks, Fastify returns the **top 3–5 remaining** players for the saved `DraftProfile`. Anyone’s pick can be marked taken so the pool shrinks. v1 does **not** simulate other teams’ brains.
+On `/draft`, the saved `DraftProfile` ranks the universe into a **stats table**. The user can edit every profile field there and the table re-ranks. Optional **draft assistance** splits that same list into round subsections. v1 does **not** simulate other teams’ brains and does not mark players taken.
 
 ## In scope
 
-- Astro page `/draft` with one React island (`client:load`)
-- Draft session in Zustand (`localStorage`): round, pick index, snake vs linear, `takenPlayerIds`, `myTeamIds`
-- `POST /draft/recommendations` `{ profile, takenPlayerIds, limit?: 3 | 4 | 5 }`
-- UI: 3–5 recommendation cards, search/mark any player taken, mark as **my** pick, advance
-- Whose pick it is (user vs others) derived from league size + draft type + pick number
+- Astro page `/draft` with one React island (`client:only="react"`)
+- Default view: one table sorted by `rank` (name, team, pos, enabled-cat stats)
+- Profile editor on `/draft` (league size, rounds, draft type, cats, stances, intensity). Valid edits persist to `ww.draftProfile` and `POST /rank` again
+- Draft assistance toggle (off by default, not persisted): `draftRounds` subsections of width `leagueSize`; last round is the leftover tail
 - Redirect to `/onboard` if no valid `DraftProfile` in storage
-- Re-rank remaining pool only (filter taken, then same composite as M2)
+- Same composites as `/rank`. Partition is a slice, not a re-z-score
 
 ## Out of scope
 
 - Auction
 - CPU mock of other teams (no ADP opponent model)
+- Mark taken / my pick / draft session
 - Positional slot limits / roster construction rules
-- Replacement-level / scarcity (still later)
+- Replacement-level / scarcity
 - Yahoo / live league
-- Undo beyond a simple “remove last taken” is nice-to-have, not required
+- Sorting the table by arbitrary columns
+- User draft slot (v1 is not pick-by-pick)
 
 ## Stack / touchpoints
 
-| Piece                        | Where                                                            |
-| ---------------------------- | ---------------------------------------------------------------- |
-| `/draft.astro`               | `app/client`                                                     |
-| Draft island + session store | React + Zustand persist                                          |
-| Recommendations              | Fastify `POST /draft/recommendations`                            |
-| Ranker reuse                 | `app/core` — same `composite` as `/rank`, minus `takenPlayerIds` |
+| Piece          | Where                            |
+| -------------- | -------------------------------- |
+| `/draft.astro` | `app/client`                     |
+| Board island   | React + existing profile Zustand |
+| Rank fetch     | Fastify `POST /rank`             |
+| Round buckets  | `app/core` `partitionByRound`    |
 
-### Session model
+### Round buckets
 
-```ts
-type DraftSession = {
-    pickNumber: number; // 1-based overall pick in the draft
-    takenPlayerIds: string[];
-    myTeamIds: string[];
-    recommendationLimit: 3 | 4 | 5; // default 5
-};
-```
+Width = league size (picks in a round). Snake vs linear does not change who sits in a subsection.
 
-League size, rounds, and `draftType` come from `DraftProfile`, not duplicated unless you want a snapshot. Total picks = `leagueSize * draftRounds`.
+- Rounds `1 .. draftRounds-1`: `ranked.slice((k-1)*leagueSize, k*leagueSize)`
+- Last round: `ranked.slice((draftRounds-1)*leagueSize)` (everyone left)
 
-**Linear:** pick `k` belongs to team `((k - 1) % leagueSize) + 1`. User is team 1 in v1 (first pick of round 1) unless you add a “draft slot” field later. Document: **v1 assumes the user is slot 1**.
+12-team, 13-round: rounds 1–12 have 12 players; round 13 is rank 145 through the end of the CSV universe.
 
-**Snake:** even rounds reverse. User slot 1 picks: 1, `2*leagueSize`, `2*leagueSize+1`, …
+### Settings
 
-When it is the user’s pick, fetch and show recommendations. When it is another team’s pick, UI is “mark who went” (search remaining). After marking taken, increment `pickNumber`.
-
-If the user marks a player as **my pick** off-turn, still append to `myTeamIds` and `takenPlayerIds` (manual override).
-
-### Recommendations endpoint
-
-1. Validate `DraftProfile`.
-2. Load universe (M1).
-3. Drop ids in `takenPlayerIds`.
-4. Score like `/rank` (M2), including `SuggestionHook`.
-5. Return the first `limit` (default 5, clamp 3–5) as `picks`.
-
-Do not mutate operator weights per round in v1.
-
-### UI (minimum)
-
-- Header: round, overall pick, “your pick” vs “other pick”
-- Recommendation cards (your pick only, or always visible for planning)
-- Taken list / my team chips
-- Player search over remaining names to mark taken
-- End state when `pickNumber` exceeds total picks or remaining is empty
+First-time quiz stays on `/onboard`. After that, `/draft` edits the same `DraftProfile` fields. Archetype swipe stays quiz-only (it is not on the schema). Intensity sliders debounce so a drag is not one rank call per tick. Invalid in-progress values keep the last good table.
 
 ## Acceptance checks
 
 - Without a profile, `/draft` sends the user back to `/onboard`.
-- Snake, 12-team: picks 1 and 24 are the user’s (slot 1); pick 2 is not.
-- Marking a player taken removes them from the next recommendations.
-- `limit=3` returns at most 3 players.
-- My picks appear on the team list and cannot be recommended again.
-- Refresh restores session from `localStorage`.
-- Recommendations use the same composites as `/rank` filtered to remaining ids (spot-check one profile).
+- Default view is one ranked table with rank, identity, and enabled cat stats. 8-cat hides `TOV`.
+- Editing a stance or preset persists a valid profile and refreshes order and columns.
+- Assistance off: no round headings. Assistance on: `draftRounds` subsections, equal size except the last, which is the tail.
+- 12-team, 13-round: round 5 is ranks 49–60; round 13 is longer than 12.
+- Refresh restores the profile and the flat table (toggle does not persist).
+- Composites in the table match `/rank` for that profile (spot-check).
 
 ## Suggested build order
 
-1. `recommendations(profile, takenIds, limit)` in `app/core` + Vitest (taken filter).
-2. Fastify `POST /draft/recommendations`.
-3. Session store + snake/linear pick ownership.
-4. Draft island: cards, mark taken, my pick, advance.
-5. Empty profile redirect + draft complete state.
+1. `partitionByRound` in `app/core` + Vitest.
+2. `/draft` island: table from `POST /rank`, redirect if empty profile.
+3. Settings panel + assistance toggle.
+4. Spec, README, home copy.

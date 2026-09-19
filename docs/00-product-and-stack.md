@@ -9,11 +9,11 @@ Lock the product loop, TypeScript stack, repo layout, and HTTP sketch so later m
 ```text
 quiz → DraftProfile JSON
 CSV  → player universe
-profile + operator weights + universe → weighted z-score board
-draft session (taken / my picks) → top 3–5 remaining per pick
+profile + operator weights + universe → weighted z-score table
+optional draft assistance → same list, sliced into round buckets
 ```
 
-No accounts. Quiz + draft session live in `localStorage`. Analysis is **pure math** with two weight layers (operator + profile). Narrative AI is a no-op hook only (see [M5-extensibility.md](M5-extensibility.md)).
+No accounts. Quiz + profile live in `localStorage`. Analysis is **pure math** with two weight layers (operator + profile). Narrative AI is a no-op hook only (see [M5-extensibility.md](M5-extensibility.md)).
 
 ## In scope for this document
 
@@ -100,11 +100,10 @@ Root `package.json` workspaces: `app/client`, `app/api`, `app/core`.
 
 All JSON. Prefix `/api` is optional; pick one in M1 and keep it.
 
-| Method | Path                     | Body                                               | Response                      |
-| ------ | ------------------------ | -------------------------------------------------- | ----------------------------- |
-| `GET`  | `/health`                | —                                                  | `{ ok: true }`                |
-| `POST` | `/rank`                  | `{ profile: DraftProfile }`                        | `{ players: RankedPlayer[] }` |
-| `POST` | `/draft/recommendations` | `{ profile, takenPlayerIds, limit?: 3 \| 4 \| 5 }` | `{ picks: RankedPlayer[] }`   |
+| Method | Path      | Body                        | Response                      |
+| ------ | --------- | --------------------------- | ----------------------------- |
+| `GET`  | `/health` | —                           | `{ ok: true }`                |
+| `POST` | `/rank`   | `{ profile: DraftProfile }` | `{ players: RankedPlayer[] }` |
 
 `RankedPlayer` includes `playerId`, identity fields, per-game cats, per-cat z, `composite`, `rank`. Exact field list is locked in M2.
 
