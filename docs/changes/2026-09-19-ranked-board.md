@@ -52,6 +52,8 @@ Close M4. `/draft` is the primary ranked-stats table for the saved quiz. The use
 
 M5 stays seams only. No Yahoo, live stats, or CPU opponents.
 
+Later product/shell (not this PR): TanStack Start as a middle ground between Astro SSG and a full SPA. Revisit the design system on that pass. `client:only` on `/draft` is the current persist choice, not a lock.
+
 ## Reference docs
 
 - [M4-draft-assistant.md](../M4-draft-assistant.md)

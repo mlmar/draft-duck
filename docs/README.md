@@ -47,3 +47,5 @@ Astro static site + React islands (`app/client`) → Fastify (`app/api`) → sha
 ## Explicitly later (not this app yet)
 
 Yahoo OAuth, upload current team, live league standings, injury/news, auction drafts, AI writeups, Astro SSR. Recorded only as seams in [M5-extensibility.md](M5-extensibility.md).
+
+Also later, not blocking M4: TanStack Start as a middle ground between this Astro SSG shell and a full SPA. Revisit the design system (shadcn table chrome, density) in that pass.

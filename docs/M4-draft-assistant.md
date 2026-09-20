@@ -6,7 +6,7 @@ On `/draft`, the saved `DraftProfile` ranks the universe into a **stats table**.
 
 ## In scope
 
-- Astro page `/draft` with one React island (`client:only="react"`)
+- Astro page `/draft` with one React island. Today that is `client:only="react"` so persist does not fight SSR. That directive is a current choice, not a lock.
 - Default view: one table sorted by `rank` (name, team, pos, enabled-cat stats)
 - Profile editor on `/draft` (league size, rounds, draft type, cats, stances, intensity). Valid edits persist to `ww.draftProfile` and `POST /rank` again
 - Draft assistance toggle (off by default, not persisted): `draftRounds` subsections of width `leagueSize`; last round is the leftover tail
