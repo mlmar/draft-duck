@@ -1,12 +1,13 @@
 import { PlayerTable } from '@/components/draft/player-table';
 import { ProfileSettings } from '@/components/draft/profile-settings';
 import { Button } from '@/components/ui/button';
+import { useDebounce } from '@/hooks/use-debounce';
 import { rankPlayers } from '@/lib/api';
 import { canContinue, profileToQuizDraft, quizDraftToProfile, type QuizDraft } from '@/lib/quiz';
 import { useDraftProfileStore } from '@/stores/draft-profile';
 import { draftProfileSchema, partitionByRound } from '@waiver-warrior/core';
 import { QueryClient, QueryClientProvider, keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const INTENSITY_DEBOUNCE_MS = 200;
 
@@ -34,7 +35,15 @@ function DraftBoardInner() {
     const [draft, setDraft] = useState<QuizDraft | null>(null);
     const [hydrated, setHydrated] = useState(false);
     const [assistance, setAssistance] = useState(false);
-    const intensityTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    function persistDraft(next: QuizDraft) {
+        if (!canContinue('league', next) || !canContinue('preset', next)) return;
+        const parsed = draftProfileSchema.safeParse(quizDraftToProfile(next));
+        if (!parsed.success) return;
+        setProfile(parsed.data);
+    }
+
+    const persistIntensity = useDebounce(persistDraft, INTENSITY_DEBOUNCE_MS);
 
     useEffect(() => {
         const applySaved = () => {
@@ -52,12 +61,6 @@ function DraftBoardInner() {
         return unsub;
     }, []);
 
-    useEffect(() => {
-        return () => {
-            if (intensityTimer.current !== null) window.clearTimeout(intensityTimer.current);
-        };
-    }, []);
-
     const rankQuery = useQuery({
         queryKey: ['rank', profile],
         queryFn: () => rankPlayers(profile!),
@@ -65,26 +68,15 @@ function DraftBoardInner() {
         placeholderData: keepPreviousData
     });
 
-    function persistDraft(next: QuizDraft) {
-        if (!canContinue('league', next) || !canContinue('preset', next)) return;
-        const parsed = draftProfileSchema.safeParse(quizDraftToProfile(next));
-        if (!parsed.success) return;
-        setProfile(parsed.data);
-    }
-
     function handleDiscreteChange(next: QuizDraft) {
-        if (intensityTimer.current !== null) {
-            window.clearTimeout(intensityTimer.current);
-            intensityTimer.current = null;
-        }
+        persistIntensity.cancel();
         setDraft(next);
         persistDraft(next);
     }
 
     function handleIntensityChange(next: QuizDraft) {
         setDraft(next);
-        if (intensityTimer.current !== null) window.clearTimeout(intensityTimer.current);
-        intensityTimer.current = window.setTimeout(() => persistDraft(next), INTENSITY_DEBOUNCE_MS);
+        persistIntensity(next);
     }
 
     if (!hydrated || draft === null || profile === null) {
