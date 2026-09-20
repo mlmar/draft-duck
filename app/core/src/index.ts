@@ -14,3 +14,21 @@ export { identitySuggestionHook } from './suggestion-hook.ts';
 export type { SuggestionHook } from './suggestion-hook.ts';
 export { partitionByRound } from './partition.ts';
 export type { RoundSection } from './partition.ts';
+export {
+    CAT_HIGHLIGHT_MODES,
+    CAT_HIGHLIGHT_STRATEGIES,
+    DEFAULT_CAT_HIGHLIGHT_MODE,
+    HEAT_CLAMP,
+    HEAT_DEAD_ZONE,
+    catHighlightStrategy,
+    formatSignedScore,
+    heatFromScore,
+    leagueZHighlight
+} from './cat-highlight.ts';
+export type {
+    CatHighlightInput,
+    CatHighlightMode,
+    CatHighlightResult,
+    CatHighlightStrategy,
+    HeatRamp
+} from './cat-highlight.ts';

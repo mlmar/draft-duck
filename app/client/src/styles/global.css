@@ -87,6 +87,9 @@
     --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
     --sidebar-border: oklch(0.92 0.004 286.32);
     --sidebar-ring: #78a3cf;
+    /* Low-chroma sage/rose for cat heat. Mix toward transparent by |z|. Not neon. */
+    --heat-good: oklch(0.88 0.07 145);
+    --heat-bad: oklch(0.88 0.07 25);
 }
 
 @layer base {
