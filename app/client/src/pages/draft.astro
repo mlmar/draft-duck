@@ -1,18 +1,13 @@
 ---
-// Draft stub. Pick tracking and top 3-5 cards land in M4.
-import { LinkButton } from '@/components/link-button';
+// Ranked board. Settings and optional round sections live in one React island.
+import { DraftBoard } from '@/components/draft/draft-board';
 import Layout from '@/layouts/Layout.astro';
 ---
 
 <Layout title='Draft - Waiver Warrior'>
-    <main class='mx-auto flex min-h-dvh max-w-lg flex-col justify-center px-4 py-10 md:max-w-2xl'>
-        <p class='font-medium text-primary'>Draft</p>
-        <h1>Draft assistant next</h1>
-        <p class='max-w-md'>Mark players taken and see the next three to five remaining names. That board is M4.</p>
-        <p class='mt-8'>
-            <LinkButton href='/onboard' variant='outline'>
-                Back to quiz
-            </LinkButton>
-        </p>
+    <main class='mx-auto min-h-dvh max-w-6xl px-4 py-10'>
+        <DraftBoard client:only='react'>
+            <p>Loading board…</p>
+        </DraftBoard>
     </main>
 </Layout>

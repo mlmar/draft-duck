@@ -1,6 +1,6 @@
 import type { DraftProfile, RankedPlayer } from '@waiver-warrior/core';
 
-// Thin POST /rank. The quiz mutation owns loading and error UI.
+// Thin POST /rank. The draft query owns loading and error UI.
 
 const API_URL = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3300';
 

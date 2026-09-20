@@ -1,10 +1,10 @@
 ---
 name: summarize-latest-changes
 description: >-
-  Writes a dated change note under docs/changes summarizing recent git and
-  conversation work. Use when the user asks to summarize latest changes, write
-  a change note, document the work, or capture intent and next steps after
-  implementation.
+    Writes a dated change note under docs/changes summarizing recent git and
+    conversation work. Use when the user asks to summarize latest changes, write
+    a change note, document the work, or capture intent and next steps after
+    implementation.
 ---
 
 # Summarize latest changes
