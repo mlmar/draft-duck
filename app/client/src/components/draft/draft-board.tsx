@@ -1,15 +1,22 @@
-import { PlayerTable } from '@/components/draft/player-table';
+import { PlayerTable, type CatValueMode } from '@/components/draft/player-table';
 import { ProfileSettings } from '@/components/draft/profile-settings';
 import { Button } from '@/components/ui/button';
 import { useDebounce } from '@/hooks/use-debounce';
 import { rankPlayers } from '@/lib/api';
 import { canContinue, profileToQuizDraft, quizDraftToProfile, type QuizDraft } from '@/lib/quiz';
 import { useDraftProfileStore } from '@/stores/draft-profile';
-import { draftProfileSchema, partitionByRound } from '@waiver-warrior/core';
+import {
+    catHighlightStrategy,
+    DEFAULT_CAT_HIGHLIGHT_MODE,
+    draftProfileSchema,
+    partitionByRound
+} from '@waiver-warrior/core';
 import { QueryClient, QueryClientProvider, keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 const INTENSITY_DEBOUNCE_MS = 200;
+// Named setting, not a table branch. leagueZ now. Add teamNeed to the registry later and point this at it.
+const CAT_HIGHLIGHT_MODE = DEFAULT_CAT_HIGHLIGHT_MODE;
 
 function createQueryClient() {
     return new QueryClient({
@@ -38,6 +45,8 @@ function DraftBoardInner() {
     const [assistance, setAssistance] = useState(
         () => new URLSearchParams(window.location.search).get('assist') === '1'
     );
+    // Raw vs +/- is the same signed score as the heat. Not persisted, same as assistance.
+    const [valueMode, setValueMode] = useState<CatValueMode>('raw');
 
     function persistDraft(next: QuizDraft) {
         if (!canContinue('league', next) || !canContinue('preset', next)) return;
@@ -89,6 +98,17 @@ function DraftBoardInner() {
     const players = rankQuery.data ?? [];
     const sections = partitionByRound(players, profile.leagueSize, profile.draftRounds);
     const rankError = rankQuery.error instanceof Error ? rankQuery.error.message : null;
+    const highlight = catHighlightStrategy(CAT_HIGHLIGHT_MODE);
+    // One table so every round shares one horizontal scroll. Separate tables drifted columns.
+    const groups = assistance
+        ? sections.map((section) => ({
+              id: `round-${section.round}`,
+              label: `Round ${section.round} · ${section.players.length} ${
+                  section.players.length === 1 ? 'player' : 'players'
+              }`,
+              players: section.players
+          }))
+        : [{ id: 'board', players }];
 
     return (
         <div className='grid gap-8'>
@@ -108,6 +128,14 @@ function DraftBoardInner() {
                     >
                         {assistance ? 'Draft assistance on' : 'Draft assistance off'}
                     </Button>
+                    <Button
+                        type='button'
+                        variant={valueMode === 'plusMinus' ? 'default' : 'outline'}
+                        aria-pressed={valueMode === 'plusMinus'}
+                        onClick={() => setValueMode((mode) => (mode === 'raw' ? 'plusMinus' : 'raw'))}
+                    >
+                        {valueMode === 'plusMinus' ? '+/-' : 'Raw stats'}
+                    </Button>
                 </div>
             </header>
 
@@ -125,31 +153,14 @@ function DraftBoardInner() {
             {rankQuery.isFetching ? <p className='mb-0'>Ranking the board…</p> : null}
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
 
-            {assistance ? (
-                <div className='grid gap-10'>
-                    {sections.map((section) => (
-                        <div key={section.round} className='grid gap-3'>
-                            <div className='flex flex-wrap items-baseline gap-x-3 gap-y-1'>
-                                <h2 className='mb-0 text-xl font-semibold md:text-2xl'>Round {section.round}</h2>
-                                <p className='mb-0 text-sm text-muted-foreground'>
-                                    {section.players.length} {section.players.length === 1 ? 'player' : 'players'}
-                                </p>
-                            </div>
-                            <PlayerTable
-                                players={section.players}
-                                enabledCats={profile.enabledCats}
-                                emptyLabel='No players in this round.'
-                            />
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <PlayerTable
-                    players={players}
-                    enabledCats={profile.enabledCats}
-                    emptyLabel='No players on this board.'
-                />
-            )}
+            <PlayerTable
+                groups={groups}
+                enabledCats={profile.enabledCats}
+                emptyLabel='No players on this board.'
+                profile={profile}
+                highlight={highlight}
+                valueMode={valueMode}
+            />
         </div>
     );
 }
