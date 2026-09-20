@@ -49,7 +49,7 @@ Do not import CSV paths inside the ranker.
 
 **Intent:** keep z-score math pure. Narrative (punt reasons, later AI or injury copy) must not live inside the ranker.
 
-`rank()` scores, sorts, assigns 1-based `rank`, then calls `annotate`. The default is identity, so `/rank` today is rank-then-do-nothing. Call identity now instead of skipping `annotate` so `/rank` and later `/draft/recommendations` share one composition point. A real annotator is a bootstrap swap, not a second branch in the z-score loop.
+`rank()` scores, sorts, assigns 1-based `rank`, then calls `annotate`. The default is identity, so `/rank` today is rank-then-do-nothing. Call identity now instead of skipping `annotate` so ranking HTTP and any later draft slice share one composition point. A real annotator is a bootstrap swap, not a second branch in the z-score loop.
 
 **Later annotator contract:** may set display-only `notes` on `RankedPlayer` (for example “punts FG%”). Must not change `composite`, `rank`, or player order. Must not recompute z-scores. The hook is not where ranking logic lives.
 
@@ -71,7 +71,7 @@ If a v1 type would only exist for Yahoo, omit it.
 - `app/core` exports `PlayerStatsProvider` and a non-production `NbaApiProvider` stub.
 - Ranker tests use fixtures or `CsvProvider`, not NBA HTTP.
 - `DraftProfile` Zod schema has no yahoo/oauth fields (grep).
-- `/rank` and `/draft/recommendations` take a provider in the composition root (injectable in tests).
+- `/rank` takes a provider in the composition root (injectable in tests). Round buckets slice that list; they do not open files.
 - `SuggestionHook` is called in both rank paths; identity hook keeps composites identical.
 
 ## Suggested build order
