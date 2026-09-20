@@ -1,8 +1,7 @@
-import { LinkButton } from '@/components/link-button';
 import type { QuizStepProps } from '@/components/onboard/step-types';
 import { CAT_LABELS } from '@waiver-warrior/core';
 
-// Recap of the draft, then a top-10 preview after /rank. Continue to draft only shows on success.
+// Recap of the draft. Rank my board persists and leaves for /draft.
 
 function stanceLabel(stance: string | undefined): string {
     if (stance === 'need') return 'Need';
@@ -10,9 +9,7 @@ function stanceLabel(stance: string | undefined): string {
     return 'Neutral';
 }
 
-export function ReviewStep({ value, rankedPlayers, rankError, ranking }: QuizStepProps) {
-    const preview = rankedPlayers?.slice(0, 10) ?? [];
-
+export function ReviewStep({ value, parseError }: QuizStepProps) {
     return (
         <div className='grid gap-8'>
             <dl className='grid gap-4'>
@@ -43,25 +40,7 @@ export function ReviewStep({ value, rankedPlayers, rankError, ranking }: QuizSte
                 </div>
             </dl>
 
-            {ranking ? <p className='mb-0'>Ranking the board…</p> : null}
-            {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
-
-            {preview.length > 0 ? (
-                <div className='grid gap-3'>
-                    <p className='mb-0 font-medium'>Top 10 for this profile</p>
-                    <ol className='grid gap-1'>
-                        {preview.map((player) => (
-                            <li key={player.playerId}>
-                                {player.rank}. {player.name}{' '}
-                                <span className='text-muted-foreground'>{player.team}</span>
-                            </li>
-                        ))}
-                    </ol>
-                    <p className='mb-0 mt-2'>
-                        <LinkButton href='/draft'>Continue to board</LinkButton>
-                    </p>
-                </div>
-            ) : null}
+            {parseError ? <p className='mb-0 text-destructive'>{parseError}</p> : null}
         </div>
     );
 }

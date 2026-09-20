@@ -72,7 +72,7 @@ export const STEPS: QuizStepDef[] = [
     {
         id: 'review',
         title: 'Review',
-        description: 'Check the profile, then rank. The top 10 is a preview, not the draft board.',
+        description: 'Check the profile, then rank. You will land on the draft board.',
         submit: true,
         continueLabel: 'Rank my board',
         Component: ReviewStep
