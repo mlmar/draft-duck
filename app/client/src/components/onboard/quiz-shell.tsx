@@ -17,7 +17,6 @@ type QuizShellProps = {
     skipLabel?: string;
     continueLabel?: string;
     continueDisabled?: boolean;
-    hideContinue?: boolean;
     banner?: ReactNode;
     children: ReactNode;
 };
@@ -34,7 +33,6 @@ export function QuizShell({
     skipLabel = 'Skip',
     continueLabel = 'Continue',
     continueDisabled = false,
-    hideContinue = false,
     banner,
     children
 }: QuizShellProps) {
@@ -99,16 +97,9 @@ export function QuizShell({
                             ) : null}
                         </div>
                     ) : null}
-                    {hideContinue ? null : (
-                        <Button
-                            type='button'
-                            onClick={onContinue}
-                            disabled={continueDisabled}
-                            className='w-full md:w-auto'
-                        >
-                            {continueLabel}
-                        </Button>
-                    )}
+                    <Button type='button' onClick={onContinue} disabled={continueDisabled} className='w-full md:w-auto'>
+                        {continueLabel}
+                    </Button>
                 </div>
             </div>
         </div>

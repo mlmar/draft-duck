@@ -34,7 +34,10 @@ function DraftBoardInner() {
     const setProfile = useDraftProfileStore((state) => state.setProfile);
     const [draft, setDraft] = useState<QuizDraft | null>(null);
     const [hydrated, setHydrated] = useState(false);
-    const [assistance, setAssistance] = useState(false);
+    // Onboard hands off with ?assist=1. Direct /draft visits stay a flat table.
+    const [assistance, setAssistance] = useState(
+        () => new URLSearchParams(window.location.search).get('assist') === '1'
+    );
 
     function persistDraft(next: QuizDraft) {
         if (!canContinue('league', next) || !canContinue('preset', next)) return;
@@ -104,9 +107,6 @@ function DraftBoardInner() {
                         onClick={() => setAssistance((on) => !on)}
                     >
                         {assistance ? 'Draft assistance on' : 'Draft assistance off'}
-                    </Button>
-                    <Button type='button' variant='ghost' asChild>
-                        <a href='/onboard'>Quiz</a>
                     </Button>
                 </div>
             </header>
