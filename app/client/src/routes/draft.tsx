@@ -8,11 +8,16 @@ export type DraftSearch = {
     values?: 'pm';
 };
 
+function flagOn(value: unknown): boolean {
+    // URL loads parse assist=1 as a number. Client navigate keeps the string '1'.
+    return value === '1' || value === 1 || value === true;
+}
+
 export const Route = createFileRoute('/draft')({
     // Client-only. Needs localStorage and POST /rank, so it is not prerendered.
     ssr: false,
     validateSearch: (search: Record<string, unknown>): DraftSearch => ({
-        assist: search.assist === '1' ? '1' : undefined,
+        assist: flagOn(search.assist) ? '1' : undefined,
         values: search.values === 'pm' ? 'pm' : undefined
     }),
     component: DraftPage,
