@@ -13,14 +13,14 @@ Move `app/client` from Astro islands to TanStack Start. Keep ranking on Fastify.
 ## Tradeoffs
 
 - **SPA mode plus a page allow-list.** Home, about, scoring, and onboard are static HTML. `/draft` needs `localStorage` and the API, so it is not prerendered. Auto-discovery and link crawling are off so a Start link to `/draft` does not emit draft HTML. The SPA shell uses mask path `/?spa-shell=1` so it does not collide with prerendered `/`.
-- **Router instead of full page loads.** Quiz finish and the empty-profile gate use `navigate`. Marketing pages can still be served as files.
+- **Router instead of full page loads.** Quiz finish navigates to `/draft?assist=1`. Empty-profile gate uses `navigate`. Assist and raw/+/- patch `/draft` search in place (`replace: true`).
 - **Zustand skips hydration on the server.** `/onboard` prerenders the first step from defaults, then persist fills in after mount. That replaces `client:only`.
 
 ## High-level overview of the current implementation
 
 `app/client` is Vite + TanStack Start. File routes live under `src/routes`. The Vite plugin enables SPA mode and prerenders `/`, `/about`, `/how-it-works`, and `/onboard`. Everything else hydrates from the SPA shell.
 
-The quiz and board are the same React trees as before. `LinkButton` uses TanStack `Link`. Fastify still serves `/health`, `/players`, and `/rank`.
+The quiz and board are the same React trees as before. `/draft` search owns view flags: `assist=1` for round groups, `values=pm` for +/-. Missing params are the flat raw table. `LinkButton` uses TanStack `Link`. Fastify still serves `/health`, `/players`, and `/rank`.
 
 ## Surfaces touched
 
@@ -31,8 +31,8 @@ The quiz and board are the same React trees as before. `LinkButton` uses TanStac
 
 ## User-visible vs contract
 
-- **UI:** Home now links to Scoring and About. Onboard has a home link. Client-side navigation between those routes.
-- **Contract:** `DraftProfile` and `POST /rank` are unchanged. `PUBLIC_API_URL` still points at Fastify.
+- **UI:** Home now links to Scoring and About. Onboard has a home link. Client-side navigation between those routes. Assist and +/- follow the URL.
+- **Contract:** `DraftProfile` and `POST /rank` are unchanged. `PUBLIC_API_URL` still points at Fastify. `ww.draftProfile` is still the profile. View flags are not stored there.
 
 ## Known gaps
 
@@ -44,8 +44,9 @@ The quiz and board are the same React trees as before. `LinkButton` uses TanStac
 
 1. Open `/`. Start goes to `/onboard`. Scoring and About are readable without the API.
 2. Complete the quiz. Lands on `/draft?assist=1` with a ranked table (API running).
-3. Refresh `/draft`. Profile and flat table remain. Clear `ww.draftProfile` and open `/draft` again: lands on `/onboard`.
-4. `npm run build -w @waiver-warrior/client` emits HTML for `/`, `/about`, `/how-it-works`, `/onboard`, and a `_shell.html`. No prerendered `/draft/index.html`.
+3. Toggle assistance off, then +/-. URL drops `assist` and adds `values=pm`. Refresh keeps that view. Open `/draft` with no query: flat table and raw stats.
+4. Clear `ww.draftProfile` and open `/draft` again: lands on `/onboard`.
+5. `npm run build -w @waiver-warrior/client` emits HTML for `/`, `/about`, `/how-it-works`, `/onboard`, and a `_shell.html`. No prerendered `/draft/index.html`.
 
 ## Next steps
 
