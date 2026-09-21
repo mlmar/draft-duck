@@ -29,7 +29,7 @@ M3 is Done. No Yahoo, auth, or AI. M5 stays seams only. Ranking HTTP stays on Fa
 
 - Gate `/draft` on a valid profile; else `/onboard`
 - Query key is the profile. Discrete chips persist immediately. Intensity debounce 200ms
-- Assistance is React state only
+- Assistance and +/- live in `/draft` search (`assist=1`, `values=pm`). Toggles replace search on the current route.
 - Table: overflow-x, sticky rank+name, enabled cats, composite as `text-sm` under the name
 
 ## Docs

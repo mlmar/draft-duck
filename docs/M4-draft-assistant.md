@@ -9,7 +9,7 @@ On `/draft`, the saved `DraftProfile` ranks the universe into a **stats table**.
 - `/draft` route. Persist hydrates after mount so it does not fight prerender of other pages.
 - Default view: one table sorted by `rank` (name, team, pos, enabled-cat stats)
 - Profile editor on `/draft` (league size, rounds, draft type, cats, stances, intensity). Valid edits persist to `ww.draftProfile` and `POST /rank` again
-- Draft assistance toggle (off by default, not persisted): `draftRounds` subsections of width `leagueSize`; last round is the leftover tail
+- Draft assistance toggle (off by default unless `?assist=1`): `draftRounds` subsections of width `leagueSize`; last round is the leftover tail. View flags live in the URL, not `localStorage`.
 - Redirect to `/onboard` if no valid `DraftProfile` in storage
 - Same composites as `/rank`. Partition is a slice, not a re-z-score
 
@@ -53,7 +53,7 @@ First-time quiz stays on `/onboard`. After that, `/draft` edits the same `DraftP
 - Editing a stance or preset persists a valid profile and refreshes order and columns.
 - Assistance off: no round headings. Assistance on: `draftRounds` subsections, equal size except the last, which is the tail.
 - 12-team, 13-round: round 5 is ranks 49–60; round 13 is longer than 12.
-- Refresh restores the profile and the flat table (toggle does not persist).
+- Refresh restores the profile. `?assist=1` and `?values=pm` keep assistance and +/-. No query means flat table and raw stats.
 - Composites in the table match `/rank` for that profile (spot-check).
 
 ## Suggested build order
