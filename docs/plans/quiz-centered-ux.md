@@ -155,7 +155,7 @@ Replace the Edit profile `<details>` dump as the only place answers live.
 
 Always-visible, compact:
 
-- League chip: `12-team snake · 13 rounds`
+- League chip: `12-team snake · pick 7`
 - Stance row: one control per enabled cat (Need / Neutral / Punt). Changing a chip persists and re-ranks, same as today.
 - Intensity and custom cats stay behind a secondary Edit.
 
