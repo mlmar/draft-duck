@@ -109,13 +109,13 @@ Move league size, rounds, and snake/linear later, or onto one "League basics" sc
 Recommended order:
 
 1. Categories (9-cat / 8-cat / custom)
-2. Build (stocks vs points, still skippable)
-3. Stances (Need / Neutral / Punt)
-4. Intensity (optional, skippable)
-5. League basics (size, rounds, type)
+2. Archetype gallery (named build skips the next two)
+3. Stances only on Custom
+4. Intensity only on Custom, still skippable
+5. League basics (size, rounds, type, **pick slot**)
 6. Review that is a board preview, not a recap list
 
-Settings still belong on the profile. They should not be the first three taps. The unique answers should come while attention is high.
+Settings still belong on the profile. They should not be the first three taps. A named build is how most people skip the form. Custom is how they tune.
 
 ### 2. Show consequence while they answer
 
@@ -130,7 +130,7 @@ PR #4 makes this easier: the quiz is already a client tree talking to Fastify. N
 - Merge league + draft type.
 - Make review the first sight of the board, then Continue to `/draft?assist=1`.
 - Keep intensity skippable. Consider hiding the sliders behind "Fine-tune" so Skip is the visual default.
-- One optional archetype is still the v1 lock. Do not add more swipe pairs. Do make that pair larger and earlier.
+- Replace the one stocks/points pair with a small archetype gallery that can skip stances and intensity. See [Archetype profiles](#archetype-profiles).
 
 ### 4. Treat returning users as a different entry
 
@@ -189,21 +189,140 @@ PR #4 already called this out. Do it as a board pass, not a rewrite:
 
 Mark taken would make this a draft room. That is a different product. v1 is a personal ranking from a quiz. Do not smuggle session tracking into a UX polish pass.
 
+A **draft slot** (pick 7 of 12) is not a taken list. It is a highlight on this same BPA board. See [Pick number](#pick-number).
+
+## Pick number
+
+Ask for slot on the league-basics screen: pick `1 .. leagueSize`. Persist it on `DraftProfile` as `draftSlot`. It belongs with league size and snake/linear, not in `/draft` search.
+
+Snake vs linear still does not change `partitionByRound`. Slot only changes **which row in each round is yours**, if everyone took BPA off this list.
+
+Overall pick for round `r`, slot `s`, size `n`:
+
+- Linear: `(r - 1) * n + s`
+- Snake, odd `r`: same as linear
+- Snake, even `r`: `r * n - s + 1`
+
+Pick 7 in a 12-team snake: overall 7, 18, 31, 42, and so on. The player at `ranked[overall - 1]` is "your pick" in that round. Ranker math does not change.
+
+### Ways to show it
+
+Pick one primary treatment. Do not stack all of them.
+
+1. **Your-pick row in each round.** Assistance mode already groups by round. Mark the slot row (`Your pick · 7th`) with a quiet left rule or row fill. Everyone else in the round stays visible. This is the smallest honest version: "if the room drafted this board in order, you are on the clock here."
+
+2. **Your-team strip.** Pull the 13 (or `draftRounds`) names at those overall picks into a compact list above or beside the table. Caption: "BPA at your slots." Optional: sum or spark the Need cats on that hypothetical roster so the quiz stays visible. This is the best pair with a simplified board.
+
+3. **Window around the slot.** In each round, show slot ±2 (picks 5–9 if you are 7) instead of the whole league. Good on a phone. Bad as the only detailed view, because you cannot see who "goes" two picks later.
+
+4. **Overall pick as language.** Keep `rank` in the data. In assistance chrome, say `Pick 18` on the row that is your round-2 turn. Flat-table mode can keep Rank.
+
+### What not to do with slot
+
+- Do not grey out names above your pick as "likely gone" unless you are explicit that "gone" means "higher on *your* board." That is circular, but it is honest. Fake ADP is worse.
+- Do not re-z-score for early vs late. Slot is a lens, not a weight.
+- Do not auto-pick for other teams. No CPU, no ADP opponent model. M4 stays.
+
+If `draftSlot` is missing (old profiles), treat assistance as today's unlabeled buckets. Do not invent pick 1.
+
+## Detailed vs simplified board
+
+Today's table is one density: identity, every enabled cat, heat, composite under the name, optional round groups. Add a view flag next to the existing ones: `/draft?assist=1&view=simple`. Missing `view` is the detailed table.
+
+The toggle is not raw vs +/-. Those stay a text mode on the detailed grid. Simple vs detailed is **what the page is for**.
+
+**Simple = decide at your pick.** **Detailed = research the universe.**
+
+### Simplified view shows
+
+- Header: profile one-liner (`12-team snake · pick 7 · punt FG%`).
+- Stance chips (read or tap). No intensity sliders.
+- If assistance is on: round sections, but each round is short.
+  - With a slot: your-pick row plus two names before and after, or only the your-team strip plus the current round window.
+  - Without a slot: top 3 in each round, not all 12.
+- Each row: rank or pick number, name, pos. No team column.
+- Instead of nine heat cells: two or three **fit marks** from the quiz. Examples: `STL +1.4`, `BLK +0.9`, `FG% ignored`. Use the same signed score as +/-. Need cats first. Punted cats as muted "ignored," not a red cell.
+- Optional one-line under the name: strongest Need cat, or "fits punt FG%."
+- No full cat grid, no heat legend, no Edit profile dump. A "Full table" control is enough.
+
+Landing from the quiz (`?assist=1`) can default to simple so the first board feels like a draft sheet, not a spreadsheet.
+
+### Detailed view shows
+
+- What ships today, plus the stance bar from [Put the profile in the chrome](#1-put-the-profile-in-the-chrome).
+- All enabled-cat columns, league-z or `teamNeed` heat, raw vs +/-.
+- Full round buckets (league-size rows) when assistance is on. Your-pick row still marked if `draftSlot` is set.
+- Search-by-name. Composite under the name.
+- Intensity and custom cats behind Edit.
+
+### How they relate
+
+| | Simplified | Detailed |
+| --- | --- | --- |
+| Job | Who is on the clock at my pick | Why this order, every cat |
+| Rows | Window or your-team strip | Full universe / full round |
+| Cats | 2–3 fit marks | Every enabled cat + heat |
+| Slot | Primary | Marker on a full grid |
+| Default | After onboard, and on a phone | Assist off, or user toggle |
+
+Keep one `PlayerTable`. Simple is fewer columns and fewer rows, not a second widget kit. URL owns the flag, same as `assist` and `values`.
+
+## Archetype profiles
+
+The current stocks/points step only marks one or two cats Need, then still asks every stance and intensity. To skip those screens, an archetype must write a **full stance map** (and skip intensity), then jump to league basics and a review that already looks like a board.
+
+Show 5–6 named builds plus **Custom**. Custom keeps today's stances + optional intensity. A named build sets stances, sets `includeIntensity: false`, and skips those steps.
+
+Store an optional `archetypeId` on `DraftProfile` so the board chrome can say "Punt FG%" after restore. Inferring from chips is brittle (two builds can share a punt).
+
+### Recommended set
+
+Keep the list short. These are the 9-cat builds people actually draft. Need = 1.5, omitted cats stay Neutral, punt = 0. Do not also crank intensity; the skip is the point.
+
+| Id | Label | Need | Punt | Who it is for |
+| --- | --- | --- | --- | --- |
+| `balanced` | Balanced | — | — | Default board. Skip stances because Neutral is the answer. |
+| `puntFg` | Punt FG% | REB, BLK, FT% | FG% | Bigs who miss inside. Classic punt. |
+| `puntFt` | Punt FT% | FG%, REB, BLK | FT% | Centers who cannot shoot free throws. |
+| `guards` | Guards | PTS, AST, 3PM, FT% | BLK | Perimeter build. REB stays Neutral so it is not a double punt. |
+| `stocks` | Stocks | STL, BLK | PTS | Defensive specialists. Optional later: also punt FG%. Start with PTS only so the card stays one idea. |
+| `puntAst` | Punt AST | PTS, REB, BLK, FG% | AST | Non-playmakers. Interior counting stats. |
+
+**Custom** is not a seventh chip with a fake map. It means "ask me Need / Neutral / Punt."
+
+8-cat: drop TOV from every map. Do not punt a cat that is not enabled. If someone picked custom cats, either hide named builds that punt a disabled cat, or apply Need/Punt only on enabled keys.
+
+### Quiz flow with skip
+
+1. Categories (9-cat / 8-cat / custom).
+2. Archetype gallery. Helper line on each card: `Need REB, BLK, FT% · Punt FG%`.
+3. If a named build: league basics (size, rounds, type, **slot**), then review with top-N.
+4. If Custom: stances, optional intensity, league basics, review.
+
+Review always allows "Edit stances" so a punt-FG% user can still mark AST Neutral vs Punt without retaking the whole quiz. The gallery is a fast path, not a lock.
+
+Do not add a second gallery later (no Tinder stack). If a build is wrong, change it on the board stance bar.
+
+### What this replaces
+
+Drop the one-pair stocks/points step. `stocks` in the table above is that idea with a real punt, so it can skip the rest. Balanced is how a first-time user reaches a board in three screens (cats, balanced, league).
+
 ## Recommended sequence
 
 Work against the PR #4 branch (or `main` after it merges). Three thin passes beat one redesign.
 
 1. **Story and entry.** Home / About / Scoring copy. Returning-user fork. Board in nav when a profile exists. Header language on `/draft`.
-2. **Quiz payoff.** Reorder `STEPS` toward CAT-first. Compact league screen. Live top-N (or movers) on review. Intensity visually skippable.
-3. **Board as quiz output.** Stance bar in chrome. `teamNeed` heat. Density/mobile pass on `PlayerTable`.
+2. **Quiz payoff.** Categories, then archetype gallery with skip. Compact league screen including slot. Live top-N on review. Custom path still has stances + optional intensity.
+3. **Board as quiz output.** Stance bar. `view=simple` vs detailed. Your-pick marker (and optional your-team strip). `teamNeed` heat on the detailed grid.
 
-Pass 1 is copy and routing. Pass 2 is `/onboard` plus a small rank preview. Pass 3 is `/draft` plus `app/core` highlight. Ranker formulas stay untouched throughout.
+Pass 1 is copy and routing. Pass 2 is `/onboard` plus a small schema add (`draftSlot`, `archetypeId`). Pass 3 is `/draft` plus highlight. Ranker formulas stay untouched throughout. Slot does not feed `POST /rank`.
 
 ## Out of scope for this direction
 
 - Accounts, Yahoo, live NBA fetch, auction.
 - CPU opponents, ADP, replacement-level, positional scarcity.
-- Per-question routes, extra archetype pairs, Tinder for every screen.
+- Mark taken / pick-by-pick session. Slot highlight is not that.
+- Per-question routes, Tinder for every screen, a second archetype gallery.
 - Column sort, dark mode, second typeface, saturated gradients.
 - Prerendering `/draft`.
 
@@ -213,11 +332,12 @@ A stranger should be able to say what this site is after the home screen: a CAT 
 
 Checks:
 
-1. First run: a CAT question appears before league size. Review shows names, not only a recap list. Finish still lands on `/draft?assist=1`.
+1. First run: categories then an archetype. A named build skips stances. Review shows names. Finish lands on `/draft?assist=1` (simple view is allowed).
 2. Returning run: Home offers the board without retaking seven steps. Stances are visible on `/draft` without opening Edit profile.
-3. Changing Need / Punt on the board moves order and, once `teamNeed` ships, heat. Refresh keeps the profile. Assist and +/- still follow the URL.
-4. Scoring/About still explain math. They no longer say the table is the product.
-5. Phone: quiz chips and the stance bar work in one column. The table still scrolls cats horizontally.
+3. Changing Need / Punt on the board moves order and, once `teamNeed` ships, heat. Refresh keeps the profile. Assist, +/- , and view still follow the URL. Slot stays on the profile.
+4. Pick 7 in a 12-team snake marks overall 7 and 18, not "rank 7 in every round."
+5. Scoring/About still explain math. They no longer say the table is the product.
+6. Phone: simple view is usable without horizontal cat scroll. Detailed still scrolls cats.
 
 ## Reference
 
