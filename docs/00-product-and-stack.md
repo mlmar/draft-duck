@@ -18,7 +18,7 @@ No accounts. Quiz + profile live in `localStorage`. Analysis is **pure math** wi
 ## In scope for this document
 
 - Locked stack and package layout
-- Astro static pages vs React islands
+- TanStack Start SPA plus selective prerender
 - Fastify as the only ranking HTTP surface
 - Shared Zod schemas in `app/core`
 - Explicit non-goals
@@ -33,29 +33,30 @@ No accounts. Quiz + profile live in `localStorage`. Analysis is **pure math** wi
 
 All TypeScript. No Python, no Next.js, no database in v1.
 
-### `app/client` — Astro + React islands
+### `app/client` — TanStack Start (SPA + selective SSG)
 
-Same pattern as a static Astro shell with `@astrojs/react`:
+Client-side Start app. Fastify still owns ranking HTTP. Do not add Start server functions for `/rank`.
 
-- **`output: 'static'`.** Zero-JS pages for marketing / explainers.
-- **File routes** in `src/pages/*.astro`. Astro owns navigation. Do not add TanStack Router or a second Vite SPA under `/app`.
-- **React 19 islands** for the app:
-    - `/onboard` — quiz (`client:only="react"`)
-    - `/draft` — draft assistant
+- **SPA mode.** The app hydrates on the client. `/draft` is not prerendered: it needs `localStorage` and `POST /rank`.
+- **Prerender only the public/entry pages:** `/`, `/about`, `/how-it-works`, `/onboard`. Do not auto-discover or crawl every file route (home links to `/draft`).
+- **File routes** in `src/routes/*.tsx`. TanStack Router owns navigation.
 - **Keep:** TanStack Query (API calls), Zustand (`localStorage` persist), Tailwind.
-- Quiz/draft may be multi-step React trees _inside_ those two pages. Do not create a new Astro page per quiz question.
+- Quiz/draft stay multi-step React trees inside `/onboard` and `/draft`. Do not create a route per quiz question.
 
-Suggested static pages for M1+:
+Routes:
 
-- `/` — home / start onboarding
-- `/how-it-works` — ranking explained in plain language (no JS)
+- `/` — home / start onboarding (prerender)
+- `/about` — what the app is (prerender)
+- `/how-it-works` — ranking explained in plain language (prerender)
+- `/onboard` — quiz entry (prerender the first step; persist hydrates after mount)
+- `/draft` — ranked board (SPA only)
 - `/cats` — CAT glossary (optional; can wait until copy exists)
 
 ### `app/api` — Fastify
 
-Thin HTTP over `app/core`. Zod-validate request bodies in handlers (or a Fastify Zod serializer). Enable CORS for the Astro origin in dev.
+Thin HTTP over `app/core`. Zod-validate request bodies in handlers (or a Fastify Zod serializer). Enable CORS for the client origin in dev.
 
-Ranking is **not** done in Astro server routes or adapters. Fastify stays the API so a later NBA fetch does not live in the static site. Astro SSR / `@astrojs/node` is out of v1.
+Ranking is **not** done in Start server functions or server routes. Fastify stays the API so a later NBA fetch does not live in the static site. Start SSR as a ranking host is out of v1.
 
 ### `app/core`
 
@@ -76,7 +77,7 @@ Auth, DB, Docker, AI copy, live NBA fetch, Python, Yahoo, auction drafts.
 ```text
 waiver-warrior/
   app/
-    client/              # Astro
+    client/              # TanStack Start
     api/                 # Fastify
     core/                # ingest + ranker + Zod
       config/
@@ -120,7 +121,7 @@ All JSON. Prefix `/api` is optional; pick one in M1 and keep it.
 ## Acceptance checks
 
 - A new contributor can name the three packages and which process owns ranking HTTP.
-- Static vs island split is unambiguous: `.astro` for content, React only on `/onboard` and `/draft`.
+- Prerender vs SPA split is unambiguous: `/`, `/about`, `/how-it-works`, `/onboard` are static HTML; `/draft` is client-only.
 - `DraftProfile` has no vendor ids.
 
 ## Suggested build order

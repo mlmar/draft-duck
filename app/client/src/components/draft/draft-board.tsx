@@ -12,6 +12,7 @@ import {
     partitionByRound
 } from '@waiver-warrior/core';
 import { QueryClient, QueryClientProvider, keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
 const INTENSITY_DEBOUNCE_MS = 200;
@@ -27,26 +28,33 @@ function createQueryClient() {
     });
 }
 
-export function DraftBoard() {
+type DraftBoardProps = {
+    assist: boolean;
+    valueMode: CatValueMode;
+    onAssistChange: (on: boolean) => void;
+    onValueModeChange: (mode: CatValueMode) => void;
+};
+
+export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChange }: DraftBoardProps) {
     const [queryClient] = useState(createQueryClient);
     return (
         <QueryClientProvider client={queryClient}>
-            <DraftBoardInner />
+            <DraftBoardInner
+                assist={assist}
+                valueMode={valueMode}
+                onAssistChange={onAssistChange}
+                onValueModeChange={onValueModeChange}
+            />
         </QueryClientProvider>
     );
 }
 
-function DraftBoardInner() {
+function DraftBoardInner({ assist, valueMode, onAssistChange, onValueModeChange }: DraftBoardProps) {
+    const navigate = useNavigate();
     const profile = useDraftProfileStore((state) => state.profile);
     const setProfile = useDraftProfileStore((state) => state.setProfile);
     const [draft, setDraft] = useState<QuizDraft | null>(null);
     const [hydrated, setHydrated] = useState(false);
-    // Onboard hands off with ?assist=1. Direct /draft visits stay a flat table.
-    const [assistance, setAssistance] = useState(
-        () => new URLSearchParams(window.location.search).get('assist') === '1'
-    );
-    // Raw vs +/- is the same signed score as the heat. Not persisted, same as assistance.
-    const [valueMode, setValueMode] = useState<CatValueMode>('raw');
 
     function persistDraft(next: QuizDraft) {
         if (!canContinue('league', next) || !canContinue('preset', next)) return;
@@ -61,7 +69,7 @@ function DraftBoardInner() {
         const applySaved = () => {
             const saved = useDraftProfileStore.getState().profile;
             if (!saved) {
-                window.location.replace('/onboard');
+                void navigate({ to: '/onboard', replace: true });
                 return;
             }
             setDraft(profileToQuizDraft(saved));
@@ -71,7 +79,7 @@ function DraftBoardInner() {
         const unsub = useDraftProfileStore.persist.onFinishHydration(applySaved);
         if (useDraftProfileStore.persist.hasHydrated()) applySaved();
         return unsub;
-    }, []);
+    }, [navigate]);
 
     const rankQuery = useQuery({
         queryKey: ['rank', profile],
@@ -100,7 +108,7 @@ function DraftBoardInner() {
     const rankError = rankQuery.error instanceof Error ? rankQuery.error.message : null;
     const highlight = catHighlightStrategy(CAT_HIGHLIGHT_MODE);
     // One table so every round shares one horizontal scroll. Separate tables drifted columns.
-    const groups = assistance
+    const groups = assist
         ? sections.map((section) => ({
               id: `round-${section.round}`,
               label: `Round ${section.round} · ${section.players.length} ${
@@ -122,11 +130,11 @@ function DraftBoardInner() {
                 <div className='flex flex-wrap items-center gap-3'>
                     <Button
                         type='button'
-                        variant={assistance ? 'default' : 'outline'}
-                        aria-pressed={assistance}
-                        onClick={() => setAssistance((on) => !on)}
+                        variant={assist ? 'default' : 'outline'}
+                        aria-pressed={assist}
+                        onClick={() => onAssistChange(!assist)}
                     >
-                        {assistance ? 'Draft assistance on' : 'Draft assistance off'}
+                        {assist ? 'Draft assistance on' : 'Draft assistance off'}
                     </Button>
                     {/* w-32 matches Raw stats so swapping to +/- does not shrink the control. */}
                     <Button
@@ -134,7 +142,7 @@ function DraftBoardInner() {
                         className='w-32'
                         variant={valueMode === 'plusMinus' ? 'default' : 'outline'}
                         aria-pressed={valueMode === 'plusMinus'}
-                        onClick={() => setValueMode((mode) => (mode === 'raw' ? 'plusMinus' : 'raw'))}
+                        onClick={() => onValueModeChange(valueMode === 'raw' ? 'plusMinus' : 'raw')}
                     >
                         {valueMode === 'plusMinus' ? '+/-' : 'Raw stats'}
                     </Button>

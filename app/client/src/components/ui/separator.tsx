@@ -1,4 +1,4 @@
-// Decorative divider. No client directive so Astro can SSR it with zero JS.
+// Decorative divider. Kept as a presentational primitive so pages do not invent a border.
 import { cn } from 'cn';
 import { Separator as SeparatorPrimitive } from 'radix-ui';
 import * as React from 'react';

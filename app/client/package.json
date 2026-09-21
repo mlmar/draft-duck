@@ -4,16 +4,16 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "astro dev --host",
-        "build": "astro build",
-        "preview": "astro preview"
+        "dev": "vite dev --host",
+        "build": "vite build",
+        "preview": "vite preview --host"
     },
     "dependencies": {
-        "@astrojs/react": "^4.4.0",
         "@fontsource-variable/public-sans": "^5.3.0",
         "@tanstack/react-query": "^5.103.1",
+        "@tanstack/react-router": "^1.170.38",
+        "@tanstack/react-start": "^1.168.56",
         "@waiver-warrior/core": "*",
-        "astro": "^5.13.8",
         "class-variance-authority": "^0.7.1",
         "cn": "^0.3.0",
         "lucide-react": "^1.46.0",
@@ -28,7 +28,9 @@
         "@tailwindcss/vite": "^4.1.13",
         "@types/react": "^19.1.13",
         "@types/react-dom": "^19.1.9",
+        "@vitejs/plugin-react": "^5.2.0",
         "tailwindcss": "^4.1.13",
-        "typescript": "^5.9.2"
+        "typescript": "^5.9.2",
+        "vite": "^7.1.0"
     }
 }

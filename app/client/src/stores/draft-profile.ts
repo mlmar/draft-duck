@@ -12,9 +12,14 @@ type DraftProfileState = {
     clearProfile: () => void;
 };
 
+function isBrowser() {
+    return typeof window !== 'undefined';
+}
+
 // Persist the profile JSON itself, not Zustand's wrapper, so the key is easy to inspect.
 const profileStorage: StateStorage = {
     getItem(name) {
+        if (!isBrowser()) return null;
         const raw = localStorage.getItem(name);
         if (raw == null) return null;
         try {
@@ -30,6 +35,7 @@ const profileStorage: StateStorage = {
         }
     },
     setItem(name, value) {
+        if (!isBrowser()) return;
         const wrapped = JSON.parse(value) as { state?: { profile?: unknown } };
         // Default store state is null. Do not wipe a saved profile during that write.
         if (wrapped.state?.profile == null) return;
@@ -41,6 +47,7 @@ const profileStorage: StateStorage = {
         localStorage.setItem(name, JSON.stringify(parsed.data));
     },
     removeItem(name) {
+        if (!isBrowser()) return;
         localStorage.removeItem(name);
     }
 };
@@ -52,13 +59,15 @@ export const useDraftProfileStore = create<DraftProfileState>()(
             setProfile: (profile) => set({ profile }),
             clearProfile: () => {
                 set({ profile: null });
-                localStorage.removeItem(STORAGE_KEY);
+                if (isBrowser()) localStorage.removeItem(STORAGE_KEY);
             }
         }),
         {
             name: STORAGE_KEY,
             storage: createJSONStorage(() => profileStorage),
-            partialize: (state) => ({ profile: state.profile })
+            partialize: (state) => ({ profile: state.profile }),
+            // Prerender of /onboard must not touch localStorage.
+            skipHydration: !isBrowser()
         }
     )
 );
