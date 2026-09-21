@@ -128,8 +128,10 @@ function DraftBoardInner() {
                     >
                         {assistance ? 'Draft assistance on' : 'Draft assistance off'}
                     </Button>
+                    {/* w-32 matches Raw stats so swapping to +/- does not shrink the control. */}
                     <Button
                         type='button'
+                        className='w-32'
                         variant={valueMode === 'plusMinus' ? 'default' : 'outline'}
                         aria-pressed={valueMode === 'plusMinus'}
                         onClick={() => setValueMode((mode) => (mode === 'raw' ? 'plusMinus' : 'raw'))}
