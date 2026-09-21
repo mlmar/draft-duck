@@ -26,15 +26,15 @@ A first-time user (no account) should be able to:
 
 ## How to read these docs
 
-| Doc                                                        | When to open it                                    |
-| ---------------------------------------------------------- | -------------------------------------------------- |
-| [00-product-and-stack.md](00-product-and-stack.md)         | Stack, repo layout, API sketch, non-goals          |
-| [M1-foundation.md](M1-foundation.md)                       | Workspaces, Astro home, Fastify health, CSV ingest |
-| [M2-ranking-engine.md](M2-ranking-engine.md)               | Z-score formulas, weights, Vitest goldens          |
-| [M3-onboarding.md](M3-onboarding.md)                       | Quiz island and `DraftProfile`                     |
-| [M4-draft-assistant.md](M4-draft-assistant.md)             | Ranked table and optional round sections           |
-| [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md) | M4 implementation plan (current tree)              |
-| [M5-extensibility.md](M5-extensibility.md)                 | NBA adapter, suggestion hook, Yahoo seams          |
+| Doc                                                        | When to open it                                     |
+| ---------------------------------------------------------- | --------------------------------------------------- |
+| [00-product-and-stack.md](00-product-and-stack.md)         | Stack, repo layout, API sketch, non-goals           |
+| [M1-foundation.md](M1-foundation.md)                       | Workspaces, client home, Fastify health, CSV ingest |
+| [M2-ranking-engine.md](M2-ranking-engine.md)               | Z-score formulas, weights, Vitest goldens           |
+| [M3-onboarding.md](M3-onboarding.md)                       | Quiz and `DraftProfile`                             |
+| [M4-draft-assistant.md](M4-draft-assistant.md)             | Ranked table and optional round sections            |
+| [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md) | M4 implementation plan (current tree)               |
+| [M5-extensibility.md](M5-extensibility.md)                 | NBA adapter, suggestion hook, Yahoo seams           |
 
 Each milestone has **goal, in scope, out of scope, stack/touchpoints, acceptance checks, suggested build order**. M1–M4 are sequential. M5 is “do not paint into a corner” plus later optional work.
 
@@ -42,10 +42,8 @@ Product specs stay in `docs/M1`–`docs/M5`. Implementation plans live under [`d
 
 ## Stack (one line)
 
-Astro static site + React islands (`app/client`) → Fastify (`app/api`) → shared TypeScript ranker (`app/core`). Details in [00-product-and-stack.md](00-product-and-stack.md).
+TanStack Start SPA with selective prerender (`app/client`) → Fastify (`app/api`) → shared TypeScript ranker (`app/core`). Details in [00-product-and-stack.md](00-product-and-stack.md).
 
 ## Explicitly later (not this app yet)
 
-Yahoo OAuth, upload current team, live league standings, injury/news, auction drafts, AI writeups, Astro SSR. Recorded only as seams in [M5-extensibility.md](M5-extensibility.md).
-
-Also later, not blocking M4: TanStack Start as a middle ground between this Astro SSG shell and a full SPA. Revisit the design system (shadcn table chrome, density) in that pass.
+Yahoo OAuth, upload current team, live league standings, injury/news, auction drafts, AI writeups. Recorded only as seams in [M5-extensibility.md](M5-extensibility.md).

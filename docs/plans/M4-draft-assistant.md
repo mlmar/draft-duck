@@ -15,7 +15,7 @@ M3 is Done. No Yahoo, auth, or AI. M5 stays seams only. Ranking HTTP stays on Fa
 - [`rank()`](../../app/core/src/ranker.ts) via existing `POST /rank`
 - [`useDraftProfileStore`](../../app/client/src/stores/draft-profile.ts)
 - Quiz field components (`LeagueStep`, `PresetStep`, `StancesStep`, `ChoiceRow`, intensity sliders) on a single settings panel
-- `client:only="react"` so persist does not fight SSR
+- Persist hydrates after mount so it does not fight prerender of other pages
 
 ## Core
 

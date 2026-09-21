@@ -17,7 +17,7 @@ Treat this as a checklist while building M1–M4, then a later optional slice fo
 
 - Yahoo OAuth, league settings import, current roster upload
 - Calling `nba_api` or any live stats HTTP
-- Astro SSR / `@astrojs/node`
+- Ranking HTTP on TanStack Start server functions or adapters
 - AI writeups, Gemini, or LLM rank explanations
 - Injury / news feeds
 - Auction drafts
@@ -33,7 +33,7 @@ Treat this as a checklist while building M1–M4, then a later optional slice fo
 | `DraftProfile`        | League size, cats, stances only. **No** `yahooLeagueId`, `yahooTeamId`, tokens.                            |
 | `playerId`            | BR id string. Yahoo player keys wait for a mapping table later.                                            |
 | `SuggestionHook`      | Runs after sort. May append display-only fields; must not change `composite` or `rank` in v1.              |
-| Fastify vs Astro      | Live fetch stays on Fastify. Do not add ranking endpoints as Astro server routes.                          |
+| Fastify vs Start      | Live fetch stays on Fastify. Do not add ranking endpoints as Start server functions.                       |
 
 ### Provider bootstrap
 

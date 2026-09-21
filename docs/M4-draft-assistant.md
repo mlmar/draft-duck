@@ -6,7 +6,7 @@ On `/draft`, the saved `DraftProfile` ranks the universe into a **stats table**.
 
 ## In scope
 
-- Astro page `/draft` with one React island. Today that is `client:only="react"` so persist does not fight SSR. That directive is a current choice, not a lock.
+- `/draft` route. Persist hydrates after mount so it does not fight prerender of other pages.
 - Default view: one table sorted by `rank` (name, team, pos, enabled-cat stats)
 - Profile editor on `/draft` (league size, rounds, draft type, cats, stances, intensity). Valid edits persist to `ww.draftProfile` and `POST /rank` again
 - Draft assistance toggle (off by default, not persisted): `draftRounds` subsections of width `leagueSize`; last round is the leftover tail
@@ -26,12 +26,12 @@ On `/draft`, the saved `DraftProfile` ranks the universe into a **stats table**.
 
 ## Stack / touchpoints
 
-| Piece          | Where                            |
-| -------------- | -------------------------------- |
-| `/draft.astro` | `app/client`                     |
-| Board island   | React + existing profile Zustand |
-| Rank fetch     | Fastify `POST /rank`             |
-| Round buckets  | `app/core` `partitionByRound`    |
+| Piece         | Where                            |
+| ------------- | -------------------------------- |
+| `/draft`      | `app/client`                     |
+| Board         | React + existing profile Zustand |
+| Rank fetch    | Fastify `POST /rank`             |
+| Round buckets | `app/core` `partitionByRound`    |
 
 ### Round buckets
 
@@ -59,6 +59,6 @@ First-time quiz stays on `/onboard`. After that, `/draft` edits the same `DraftP
 ## Suggested build order
 
 1. `partitionByRound` in `app/core` + Vitest.
-2. `/draft` island: table from `POST /rank`, redirect if empty profile.
+2. `/draft` board: table from `POST /rank`, redirect if empty profile.
 3. Settings panel + assistance toggle.
 4. Spec, README, home copy.

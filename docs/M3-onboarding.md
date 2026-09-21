@@ -6,8 +6,7 @@ A first-time user completes a short quiz on `/onboard`, persists a `DraftProfile
 
 ## In scope
 
-- Astro page `/onboard` with one React island (`client:only="react"`)
-- Multi-step quiz **inside** that island (not a new Astro route per question)
+- `/onboard` route with one quiz tree (not a new route per question)
 - Default flow below (revisable in copy, not in schema)
 - Zustand store + `localStorage` persist for `DraftProfile`
 - TanStack Query `POST /rank` after review
@@ -25,17 +24,17 @@ A first-time user completes a short quiz on `/onboard`, persists a `DraftProfile
 
 ## Stack / touchpoints
 
-| Piece            | Where                                   |
-| ---------------- | --------------------------------------- |
-| `/onboard.astro` | `app/client`                            |
-| Quiz island      | `app/client` React component(s)         |
-| Profile store    | Zustand persist                         |
-| Rank fetch       | TanStack Query → Fastify `POST /rank`   |
-| Schema           | `app/core` `DraftProfile` Zod (from M2) |
+| Piece         | Where                                   |
+| ------------- | --------------------------------------- |
+| `/onboard`    | `app/client`                            |
+| Quiz          | `app/client` React component(s)         |
+| Profile store | Zustand persist                         |
+| Rank fetch    | TanStack Query → Fastify `POST /rank`   |
+| Schema        | `app/core` `DraftProfile` Zod (from M2) |
 
 ### Default quiz flow
 
-Keep it short. One island, step state in React.
+Keep it short. One quiz tree, step state in React.
 
 1. **League:** size `8 | 10 | 12 | 14`; draft rounds (default 13, editable).
 2. **Draft type:** snake or linear.
@@ -64,8 +63,8 @@ After review, show a compact top-10 from `/rank` so the user sees the quiz matte
 - Punt chips produce `stances[c] = 'punt'`; `/rank` response composites ignore that cat (weight 0).
 - Refresh on `/onboard` restores the profile.
 - Skip intensity and skip swipe still produce a valid profile.
-- “Start” on `/` reaches `/onboard` without a client router.
-- `/onboard` HTML shell is Astro; interactivity is a React island (`client:only="react"`). Marketing pages stay static.
+- “Start” on `/` reaches `/onboard`.
+- `/onboard` is a Start route. Interactivity is the quiz tree. Marketing pages stay prerendered.
 
 ## Suggested build order
 
