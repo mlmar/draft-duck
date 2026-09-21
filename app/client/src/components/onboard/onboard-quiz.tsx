@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import { canContinue, DEFAULT_QUIZ_DRAFT, profileToQuizDraft, quizDraftToProfile, type QuizDraft } from '@/lib/quiz';
 import { useDraftProfileStore } from '@/stores/draft-profile';
 import { draftProfileSchema } from '@waiver-warrior/core';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
-// React island for /onboard. Owns the in-progress draft, which STEPS screen is showing, and persist hydrate.
+// Quiz for /onboard. Owns the in-progress draft, which STEPS screen is showing, and persist hydrate.
 export function OnboardQuiz() {
+    const navigate = useNavigate();
     const setProfile = useDraftProfileStore((state) => state.setProfile);
     const [draft, setDraft] = useState<QuizDraft>(DEFAULT_QUIZ_DRAFT);
     const [stepIndex, setStepIndex] = useState(0);
@@ -51,7 +53,7 @@ export function OnboardQuiz() {
             }
             setParseError(null);
             setProfile(parsed.data);
-            window.location.assign('/draft?assist=1');
+            void navigate({ to: '/draft', search: { assist: '1' } });
             return;
         }
 
@@ -86,28 +88,35 @@ export function OnboardQuiz() {
         ) : null;
 
     return (
-        <QuizShell
-            title={step.title}
-            description={step.description}
-            stepIndex={stepIndex}
-            stepCount={STEPS.length}
-            optional={step.optional}
-            onBack={isFirst ? undefined : handleBack}
-            onContinue={handleContinue}
-            onSkip={step.optional ? handleSkip : undefined}
-            skipLabel={step.skipLabel}
-            continueLabel={step.continueLabel}
-            continueDisabled={!canContinue(step.id, draft)}
-            banner={restoreBanner}
-        >
-            <StepComponent
-                value={draft}
-                onChange={(next) => {
-                    setDraft(next);
-                    setParseError(null);
-                }}
-                parseError={parseError}
-            />
-        </QuizShell>
+        <>
+            <p className='mb-4'>
+                <Link to='/' className='text-muted-foreground hover:text-foreground'>
+                    Waiver Warrior
+                </Link>
+            </p>
+            <QuizShell
+                title={step.title}
+                description={step.description}
+                stepIndex={stepIndex}
+                stepCount={STEPS.length}
+                optional={step.optional}
+                onBack={isFirst ? undefined : handleBack}
+                onContinue={handleContinue}
+                onSkip={step.optional ? handleSkip : undefined}
+                skipLabel={step.skipLabel}
+                continueLabel={step.continueLabel}
+                continueDisabled={!canContinue(step.id, draft)}
+                banner={restoreBanner}
+            >
+                <StepComponent
+                    value={draft}
+                    onChange={(next) => {
+                        setDraft(next);
+                        setParseError(null);
+                    }}
+                    parseError={parseError}
+                />
+            </QuizShell>
+        </>
     );
 }

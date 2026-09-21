@@ -49,7 +49,7 @@ function keepEnabled<T>(record: Partial<Record<CatKey, T>>, enabledCats: CatKey[
     return next;
 }
 
-function sameCats(left: CatKey[], right: CatKey[]): boolean {
+function sameCats(left: readonly CatKey[], right: readonly CatKey[]): boolean {
     if (left.length !== right.length) return false;
     const rightSet = new Set(right);
     return left.every((cat) => rightSet.has(cat));

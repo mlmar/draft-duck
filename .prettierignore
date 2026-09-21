@@ -1,6 +1,10 @@
 node_modules
 dist
-.astro
+.output
+.nitro
+.tanstack
+.vinxi
 coverage
 package-lock.json
 data
+app/client/src/routeTree.gen.ts

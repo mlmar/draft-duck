@@ -12,7 +12,7 @@ export function useDebounce<Args extends unknown[]>(
 ): Debounced<Args> {
     const fnRef = useRef(fn);
     fnRef.current = fn;
-    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const timerRef = useRef<number | null>(null);
 
     const cancel = useCallback(() => {
         if (timerRef.current === null) return;
