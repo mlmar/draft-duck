@@ -53,6 +53,8 @@ function ranked(partial: Partial<RankedPlayer> & Pick<RankedPlayer, 'playerId'>)
         z: {},
         composite: 0,
         rank: 1,
+        fitRank: 1,
+        consensusRank: 1,
         ...partial
     };
 }
