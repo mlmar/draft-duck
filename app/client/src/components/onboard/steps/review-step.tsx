@@ -1,46 +1,79 @@
+import { rankPlayers } from '@/lib/api';
+import { quizDraftToProfile } from '@/lib/quiz';
+import {
+    draftProfileSchema,
+    fitMarks,
+    overallPicksForDraft,
+    type DraftProfile,
+    type RankedPlayer
+} from '@waiver-warrior/core';
+import { useQuery } from '@tanstack/react-query';
 import type { QuizStepProps } from '@/components/onboard/step-types';
-import { CAT_LABELS } from '@waiver-warrior/core';
+import { StancesStep } from '@/components/onboard/steps/stances-step';
 
-// Recap of the draft. Rank my board persists and leaves for /draft.
+// Slot preview, not a recap list. Stance edits re-rank the names at each pick.
+export function ReviewStep({ value, onChange, parseError }: QuizStepProps) {
+    const parsed = draftProfileSchema.safeParse(quizDraftToProfile(value));
+    const profile = parsed.success ? parsed.data : null;
 
-function stanceLabel(stance: string | undefined): string {
-    if (stance === 'need') return 'Need';
-    if (stance === 'punt') return 'Punt';
-    return 'Neutral';
-}
+    const previewQuery = useQuery({
+        queryKey: ['rank-preview', profile],
+        queryFn: () => rankPlayers(profile!),
+        enabled: profile !== null
+    });
 
-export function ReviewStep({ value, parseError }: QuizStepProps) {
+    const players = previewQuery.data ?? [];
+    const rankError = previewQuery.error instanceof Error ? previewQuery.error.message : null;
+    const overalls = profile ? overallPicksForDraft(profile) : [];
+    const slotPicks = overalls.flatMap((overall, index) => {
+        const player = players[overall - 1];
+        if (!player) return [];
+        return [{ overall, round: index + 1, player }];
+    });
+    const hasSlot = Boolean(profile?.draftSlot);
+
     return (
         <div className='grid gap-8'>
-            <dl className='grid gap-4'>
-                <div className='grid gap-1'>
-                    <dt className='text-muted-foreground'>League</dt>
-                    <dd>
-                        {value.leagueSize} teams, {value.draftRounds} rounds, {value.draftType}
-                    </dd>
-                </div>
-                <div className='grid gap-1'>
-                    <dt className='text-muted-foreground'>Categories</dt>
-                    <dd>{value.enabledCats.map((cat) => CAT_LABELS[cat]).join(', ')}</dd>
-                </div>
-                <div className='grid gap-1'>
-                    <dt className='text-muted-foreground'>Stances</dt>
-                    <dd>
-                        <ul className='mt-1 grid gap-1'>
-                            {value.enabledCats.map((cat) => (
-                                <li key={cat}>
-                                    {CAT_LABELS[cat]}: {stanceLabel(value.stances[cat])}
-                                    {value.includeIntensity && (value.stances[cat] ?? 'neutral') !== 'punt'
-                                        ? ` · intensity ${(value.intensity[cat] ?? 1).toFixed(1)}`
-                                        : ''}
-                                </li>
-                            ))}
-                        </ul>
-                    </dd>
-                </div>
-            </dl>
-
+            {previewQuery.isFetching ? <p className='mb-0'>Ranking a preview…</p> : null}
+            {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
             {parseError ? <p className='mb-0 text-destructive'>{parseError}</p> : null}
+
+            {!hasSlot && !previewQuery.isFetching ? (
+                <p className='mb-0 text-muted-foreground'>
+                    Set your pick on the league screen to see names at each slot.
+                </p>
+            ) : null}
+
+            {slotPicks.length > 0 ? (
+                <ol className='grid gap-3'>
+                    {slotPicks.map(({ overall, round, player }) => (
+                        <li key={`${round}-${player.playerId}`} className='grid gap-0.5'>
+                            <p className='mb-0 text-sm text-muted-foreground'>
+                                Round {round} · Pick {overall}
+                            </p>
+                            <p className='mb-0'>
+                                <span className='font-medium'>{player.name}</span>
+                                <span className='text-muted-foreground'> · {player.pos}</span>
+                            </p>
+                            {profile ? <NeedCatsLine player={player} profile={profile} /> : null}
+                        </li>
+                    ))}
+                </ol>
+            ) : null}
+
+            <details className='rounded-lg border border-border bg-card px-4 py-3'>
+                <summary className='cursor-pointer font-medium'>Edit stances</summary>
+                <div className='mt-4'>
+                    <StancesStep value={value} onChange={onChange} />
+                </div>
+            </details>
         </div>
     );
+}
+
+function NeedCatsLine({ player, profile }: { player: RankedPlayer; profile: DraftProfile }) {
+    // Need cats this player posts. Hidden when the profile has none (Balanced).
+    const marks = fitMarks(player, profile).filter((mark) => !mark.muted);
+    if (marks.length === 0) return null;
+    return <p className='mb-0 text-sm text-muted-foreground'>{marks.map((mark) => mark.text).join(' · ')}</p>;
 }

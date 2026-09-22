@@ -1,6 +1,23 @@
 // Public surface for the core package. Apps import from here, not the files below.
-export type { CatKey, CatStance, DraftProfile, PlayerSeason, RankedPlayer } from './types.ts';
-export { CAT_KEYS, CAT_LABELS } from './types.ts';
+export type { ArchetypeId, CatKey, CatStance, DraftProfile, PlayerSeason, RankedPlayer } from './types.ts';
+export { ARCHETYPE_IDS, CAT_KEYS, CAT_LABELS } from './types.ts';
+export {
+    ARCHETYPE_LABELS,
+    NAMED_BUILD_IDS,
+    NAMED_BUILDS,
+    archetypeLabel,
+    isNamedBuildId,
+    isNamedBuildVisible,
+    namedBuildHelper,
+    profileHeadline,
+    restoreSummary,
+    stancesForArchetype
+} from './named-builds.ts';
+export type { NamedBuild, NamedBuildId } from './named-builds.ts';
+export { ordinal, overallPick, overallPicksForDraft } from './draft-slot.ts';
+export type { OverallPickInput } from './draft-slot.ts';
+export { fitMarks, needCatFit, needCats, puntCats, whyCopy } from './need-fit.ts';
+export type { FitMark } from './need-fit.ts';
 export type { PlayerStatsProvider } from './provider.ts';
 export { CsvProvider, DEFAULT_MIN_GAMES } from './csv-provider.ts';
 export type { CsvProviderOptions } from './csv-provider.ts';
@@ -23,7 +40,8 @@ export {
     catHighlightStrategy,
     formatSignedScore,
     heatFromScore,
-    leagueZHighlight
+    leagueZHighlight,
+    teamNeedHighlight
 } from './cat-highlight.ts';
 export type {
     CatHighlightInput,

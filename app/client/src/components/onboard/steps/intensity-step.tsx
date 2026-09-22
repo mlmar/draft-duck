@@ -1,32 +1,35 @@
-import { IntensitySlider } from '@/components/onboard/intensity-slider';
+import { INTENSITY_HINT, IntensitySlider } from '@/components/onboard/intensity-slider';
 import type { QuizStepProps } from '@/components/onboard/step-types';
 import { CAT_LABELS } from '@waiver-warrior/core';
 
-// Optional per-cat weights for enabled non-punt cats. Skip vs continue is decided in the shell.
+type IntensityStepProps = QuizStepProps & {
+    idPrefix?: string;
+};
 
-export function IntensityStep({ value, onChange }: QuizStepProps) {
-    const cats = value.enabledCats.filter((cat) => (value.stances[cat] ?? 'neutral') !== 'punt');
+// Every enabled cat. Punt sliders stay disabled so intensity is not written for them.
 
-    if (cats.length === 0) {
-        return <p className='mb-0'>Every enabled category is punted, so there is nothing to weight.</p>;
-    }
-
+export function IntensityStep({ value, onChange, idPrefix = 'intensity' }: IntensityStepProps) {
     return (
         <div className='grid gap-5'>
-            {cats.map((cat) => (
-                <IntensitySlider
-                    key={cat}
-                    id={`intensity-${cat}`}
-                    label={CAT_LABELS[cat]}
-                    value={value.intensity[cat] ?? 1}
-                    onChange={(intensity) =>
-                        onChange({
-                            ...value,
-                            intensity: { ...value.intensity, [cat]: intensity }
-                        })
-                    }
-                />
-            ))}
+            <p className='mb-0 text-muted-foreground'>{INTENSITY_HINT}</p>
+            {value.enabledCats.map((cat) => {
+                const punted = (value.stances[cat] ?? 'neutral') === 'punt';
+                return (
+                    <IntensitySlider
+                        key={cat}
+                        id={`${idPrefix}-${cat}`}
+                        label={CAT_LABELS[cat]}
+                        value={value.intensity[cat] ?? 1}
+                        disabled={punted}
+                        onChange={(intensity) =>
+                            onChange({
+                                ...value,
+                                intensity: { ...value.intensity, [cat]: intensity }
+                            })
+                        }
+                    />
+                );
+            })}
         </div>
     );
 }
