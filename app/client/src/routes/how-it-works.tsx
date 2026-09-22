@@ -1,4 +1,4 @@
-import { LinkButton } from '@/components/link-button';
+import { EntryCtas } from '@/components/entry-ctas';
 import { PageShell } from '@/components/page-shell';
 import { SiteNav } from '@/components/site-nav';
 import { createFileRoute } from '@tanstack/react-router';
@@ -23,7 +23,7 @@ function HowItWorksPage() {
             <h1>How the board is ranked</h1>
             <p>
                 Every player is scored against the same filtered 2025-26 per-game universe. The quiz does not invent
-                stats. It only changes how much each category counts.
+                stats. It only changes how much each category counts. The table is the result of those weights.
             </p>
 
             <h2>Z-scores, then weights</h2>
@@ -46,11 +46,10 @@ function HowItWorksPage() {
             <h2>Draft assistance</h2>
             <p className='mb-0'>
                 Assistance does not re-rank. It slices the same ordered list into round buckets of league size. The last
-                round holds everyone past a full roster. Snake versus linear does not change who sits in a bucket.
+                round holds everyone past a full roster. Snake versus linear does not change who sits in a bucket. Your
+                pick slot only marks which name in each round is yours.
             </p>
-            <p className='mt-8 mb-0'>
-                <LinkButton to='/onboard'>Start</LinkButton>
-            </p>
+            <EntryCtas />
             <SiteNav />
         </PageShell>
     );
