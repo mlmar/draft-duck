@@ -1,5 +1,5 @@
 {
-    "name": "@waiver-warrior/api",
+    "name": "@draft-duck/api",
     "version": "0.0.0",
     "private": true,
     "type": "module",
@@ -9,7 +9,7 @@
     },
     "dependencies": {
         "@fastify/cors": "^11.1.0",
-        "@waiver-warrior/core": "*",
+        "@draft-duck/core": "*",
         "fastify": "^5.6.1"
     },
     "devDependencies": {

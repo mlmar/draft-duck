@@ -15,7 +15,7 @@ import {
     overallPicksForDraft,
     partitionByRound,
     profileHeadline
-} from '@waiver-warrior/core';
+} from '@draft-duck/core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useMemo, useState } from 'react';
@@ -124,7 +124,7 @@ export function DraftBoard({
         <div className='grid gap-8'>
             <p className='mb-0'>
                 <Link to='/' className='text-muted-foreground hover:text-foreground'>
-                    Waiver Warrior
+                    Draft Duck
                 </Link>
             </p>
             <header className='grid gap-3'>

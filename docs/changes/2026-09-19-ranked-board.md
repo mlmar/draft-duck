@@ -7,7 +7,7 @@ Close M4. `/draft` is the primary ranked-stats table for the saved quiz. The use
 ## What did not change
 
 - Ranker formulas, operator JSON, and `POST /rank` request/response shape.
-- `/onboard` stepper and `ww.draftProfile` persist.
+- `/onboard` stepper and `dd.draftProfile` persist.
 - No accounts, no mark-taken session, no Yahoo fields, no `POST /draft/recommendations`.
 
 ## Tradeoffs
@@ -19,7 +19,7 @@ Close M4. `/draft` is the primary ranked-stats table for the saved quiz. The use
 
 ## High-level overview of the current implementation
 
-`/onboard` still writes `ww.draftProfile` and links to `/draft`. The draft island hydrates that profile, redirects to `/onboard` if it is missing, and `POST`s `/rank`. The table shows rank, name, team, pos, and enabled-cat stats. Edit profile is a `<details>` that reuses the quiz field components. Discrete chips persist immediately. Intensity sliders debounce 200ms. Draft assistance runs `partitionByRound` on the ranked list.
+`/onboard` still writes `dd.draftProfile` and links to `/draft`. The draft island hydrates that profile, redirects to `/onboard` if it is missing, and `POST`s `/rank`. The table shows rank, name, team, pos, and enabled-cat stats. Edit profile is a `<details>` that reuses the quiz field components. Discrete chips persist immediately. Intensity sliders debounce 200ms. Draft assistance runs `partitionByRound` on the ranked list.
 
 ## Surfaces touched
 
@@ -46,7 +46,7 @@ Close M4. `/draft` is the primary ranked-stats table for the saved quiz. The use
 2. Open Edit profile. Punt FG%. Confirm order moves and the column stays. Switch to 8-cat. Confirm TOV is gone.
 3. Turn on draft assistance. Round 1 has 12 players. Round 5 starts at rank 49. Round 13 is longer than 12.
 4. Refresh. Toggle is off. Profile edits are still there.
-5. Clear `ww.draftProfile` and open `/draft`. Lands on `/onboard`.
+5. Clear `dd.draftProfile` and open `/draft`. Lands on `/onboard`.
 
 ## Next steps
 

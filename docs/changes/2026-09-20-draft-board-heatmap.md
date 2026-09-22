@@ -7,7 +7,7 @@ Make the ranked board easier to scan. Assistance rounds share one horizontal scr
 ## What did not change
 
 - Ranker formulas, operator JSON, and `POST /rank` request/response shape.
-- `/onboard` stepper and `ww.draftProfile` persist.
+- `/onboard` stepper and `dd.draftProfile` persist.
 - No team-need coloring, no taken list, no re-z-score per round.
 - No purple text. No stickers.
 
@@ -21,7 +21,7 @@ Make the ranked board easier to scan. Assistance rounds share one horizontal scr
 
 ## High-level overview of the current implementation
 
-`/draft` still hydrates `ww.draftProfile` and `POST`s `/rank`. Draft assistance still slices with `partitionByRound`. Those slices now feed one `PlayerTable` as labeled groups.
+`/draft` still hydrates `dd.draftProfile` and `POST`s `/rank`. Draft assistance still slices with `partitionByRound`. Those slices now feed one `PlayerTable` as labeled groups.
 
 Cat heat uses `leagueZ`: ranker z vs the filtered universe, TOV already flipped, null shot rates uncolored. Average scores stay transparent so zebra still reads. Raw vs +/- only changes cell text. The highlight mode is a named constant (`leagueZ`) so a later setting can point at `teamNeed`.
 

@@ -2,11 +2,11 @@
 
 High-level approaches for onboarding, the CAT quiz, and the draft board. The goal is to stop competing with ranking sites on table density and instead make the quiz the product.
 
-This is a direction document, not a pixel spec. Implement on the TanStack Start shell from [PR #4](https://github.com/mlmar/waiver-warrior/pull/4), not the Astro island tree on `main`. Ranker math, `POST /rank`, and design-aesthetic locks stay put. No app code until the three passes below.
+This is a direction document, not a pixel spec. Implement on the TanStack Start shell from [PR #4](https://github.com/mlmar/draft-duck/pull/4), not the Astro island tree on `main`. Ranker math, `POST /rank`, and design-aesthetic locks stay put. No app code until the three passes below.
 
 ## Why
 
-Hashtag, Basketball Monster, and FantasyPros already win at "here is a ranked stats table." Waiver Warrior's loop is already different:
+Hashtag, Basketball Monster, and FantasyPros already win at "here is a ranked stats table." Draft Duck's loop is already different:
 
 ```text
 quiz → DraftProfile → weighted z-score board → optional round buckets
@@ -18,7 +18,7 @@ The differentiator should be: you answer CAT questions, the board is the consequ
 
 ## What to keep
 
-- No accounts. Profile stays `ww.draftProfile`.
+- No accounts. Profile stays `dd.draftProfile`.
 - Ranker math, operator weights, and `POST /rank` stay put.
 - Public Sans, light theme, primary `#78A3CF`, no pills, no uppercase kickers. See the design-aesthetic rule.
 - v1 still has no taken list, Yahoo, auction, or AI copy.
@@ -124,7 +124,7 @@ flowchart LR
 
 Rewrite the story in this order: quiz, then board as output.
 
-1. **Home:** "Tell us how you want to play. We rank the 2025-26 board for that profile." Tease the gallery, not stance chips. Static example of two cards (Fortress, Sniper) plus Start. Start is still the primary CTA. If `ww.draftProfile` exists after hydrate, offer Open board and Retake quiz.
+1. **Home:** "Tell us how you want to play. We rank the 2025-26 board for that profile." Tease the gallery, not stance chips. Static example of two cards (Fortress, Sniper) plus Start. Start is still the primary CTA. If `dd.draftProfile` exists after hydrate, offer Open board and Retake quiz.
 2. **About / Scoring:** Keep the math page. Change "the table is the product" to "the quiz sets the weights, the table is the result." Scoring already has the right explanation.
 3. **Nav:** After a profile exists, Board belongs in chrome. Quiz stays reachable as Retake or Edit build, not only as first-run onboarding.
 
@@ -240,7 +240,7 @@ Custom cats: hide a named card if its **punt** cat is not enabled (a punt of not
 
 ### Home and restore
 
-Home first-run: tease this question, not stance chips. Static example of two cards (Fortress, Sniper) plus Start. If `ww.draftProfile` hydrates: Open board and Retake.
+Home first-run: tease this question, not stance chips. Static example of two cards (Fortress, Sniper) plus Start. If `dd.draftProfile` hydrates: Open board and Retake.
 
 Retake: gallery preselects saved `archetypeId`. Jump to review stays. One-line summary can be the one-word label (`Fortress · punt FT%`).
 

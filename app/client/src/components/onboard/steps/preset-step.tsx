@@ -1,7 +1,7 @@
 import { ChoiceRow } from '@/components/onboard/choice-row';
 import type { QuizStepProps } from '@/components/onboard/step-types';
 import { applyPreset, setCustomCats, type CatPreset } from '@/lib/quiz';
-import { CAT_KEYS, CAT_LABELS } from '@waiver-warrior/core';
+import { CAT_KEYS, CAT_LABELS } from '@draft-duck/core';
 
 // 9-cat, 8-cat (drops TOV), or custom toggles. Individual cat chips only appear on Custom.
 

@@ -10,7 +10,7 @@ import {
     type QuizDraft
 } from '@/lib/quiz';
 import { useDraftProfileStore } from '@/stores/draft-profile';
-import { draftProfileSchema, restoreSummary } from '@waiver-warrior/core';
+import { draftProfileSchema, restoreSummary } from '@draft-duck/core';
 import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
@@ -123,7 +123,7 @@ export function OnboardQuiz() {
         <>
             <p className='mb-4'>
                 <Link to='/' className='text-muted-foreground hover:text-foreground'>
-                    Waiver Warrior
+                    Draft Duck
                 </Link>
             </p>
             <QuizShell

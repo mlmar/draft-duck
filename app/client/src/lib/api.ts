@@ -1,4 +1,4 @@
-import type { DraftProfile, RankedPlayer } from '@waiver-warrior/core';
+import type { DraftProfile, RankedPlayer } from '@draft-duck/core';
 
 // Thin POST /rank. The draft query owns loading and error UI.
 

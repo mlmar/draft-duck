@@ -1,6 +1,6 @@
 import { INTENSITY_HINT, IntensitySlider } from '@/components/onboard/intensity-slider';
 import type { QuizStepProps } from '@/components/onboard/step-types';
-import { CAT_LABELS } from '@waiver-warrior/core';
+import { CAT_LABELS } from '@draft-duck/core';
 
 type IntensityStepProps = QuizStepProps & {
     idPrefix?: string;

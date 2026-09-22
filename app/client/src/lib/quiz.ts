@@ -7,7 +7,7 @@ import {
     type CatKey,
     type CatStance,
     type DraftProfile
-} from '@waiver-warrior/core';
+} from '@draft-duck/core';
 
 // In-progress quiz shape plus conversions to DraftProfile. Skip intensity omits that field from the saved payload.
 
