@@ -11,22 +11,13 @@ import {
     draftProfileSchema,
     partitionByRound
 } from '@waiver-warrior/core';
-import { QueryClient, QueryClientProvider, keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
 const INTENSITY_DEBOUNCE_MS = 200;
 // Named setting, not a table branch. leagueZ now. Add teamNeed to the registry later and point this at it.
 const CAT_HIGHLIGHT_MODE = DEFAULT_CAT_HIGHLIGHT_MODE;
-
-function createQueryClient() {
-    return new QueryClient({
-        defaultOptions: {
-            queries: { retry: false },
-            mutations: { retry: false }
-        }
-    });
-}
 
 type DraftBoardProps = {
     assist: boolean;
@@ -36,20 +27,6 @@ type DraftBoardProps = {
 };
 
 export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChange }: DraftBoardProps) {
-    const [queryClient] = useState(createQueryClient);
-    return (
-        <QueryClientProvider client={queryClient}>
-            <DraftBoardInner
-                assist={assist}
-                valueMode={valueMode}
-                onAssistChange={onAssistChange}
-                onValueModeChange={onValueModeChange}
-            />
-        </QueryClientProvider>
-    );
-}
-
-function DraftBoardInner({ assist, valueMode, onAssistChange, onValueModeChange }: DraftBoardProps) {
     const navigate = useNavigate();
     const profile = useDraftProfileStore((state) => state.profile);
     const setProfile = useDraftProfileStore((state) => state.setProfile);
