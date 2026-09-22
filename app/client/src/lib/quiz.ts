@@ -1,9 +1,17 @@
-import { CAT_KEYS, type CatKey, type CatStance, type DraftProfile } from '@waiver-warrior/core';
+import {
+    CAT_KEYS,
+    isNamedBuildId,
+    isNamedBuildVisible,
+    stancesForArchetype,
+    type ArchetypeId,
+    type CatKey,
+    type CatStance,
+    type DraftProfile
+} from '@waiver-warrior/core';
 
 // In-progress quiz shape plus conversions to DraftProfile. Skip intensity omits that field from the saved payload.
 
 export type CatPreset = '9cat' | '8cat' | 'custom';
-export type ArchetypeChoice = 'stocks' | 'points';
 
 export type QuizDraft = {
     leagueSize: 8 | 10 | 12 | 14;
@@ -13,10 +21,10 @@ export type QuizDraft = {
     enabledCats: CatKey[];
     stances: Partial<Record<CatKey, CatStance>>;
     intensity: Partial<Record<CatKey, number>>;
-    // Skip leaves this false so the saved profile omits intensity.
+    // Skip Fine-tune leaves this false so the saved profile omits intensity.
     includeIntensity: boolean;
-    // Session-only. Not part of DraftProfile.
-    archetype: ArchetypeChoice | null;
+    draftSlot?: number;
+    archetypeId: ArchetypeId | null;
 };
 
 export const DEFAULT_QUIZ_DRAFT: QuizDraft = {
@@ -28,7 +36,7 @@ export const DEFAULT_QUIZ_DRAFT: QuizDraft = {
     stances: {},
     intensity: {},
     includeIntensity: false,
-    archetype: null
+    archetypeId: null
 };
 
 const EIGHT_CAT_KEYS = CAT_KEYS.filter((cat) => cat !== 'tov');
@@ -56,34 +64,46 @@ function sameCats(left: readonly CatKey[], right: readonly CatKey[]): boolean {
 }
 
 export function applyPreset(draft: QuizDraft, preset: CatPreset, customCats?: CatKey[]): QuizDraft {
-    // Switching preset should not leave punt chips on cats that are no longer enabled.
     const enabledCats = catsForPreset(preset, customCats ?? draft.enabledCats);
-    return {
+    const next: QuizDraft = {
         ...draft,
         preset,
         enabledCats,
         stances: keepEnabled(draft.stances, enabledCats),
         intensity: keepEnabled(draft.intensity, enabledCats)
     };
+    if (next.draftSlot && next.draftSlot > next.leagueSize) {
+        next.draftSlot = next.leagueSize;
+    }
+    if (next.archetypeId && isNamedBuildId(next.archetypeId) && !isNamedBuildVisible(next.archetypeId, enabledCats)) {
+        // Keep stance-bar edits unless the named card itself no longer fits the cats.
+        return { ...next, archetypeId: null };
+    }
+    return next;
 }
 
 export function setCustomCats(draft: QuizDraft, enabledCats: CatKey[]): QuizDraft {
     return applyPreset({ ...draft, enabledCats }, 'custom', enabledCats);
 }
 
-// Stocks => need STL/BLK. Points => need PTS. Leave an existing punt alone.
-export function applyArchetypeNudge(draft: QuizDraft, choice: ArchetypeChoice): QuizDraft {
-    const cats: CatKey[] = choice === 'stocks' ? ['stl', 'blk'] : ['pts'];
-    const stances = { ...draft.stances };
-    for (const cat of cats) {
-        if (!draft.enabledCats.includes(cat)) continue;
-        if (stances[cat] === 'punt') continue;
-        stances[cat] = 'need';
-    }
-    return { ...draft, stances, archetype: choice };
+// Overwrite every enabled cat. Named cards skip Fine-tune. Custom is a blank Neutral form.
+export function applyArchetype(draft: QuizDraft, id: ArchetypeId): QuizDraft {
+    return {
+        ...draft,
+        archetypeId: id,
+        stances: stancesForArchetype(id, draft.enabledCats),
+        includeIntensity: false
+    };
 }
 
-// DraftProfile is the persist and API shape. Intensity is omitted unless the user continued on that screen.
+export function setDraftSlot(draft: QuizDraft, draftSlot: number): QuizDraft {
+    if (!Number.isInteger(draftSlot) || draftSlot < 1) {
+        return { ...draft, draftSlot: undefined };
+    }
+    return { ...draft, draftSlot: Math.min(draftSlot, draft.leagueSize) };
+}
+
+// DraftProfile is the persist and API shape. Intensity is omitted unless Fine-tune changed a slider.
 export function quizDraftToProfile(draft: QuizDraft): DraftProfile {
     const profile: DraftProfile = {
         leagueSize: draft.leagueSize,
@@ -92,6 +112,8 @@ export function quizDraftToProfile(draft: QuizDraft): DraftProfile {
         enabledCats: [...draft.enabledCats],
         stances: keepEnabled(draft.stances, draft.enabledCats)
     };
+    if (draft.draftSlot) profile.draftSlot = draft.draftSlot;
+    if (draft.archetypeId) profile.archetypeId = draft.archetypeId;
     if (!draft.includeIntensity) return profile;
 
     const intensity: Partial<Record<CatKey, number>> = {};
@@ -103,7 +125,6 @@ export function quizDraftToProfile(draft: QuizDraft): DraftProfile {
     return profile;
 }
 
-// Archetype is session-only. Restore cannot recover which card they tapped, only the resulting stances.
 export function profileToQuizDraft(profile: DraftProfile): QuizDraft {
     const enabledCats = [...new Set(profile.enabledCats)];
     let preset: CatPreset = 'custom';
@@ -119,13 +140,27 @@ export function profileToQuizDraft(profile: DraftProfile): QuizDraft {
         stances: { ...profile.stances },
         intensity: { ...profile.intensity },
         includeIntensity: profile.intensity !== undefined,
-        archetype: null
+        draftSlot: profile.draftSlot,
+        archetypeId: profile.archetypeId ?? null
     };
 }
 
-// Most steps always continue. League rounds and custom cats can be empty or invalid.
 export function canContinue(stepId: string, draft: QuizDraft): boolean {
-    if (stepId === 'league') return Number.isInteger(draft.draftRounds) && draft.draftRounds > 0;
+    if (stepId === 'league') {
+        const roundsOk = Number.isInteger(draft.draftRounds) && draft.draftRounds > 0;
+        const slotOk =
+            draft.draftSlot !== undefined &&
+            Number.isInteger(draft.draftSlot) &&
+            draft.draftSlot >= 1 &&
+            draft.draftSlot <= draft.leagueSize;
+        return roundsOk && slotOk;
+    }
     if (stepId === 'preset') return draft.enabledCats.length >= 1;
+    if (stepId === 'play') return draft.archetypeId !== null;
     return true;
+}
+
+// Board edits persist without a slot so old profiles still re-rank from the stance bar.
+export function canPersist(draft: QuizDraft): boolean {
+    return Number.isInteger(draft.draftRounds) && draft.draftRounds > 0 && draft.enabledCats.length >= 1;
 }

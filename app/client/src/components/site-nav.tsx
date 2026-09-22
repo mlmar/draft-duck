@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import { useHydratedProfile } from '@/hooks/use-hydrated-profile';
 
 const LINKS = [
     { to: '/', label: 'Home' },
@@ -6,8 +7,13 @@ const LINKS = [
     { to: '/about', label: 'About' }
 ] as const;
 
-// Quiet footer links for prerendered content pages. Quiz and draft keep their own chrome.
+const BOARD_SEARCH = { assist: '1', view: 'simple' } as const;
+
+// Quiet footer links. Board appears after a profile hydrates so first-run chrome stays quiz-first.
 export function SiteNav() {
+    const { hydrated, profile } = useHydratedProfile();
+    const showBoard = hydrated && profile !== null;
+
     return (
         <nav className='mt-10 flex flex-wrap gap-x-5 gap-y-2'>
             {LINKS.map((link) => (
@@ -20,6 +26,16 @@ export function SiteNav() {
                     {link.label}
                 </Link>
             ))}
+            {showBoard ? (
+                <Link
+                    to='/draft'
+                    search={BOARD_SEARCH}
+                    className='text-muted-foreground hover:text-foreground'
+                    activeProps={{ className: 'text-foreground' }}
+                >
+                    Board
+                </Link>
+            ) : null}
         </nav>
     );
 }

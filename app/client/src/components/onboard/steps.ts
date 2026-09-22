@@ -1,6 +1,4 @@
-import { ArchetypeStep } from '@/components/onboard/steps/archetype-step';
-import { DraftTypeStep } from '@/components/onboard/steps/draft-type-step';
-import { IntensityStep } from '@/components/onboard/steps/intensity-step';
+import { PlayStep } from '@/components/onboard/steps/play-step';
 import { LeagueStep } from '@/components/onboard/steps/league-step';
 import { PresetStep } from '@/components/onboard/steps/preset-step';
 import { ReviewStep } from '@/components/onboard/steps/review-step';
@@ -25,20 +23,8 @@ export type QuizStepDef = {
     applySkip?: (draft: QuizDraft) => QuizDraft;
 };
 
-// Edit this list to reorder, drop, or insert screens.
+// Named path is four screens. Custom inserts stances between play and league.
 export const STEPS: QuizStepDef[] = [
-    {
-        id: 'league',
-        title: 'League',
-        description: 'Team count and roster depth change who is still on the board in later rounds.',
-        Component: LeagueStep
-    },
-    {
-        id: 'draftType',
-        title: 'Draft type',
-        description: 'Snake reverses pick order each round. Linear keeps the same order every round.',
-        Component: DraftTypeStep
-    },
     {
         id: 'preset',
         title: 'Categories',
@@ -46,35 +32,35 @@ export const STEPS: QuizStepDef[] = [
         Component: PresetStep
     },
     {
+        id: 'play',
+        title: 'How do you want to play?',
+        description: 'A named build writes the stance map. Custom asks Need / Neutral / Punt next.',
+        Component: PlayStep
+    },
+    {
         id: 'stances',
         title: 'Stances',
-        description: 'Need boosts that cat. Punt ignores it. Neutral is the default.',
+        description: 'Need boosts that cat. Punt ignores it. Neutral is the default. Fine-tune is optional.',
         Component: StancesStep
     },
     {
-        id: 'intensity',
-        title: 'Intensity',
-        description: 'How hard to lean into each remaining cat. Skip if 1.0 is fine.',
-        optional: true,
-        skipLabel: 'Use defaults',
-        Component: IntensityStep,
-        applyContinue: (draft) => ({ ...draft, includeIntensity: true }),
-        applySkip: (draft) => ({ ...draft, includeIntensity: false })
-    },
-    {
-        id: 'archetype',
-        title: 'Build',
-        description: 'One tap. Stocks marks steals and blocks as Need. Points marks scoring. Existing punts stay.',
-        optional: true,
-        skipLabel: 'Skip this',
-        Component: ArchetypeStep
+        id: 'league',
+        title: 'League',
+        description: 'Size, rounds, snake or linear, and the pick you will sit in.',
+        Component: LeagueStep
     },
     {
         id: 'review',
         title: 'Review',
-        description: 'Check the profile, then rank. You will land on the draft board.',
+        description: 'These are the names at your pick if the room drafted this board in order.',
         submit: true,
         continueLabel: 'Rank my board',
         Component: ReviewStep
     }
 ];
+
+export function visibleSteps(draft: QuizDraft, currentStepId?: string): QuizStepDef[] {
+    const includeStances = draft.archetypeId === 'custom' || currentStepId === 'stances';
+    if (includeStances) return STEPS;
+    return STEPS.filter((step) => step.id !== 'stances');
+}

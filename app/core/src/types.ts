@@ -42,6 +42,9 @@ export const CAT_LABELS: Record<CatKey, string> = {
 
 export type CatStance = 'need' | 'neutral' | 'punt';
 
+export const ARCHETYPE_IDS = ['balanced', 'puntFg', 'puntFt', 'guards', 'stocks', 'puntAst', 'custom'] as const;
+export type ArchetypeId = (typeof ARCHETYPE_IDS)[number];
+
 export type DraftProfile = {
     leagueSize: 8 | 10 | 12 | 14;
     draftRounds: number;
@@ -50,6 +53,10 @@ export type DraftProfile = {
     stances: Partial<Record<CatKey, CatStance>>;
     /** 0-2 intensity. Omit a cat (or the whole map) to default that cat to 1. */
     intensity?: Partial<Record<CatKey, number>>;
+    /** 1..leagueSize. Omit on old profiles. Slot is a lens, not a ranker input. */
+    draftSlot?: number;
+    /** Last gallery choice. Omit on old profiles. Do not infer from chips. */
+    archetypeId?: ArchetypeId;
 };
 
 // RankedPlayer.z only includes enabled cats. Disabled cats are omitted, not zeroed.

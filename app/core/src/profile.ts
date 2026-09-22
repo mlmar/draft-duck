@@ -1,17 +1,29 @@
 import { z } from 'zod';
-import { CAT_KEYS, type CatKey, type CatStance, type DraftProfile } from './types.ts';
+import { ARCHETYPE_IDS, CAT_KEYS, type CatKey, type CatStance, type DraftProfile } from './types.ts';
 
 const catKeySchema = z.enum(CAT_KEYS);
 const catStanceSchema = z.enum(['need', 'neutral', 'punt']);
 
-export const draftProfileSchema = z.object({
-    leagueSize: z.union([z.literal(8), z.literal(10), z.literal(12), z.literal(14)]),
-    draftRounds: z.number().int().positive(),
-    draftType: z.enum(['snake', 'linear']),
-    enabledCats: z.array(catKeySchema).min(1),
-    stances: z.record(catKeySchema, catStanceSchema).default({}),
-    intensity: z.record(catKeySchema, z.number().min(0).max(2)).optional()
-});
+export const draftProfileSchema = z
+    .object({
+        leagueSize: z.union([z.literal(8), z.literal(10), z.literal(12), z.literal(14)]),
+        draftRounds: z.number().int().positive(),
+        draftType: z.enum(['snake', 'linear']),
+        enabledCats: z.array(catKeySchema).min(1),
+        stances: z.record(catKeySchema, catStanceSchema).default({}),
+        intensity: z.record(catKeySchema, z.number().min(0).max(2)).optional(),
+        draftSlot: z.number().int().min(1).optional(),
+        archetypeId: z.enum(ARCHETYPE_IDS).optional()
+    })
+    .superRefine((profile, ctx) => {
+        if (profile.draftSlot !== undefined && profile.draftSlot > profile.leagueSize) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'draftSlot cannot exceed leagueSize',
+                path: ['draftSlot']
+            });
+        }
+    });
 
 export const rankRequestSchema = z.object({
     profile: draftProfileSchema
