@@ -1,8 +1,13 @@
+import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { CsvProvider } from './csv-provider.ts';
+import { stancesForArchetype } from './named-builds.ts';
 import { DEFAULT_OPERATOR_WEIGHTS } from './operator-weights.ts';
 import { rank } from './ranker.ts';
 import { identitySuggestionHook, type SuggestionHook } from './suggestion-hook.ts';
 import { CAT_KEYS, type DraftProfile, type PlayerSeason } from './types.ts';
+
+const seasonPath = fileURLToPath(new URL('../../data/25_26_per_game.csv', import.meta.url));
 
 function season(partial: Partial<PlayerSeason> & Pick<PlayerSeason, 'playerId'>): PlayerSeason {
     return {
@@ -158,5 +163,130 @@ describe('rank', () => {
     it('breaks composite ties by playerId ascending', () => {
         const universe = [season({ playerId: 'b', pts: 10 }), season({ playerId: 'a', pts: 10 })];
         expect(rank(universe, profile()).map((player) => player.playerId)).toEqual(['a', 'b']);
+    });
+
+    it('keeps rank, fitRank, and consensusRank aligned on an all-neutral board', () => {
+        const universe = [
+            season({ playerId: 'aaa', pts: 20, trb: 4 }),
+            season({ playerId: 'bbb', pts: 12, trb: 10 }),
+            season({ playerId: 'ccc', pts: 8, trb: 6 })
+        ];
+        const ranked = rank(universe, profile());
+        expect(ranked.every((player) => player.rank === player.fitRank && player.rank === player.consensusRank)).toBe(
+            true
+        );
+    });
+
+    it('builds consensus from enabled cats only', () => {
+        const universe = [
+            season({ playerId: 'turnover', tov: 5, pts: 22 }),
+            season({ playerId: 'careful', tov: 0.5, pts: 16 })
+        ];
+        const nine = rank(universe, profile());
+        const eight = rank(universe, profile({ enabledCats: CAT_KEYS.filter((cat) => cat !== 'tov') }));
+        expect(byId(nine, 'careful').consensusRank).toBe(1);
+        expect(byId(eight, 'turnover').consensusRank).toBe(1);
+        expect(eight[0]?.z.tov).toBeUndefined();
+    });
+
+    it('promotes a consensus star a punt board would bury and leaves a rising specialist', () => {
+        const universe = [
+            season({ playerId: 'blkstar1', blk: 4 }),
+            season({
+                playerId: 'guard001',
+                pts: 22,
+                ast: 7,
+                fg3: 3.2,
+                stl: 2.2,
+                blk: 0.2,
+                ftPct: 0.9,
+                fta: 6,
+                ft: 5.4
+            }),
+            ...Array.from({ length: 6 }, (_, index) => season({ playerId: `avg0000${index}` }))
+        ];
+        const sniper = profile({
+            stances: { pts: 'need', fg3: 'need', ftPct: 'need', ast: 'need', stl: 'need', blk: 'punt' }
+        });
+        const ranked = rank(universe, sniper, { availabilitySlack: 2 });
+        const star = byId(ranked, 'blkstar1');
+        const specialist = byId(ranked, 'guard001');
+        expect(star.fitRank).toBeGreaterThan(star.consensusRank);
+        expect(star.rank).toBeLessThanOrEqual(star.consensusRank + 2);
+        expect(star.rank).toBeLessThan(star.fitRank);
+        expect(specialist.fitRank).toBe(1);
+        expect(specialist.rank).toBe(1);
+    });
+
+    it('restores fit order when availability slack covers the whole universe', () => {
+        const universe = [
+            season({
+                playerId: 'ftstar01',
+                pts: 28,
+                trb: 3,
+                blk: 0.2,
+                fgPct: 0.41,
+                fga: 18,
+                fg: 7.4,
+                ftPct: 0.94,
+                fta: 8,
+                ft: 7.5
+            }),
+            season({
+                playerId: 'ftsink1',
+                pts: 24,
+                trb: 13,
+                blk: 2.8,
+                fgPct: 0.64,
+                fga: 18,
+                fg: 11.5,
+                ftPct: 0.52,
+                fta: 8,
+                ft: 4.2
+            }),
+            season({
+                playerId: 'avg00001',
+                pts: 12,
+                trb: 6,
+                blk: 0.8,
+                fgPct: 0.48,
+                fga: 18,
+                fg: 8.6,
+                ftPct: 0.78,
+                fta: 8,
+                ft: 6.2
+            })
+        ];
+        const fortress = profile({
+            stances: { fgPct: 'need', trb: 'need', blk: 'need', pts: 'need', ftPct: 'punt' }
+        });
+        const floored = rank(universe, fortress);
+        const fitOnly = rank(universe, fortress, { availabilitySlack: universe.length });
+        expect(fitOnly.map((player) => player.playerId)).toEqual(
+            [...floored].sort((a, b) => a.fitRank - b.fitRank).map((player) => player.playerId)
+        );
+        expect(fitOnly.every((player) => player.rank === player.fitRank)).toBe(true);
+    });
+});
+
+describe('rank season dump', () => {
+    it('keeps Fortress consensus stars inside one round of slack', async () => {
+        const universe = await new CsvProvider(seasonPath).load();
+        const fortress = profile({
+            stances: stancesForArchetype('puntFt', CAT_KEYS),
+            archetypeId: 'puntFt'
+        });
+        const ranked = rank(universe, fortress);
+        const curry = byId(ranked, 'curryst01');
+        const harden = byId(ranked, 'hardeja01');
+        const giannis = byId(ranked, 'antetgi01');
+        expect(curry.fitRank).toBeGreaterThan(curry.consensusRank);
+        expect(harden.fitRank).toBeGreaterThan(harden.consensusRank);
+        expect(curry.rank).toBeLessThanOrEqual(curry.consensusRank + fortress.leagueSize);
+        expect(harden.rank).toBeLessThanOrEqual(harden.consensusRank + fortress.leagueSize);
+        expect(curry.rank).toBeLessThan(curry.fitRank);
+        expect(harden.rank).toBeLessThan(harden.fitRank);
+        expect(giannis.rank).toBeLessThan(giannis.consensusRank);
+        expect(giannis.rank).toBe(giannis.fitRank);
     });
 });
