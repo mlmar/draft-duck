@@ -2,17 +2,15 @@ import type { CatKey, DraftProfile, RankedPlayer } from './types.ts';
 
 // Display-only. Strategies turn a player+cat into a signed score for heat and +/-.
 // Ranking math stays in ranker.ts. Swap modes here, not in table markup.
-// later: add 'teamNeed' when roster need should drive the same ramp.
 
-export const CAT_HIGHLIGHT_MODES = ['leagueZ'] as const;
+export const CAT_HIGHLIGHT_MODES = ['leagueZ', 'teamNeed'] as const;
 export type CatHighlightMode = (typeof CAT_HIGHLIGHT_MODES)[number];
 
-export const DEFAULT_CAT_HIGHLIGHT_MODE: CatHighlightMode = 'leagueZ';
+export const DEFAULT_CAT_HIGHLIGHT_MODE: CatHighlightMode = 'teamNeed';
 
 export type CatHighlightInput = {
     player: RankedPlayer;
     cat: CatKey;
-    // Unused by leagueZ. Present so a later teamNeed strategy can read stances without a table change.
     profile: DraftProfile;
 };
 
@@ -44,8 +42,21 @@ export const leagueZHighlight: CatHighlightStrategy = {
     }
 };
 
+// Same ramp as leagueZ. Punted cats stay uncolored so a Fortress board does not celebrate FT%.
+export const teamNeedHighlight: CatHighlightStrategy = {
+    id: 'teamNeed',
+    legend: { worse: 'Worse', average: 'Average', better: 'Better' },
+    score({ player, cat, profile }) {
+        if ((profile.stances[cat] ?? 'neutral') === 'punt') {
+            return { score: null, title: 'Punted' };
+        }
+        return leagueZHighlight.score({ player, cat, profile });
+    }
+};
+
 export const CAT_HIGHLIGHT_STRATEGIES: Record<CatHighlightMode, CatHighlightStrategy> = {
-    leagueZ: leagueZHighlight
+    leagueZ: leagueZHighlight,
+    teamNeed: teamNeedHighlight
 };
 
 export function catHighlightStrategy(mode: CatHighlightMode = DEFAULT_CAT_HIGHLIGHT_MODE): CatHighlightStrategy {

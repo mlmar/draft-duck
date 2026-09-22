@@ -5,7 +5,8 @@ import {
     heatFromScore,
     HEAT_CLAMP,
     HEAT_DEAD_ZONE,
-    leagueZHighlight
+    leagueZHighlight,
+    teamNeedHighlight
 } from './cat-highlight.ts';
 import { CAT_KEYS, type DraftProfile, type PlayerSeason, type RankedPlayer } from './types.ts';
 
@@ -35,13 +36,14 @@ function season(partial: Partial<PlayerSeason> & Pick<PlayerSeason, 'playerId'>)
     };
 }
 
-function profile(): DraftProfile {
+function profile(overrides: Partial<DraftProfile> = {}): DraftProfile {
     return {
         leagueSize: 12,
         draftRounds: 13,
         draftType: 'snake',
         enabledCats: [...CAT_KEYS],
-        stances: {}
+        stances: {},
+        ...overrides
     };
 }
 
@@ -56,8 +58,9 @@ function ranked(partial: Partial<RankedPlayer> & Pick<RankedPlayer, 'playerId'>)
 }
 
 describe('catHighlightStrategy', () => {
-    it('returns leagueZ by default so the table does not pick a formula', () => {
-        expect(catHighlightStrategy().id).toBe('leagueZ');
+    it('returns teamNeed by default so the board colors the quiz, not only league z', () => {
+        expect(catHighlightStrategy().id).toBe('teamNeed');
+        expect(catHighlightStrategy('teamNeed')).toBe(teamNeedHighlight);
         expect(catHighlightStrategy('leagueZ')).toBe(leagueZHighlight);
     });
 });
@@ -111,6 +114,21 @@ describe('heatFromScore', () => {
         expect(heatFromScore(HEAT_CLAMP)).toEqual({ sign: 1, intensity: 1 });
         expect(heatFromScore(-8)).toEqual({ sign: -1, intensity: 1 });
         expect(heatFromScore(8)).toEqual({ sign: 1, intensity: 1 });
+    });
+});
+
+describe('teamNeedHighlight', () => {
+    it('leaves punted cats uncolored and uses league z on the rest', () => {
+        const inputProfile = profile({ stances: { ftPct: 'punt', pts: 'need' } });
+        const player = ranked({ playerId: 'aaa', pts: 30, ftPct: 0.9, z: { pts: 1.5, ftPct: 2 } });
+        expect(teamNeedHighlight.score({ player, cat: 'ftPct', profile: inputProfile })).toEqual({
+            score: null,
+            title: 'Punted'
+        });
+        expect(teamNeedHighlight.score({ player, cat: 'pts', profile: inputProfile })).toEqual({
+            score: 1.5,
+            title: 'z 1.50'
+        });
     });
 });
 

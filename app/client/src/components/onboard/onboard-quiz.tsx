@@ -1,11 +1,20 @@
 import { QuizShell } from '@/components/onboard/quiz-shell';
-import { STEPS } from '@/components/onboard/steps';
+import { visibleSteps } from '@/components/onboard/steps';
 import { Button } from '@/components/ui/button';
-import { canContinue, DEFAULT_QUIZ_DRAFT, profileToQuizDraft, quizDraftToProfile, type QuizDraft } from '@/lib/quiz';
+import {
+    applyArchetype,
+    canContinue,
+    DEFAULT_QUIZ_DRAFT,
+    profileToQuizDraft,
+    quizDraftToProfile,
+    type QuizDraft
+} from '@/lib/quiz';
 import { useDraftProfileStore } from '@/stores/draft-profile';
-import { draftProfileSchema } from '@waiver-warrior/core';
+import { draftProfileSchema, restoreSummary } from '@waiver-warrior/core';
 import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
+
+const SIMPLE_BOARD_SEARCH = { assist: '1', view: 'simple' } as const;
 
 // Quiz for /onboard. Owns the in-progress draft and persist hydrate. The current screen is ?step=.
 export function OnboardQuiz() {
@@ -16,48 +25,46 @@ export function OnboardQuiz() {
     const [parseError, setParseError] = useState<string | null>(null);
     // Snapshot at hydrate so a first-time rank does not suddenly show the restore banner.
     const [hasSavedProfile, setHasSavedProfile] = useState(false);
+    const [savedSummary, setSavedSummary] = useState<string | null>(null);
 
-    const fromSearch = STEPS.findIndex((entry) => entry.id === search.step);
+    const path = visibleSteps(draft, search.step);
+    const fromSearch = path.findIndex((entry) => entry.id === search.step);
     const stepIndex = fromSearch === -1 ? 0 : fromSearch;
 
     // Persist hydrates from localStorage after mount. Prefill once that lands.
+    // search.build is an entry hint from home. Continue drops it from the URL; do not re-run.
     useEffect(() => {
+        const entryBuild = search.build;
         const applySaved = () => {
             const profile = useDraftProfileStore.getState().profile;
+            let next = profile ? profileToQuizDraft(profile) : DEFAULT_QUIZ_DRAFT;
+            if (entryBuild) next = applyArchetype(next, entryBuild);
             if (profile) {
-                setDraft(profileToQuizDraft(profile));
                 setHasSavedProfile(true);
+                setSavedSummary(restoreSummary(profile));
             }
+            if (profile || entryBuild) setDraft(next);
         };
 
         const unsub = useDraftProfileStore.persist.onFinishHydration(applySaved);
         if (useDraftProfileStore.persist.hasHydrated()) applySaved();
         return unsub;
+        // Mount-only. search.build is the landing hint; Continue drops it from the URL.
     }, []);
 
-    const step = STEPS[stepIndex] ?? STEPS[0]!;
+    const step = path[stepIndex] ?? path[0]!;
     const StepComponent = step.Component;
     const isFirst = stepIndex === 0;
-    const isReview = stepIndex === STEPS.length - 1;
+    const isReview = Boolean(step.submit);
 
-    function goToStep(index: number) {
-        const clamped = Math.min(Math.max(index, 0), STEPS.length - 1);
-        const next = STEPS[clamped];
-        if (!next) return;
+    function goToStepId(id: string) {
         void navigate({
-            search: { step: next.id },
+            search: { step: id },
             replace: true
         });
     }
 
-    function goNext(nextDraft: QuizDraft) {
-        setParseError(null);
-        setDraft(nextDraft);
-        goToStep(stepIndex + 1);
-    }
-
     function handleContinue() {
-        // Review persists then leaves. Ranking happens on /draft.
         if (step.submit) {
             const parsed = draftProfileSchema.safeParse(quizDraftToProfile(draft));
             if (!parsed.success) {
@@ -66,34 +73,46 @@ export function OnboardQuiz() {
             }
             setParseError(null);
             setProfile(parsed.data);
-            void navigate({ to: '/draft', search: { assist: '1' } });
+            void navigate({ to: '/draft', search: SIMPLE_BOARD_SEARCH });
             return;
         }
 
         const nextDraft = step.applyContinue ? step.applyContinue(draft) : draft;
-        goNext(nextDraft);
+        setParseError(null);
+        setDraft(nextDraft);
+        const nextPath = visibleSteps(nextDraft, step.id);
+        const current = nextPath.findIndex((entry) => entry.id === step.id);
+        const next = nextPath[current + 1] ?? nextPath[nextPath.length - 1];
+        if (next) goToStepId(next.id);
     }
 
     function handleSkip() {
         const nextDraft = step.applySkip ? step.applySkip(draft) : draft;
-        goNext(nextDraft);
+        setDraft(nextDraft);
+        const nextPath = visibleSteps(nextDraft, step.id);
+        const current = nextPath.findIndex((entry) => entry.id === step.id);
+        const next = nextPath[current + 1] ?? nextPath[nextPath.length - 1];
+        if (next) goToStepId(next.id);
     }
 
     function handleBack() {
         setParseError(null);
-        goToStep(stepIndex - 1);
+        const prev = path[stepIndex - 1];
+        if (prev) goToStepId(prev.id);
     }
 
     function jumpToReview() {
-        // One hop. The progress bar eases from the current step to the last, not through each skip.
         setParseError(null);
-        goToStep(STEPS.length - 1);
+        const review = path[path.length - 1];
+        if (review) goToStepId(review.id);
     }
 
     const restoreBanner =
         hasSavedProfile && !isReview ? (
             <div className='flex flex-wrap items-baseline gap-x-3 gap-y-1'>
-                <p className='mb-0 text-muted-foreground'>Editing your last profile</p>
+                <p className='mb-0 text-muted-foreground'>
+                    {savedSummary ? `Editing ${savedSummary}` : 'Editing your last profile'}
+                </p>
                 <Button type='button' variant='ghost' onClick={jumpToReview}>
                     Jump to review
                 </Button>
@@ -111,7 +130,7 @@ export function OnboardQuiz() {
                 title={step.title}
                 description={step.description}
                 stepIndex={stepIndex}
-                stepCount={STEPS.length}
+                stepCount={path.length}
                 optional={step.optional}
                 onBack={isFirst ? undefined : handleBack}
                 onContinue={handleContinue}
