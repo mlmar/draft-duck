@@ -11,6 +11,7 @@ Score the ingested universe with **weighted z-scores** so `/rank` returns a full
 - Inverted `TOV`
 - Two weight layers: operator JSON × profile weights
 - `composite` and `rank` (1 = best)
+- `fitRank` / `consensusRank`, and an availability floor so punt boards do not bury consensus stars
 - `POST /rank` on Fastify
 - Vitest golden cases
 - No-op `SuggestionHook.annotate(ranked) => ranked` (identity in v1)
@@ -82,7 +83,9 @@ composite = Σ_c operator_w[c] * profile_w[c] * z[c]
 
 Only **enabled** cats in the profile are included. Punt ⇒ `profile_w[c] = 0`.
 
-Sort descending by `composite`. `rank` is 1-based after sort. Ties: sort by `playerId` ascending so order is stable.
+Sort descending by `composite` to get `fitRank`. Ties: sort by `playerId` ascending so order is stable.
+
+`composite` stays this fit score. `rank` is not always `fitRank`. See [Availability floor](#availability-floor).
 
 ### Operator weights
 
@@ -127,8 +130,10 @@ Zod schema for `DraftProfile` can land in M2 (API needs it) even if the quiz is 
 `PlayerSeason` plus:
 
 - `z: Record<CatKey, number>` (enabled cats only)
-- `composite: number`
-- `rank: number`
+- `composite: number` (fit; punt cats contribute 0)
+- `rank: number` (1-based after the availability floor)
+- `fitRank: number` (1-based order by fit composite only)
+- `consensusRank: number` (1-based all-neutral order on the same enabled cats)
 
 Hook:
 
@@ -138,7 +143,45 @@ type SuggestionHook = {
 };
 ```
 
-v1 implementation returns the same array. `/rank` runs annotate after sort. Usage, intent, and the later annotator contract live in [M5-extensibility.md](M5-extensibility.md).
+v1 implementation returns the same array. `/rank` runs annotate after the availability floor assigns `rank`. Usage, intent, and the later annotator contract live in [M5-extensibility.md](M5-extensibility.md).
+
+### Availability floor
+
+A punt/Need board can drop a consensus top-20 player into late rounds (Fortress: Curry 10 -> 38, Harden 18 -> 73). Assist then treats that order as availability, so the name looks reachable when the room will already have taken them.
+
+There is no ADP in the CSV. The proxy is an all-neutral rank on the **same enabled cats** (Neutral × intensity 1, same z). 8-cat consensus ignores TOV.
+
+Pipeline:
+
+1. One z-score pass.
+2. `fitComposite` = current weighted sum. `consensusComposite` = all-neutral weights.
+3. `fitRank` / `consensusRank` from those sorts.
+4. Start from fit order. Walk players consensus-best first. If someone fell past `consensusRank + leagueSize`, splice them up to that floor. Only moves **up**. Specialists who rose stay put.
+5. Re-number `rank` 1-based.
+
+`leagueSize` is one round of slack. `RankOptions.availabilitySlack` overrides it in tests. Slack at least the universe size restores fit order.
+
+Do not blend fit with consensus. A blend also damps intended rises (Giannis/Gobert on Fortress).
+
+### If we had ADP
+
+ADP is what the rest of the room actually does. All-neutral z-rank is only a stand-in: it will mis-order name-brand, injured, or recency-boosted players.
+
+What would change, and what would not:
+
+- **Floor key.** Promote against ADP overall pick instead of `consensusRank`. Same splice, `floor = adp + slack`. Slack can shrink because the market already prices some punt drafters.
+- **Reaches become honest.** Gobert 85 -> 10 on Fortress is a reach vs ADP. Still do **not** pull him down: punt boards exist to take that player early. Expose `adp` so UI can chip "reach" / "value".
+- **UI that is circular today becomes legal.** "Likely gone by your pick" using ADP vs `draftSlot`. "ADP 45, don't spend pick 18" on a poor-fit star. Dual column: fit rank vs ADP. Do not fake any of that from this board's ranks.
+- **Data, not ranker math.** New ADP CSV/API mapped to Basketball-Reference `playerId`. Fit composite, punt/Need weights, and z-scores stay. `consensusRank` can remain as "our balanced board" beside market ADP.
+- **Do not build this now.** No ADP file in-repo.
+
+### Remaining ranking gaps (not this pass)
+
+- Replacement-level / VORP / positional scarcity (later, not M2).
+- Minutes floor for low-MP specialists.
+- Null FG%/FT% treated as impact 0 (neutral, not missing).
+- Need 1.5 × intensity 2 = 3× weight. The floor covers star-sink; stance weights stay.
+- Taken list / remaining-pool re-z.
 
 ## Acceptance checks
 
@@ -148,6 +191,10 @@ v1 implementation returns the same array. `/rank` runs annotate after sort. Usag
 - Golden: a constructed “punt-FG% big” (high `trb`/`blk`, poor volume-adjusted FG%) **rises** when `fgPct` is punted vs all-neutral.
 - Operator JSON: doubling `stl` operator weight increases `stl`’s contribution; snapshot one player’s composite in Vitest.
 - `SuggestionHook` identity: annotate does not reorder.
+- All-neutral: `rank === fitRank === consensusRank`.
+- Constructed punt board: a consensus star that `fitRank` would bury ends at `rank <= consensusRank + slack`; a fit specialist is not pulled down.
+- Season dump + Fortress: Curry and Harden stay within one round of `consensusRank`; Giannis still ranks better than consensus.
+- 8-cat: `consensusRank` omits TOV.
 
 ## Suggested build order
 
