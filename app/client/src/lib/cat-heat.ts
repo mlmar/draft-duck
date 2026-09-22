@@ -1,4 +1,4 @@
-import { heatFromScore } from '@waiver-warrior/core';
+import { heatFromScore } from '@draft-duck/core';
 import type { CSSProperties } from 'react';
 
 // Token mix lives here so strategies stay numeric. Intensity is 0-1 on the shared ramp.

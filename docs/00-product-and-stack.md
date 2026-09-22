@@ -75,7 +75,7 @@ Auth, DB, Docker, AI copy, live NBA fetch, Python, external provider, auction dr
 ## Repo layout (target)
 
 ```text
-waiver-warrior/
+draft-duck/
   app/
     client/              # TanStack Start
     api/                 # Fastify

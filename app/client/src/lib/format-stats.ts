@@ -1,4 +1,4 @@
-import type { CatKey, RankedPlayer } from '@waiver-warrior/core';
+import type { CatKey, RankedPlayer } from '@draft-duck/core';
 
 // Percents are stored 0-1. Counting stats stay per-game. Null shot rates have no attempts.
 

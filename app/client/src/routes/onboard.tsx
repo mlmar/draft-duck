@@ -2,7 +2,7 @@ import { OnboardQuiz } from '@/components/onboard/onboard-quiz';
 import { STEPS } from '@/components/onboard/steps';
 import { PageShell } from '@/components/page-shell';
 import { searchString } from '@/lib/search';
-import { ARCHETYPE_IDS, type ArchetypeId } from '@waiver-warrior/core';
+import { ARCHETYPE_IDS, type ArchetypeId } from '@draft-duck/core';
 import { createFileRoute } from '@tanstack/react-router';
 
 export type OnboardSearch = {
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/onboard')({
     component: OnboardPage,
     head: () => ({
         meta: [
-            { title: 'Onboard - Waiver Warrior' },
+            { title: 'Onboard - Draft Duck' },
             {
                 name: 'description',
                 content: 'Tell us how you want to play, then rank the 2025-26 board for that profile.'

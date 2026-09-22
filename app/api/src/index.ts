@@ -1,7 +1,7 @@
 // Local API for the client. Serves the loaded season board, health, and ranked boards.
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
-import { CsvProvider, rank, rankRequestSchema, type PlayerStatsProvider } from '@waiver-warrior/core';
+import { CsvProvider, rank, rankRequestSchema, type PlayerStatsProvider } from '@draft-duck/core';
 import { fileURLToPath } from 'node:url';
 
 const PORT = readPort('API_PORT', 3300);

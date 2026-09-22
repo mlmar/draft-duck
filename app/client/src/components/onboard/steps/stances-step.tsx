@@ -1,7 +1,7 @@
 import { ChoiceRow } from '@/components/onboard/choice-row';
 import { IntensityStep } from '@/components/onboard/steps/intensity-step';
 import type { QuizStepProps } from '@/components/onboard/step-types';
-import { CAT_LABELS, type CatStance } from '@waiver-warrior/core';
+import { CAT_LABELS, type CatStance } from '@draft-duck/core';
 
 // Need / Neutral / Punt for each enabled cat. Fine-tune stays closed until Custom opens it.
 
