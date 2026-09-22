@@ -6,7 +6,7 @@ import {
     overallPicksForDraft,
     type DraftProfile,
     type RankedPlayer
-} from '@waiver-warrior/core';
+} from '@draft-duck/core';
 import { useQuery } from '@tanstack/react-query';
 import type { QuizStepProps } from '@/components/onboard/step-types';
 import { StancesStep } from '@/components/onboard/steps/stances-step';

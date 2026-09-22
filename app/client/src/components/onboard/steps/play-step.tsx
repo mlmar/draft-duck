@@ -2,7 +2,7 @@ import { BuildCardFace, namedBuildCardClassName } from '@/components/onboard/bui
 import type { QuizStepProps } from '@/components/onboard/step-types';
 import { Button } from '@/components/ui/button';
 import { applyArchetype } from '@/lib/quiz';
-import { isNamedBuildVisible, NAMED_BUILD_IDS, type NamedBuildId } from '@waiver-warrior/core';
+import { isNamedBuildVisible, NAMED_BUILD_IDS, type NamedBuildId } from '@draft-duck/core';
 
 // How do you want to play. Named cards write a full stance map. Custom is a quieter last control.
 

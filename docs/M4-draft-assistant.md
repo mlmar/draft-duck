@@ -8,7 +8,7 @@ On `/draft`, the saved `DraftProfile` ranks the universe into a **stats table**.
 
 - `/draft` route. Persist hydrates after mount so it does not fight prerender of other pages.
 - Default view: one table sorted by `rank` (name, team, pos, enabled-cat stats)
-- Profile editor on `/draft` (league size, rounds, draft type, cats, stances, intensity). Valid edits persist to `ww.draftProfile` and `POST /rank` again
+- Profile editor on `/draft` (league size, rounds, draft type, cats, stances, intensity). Valid edits persist to `dd.draftProfile` and `POST /rank` again
 - Draft assistance toggle (off by default unless `?assist=1`): `draftRounds` subsections of width `leagueSize`; last round is the leftover tail. View flags live in the URL, not `localStorage`.
 - Redirect to `/onboard` if no valid `DraftProfile` in storage
 - Same composites as `/rank`. Partition is a slice, not a re-z-score

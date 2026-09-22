@@ -1,10 +1,10 @@
-import { draftProfileSchema, type DraftProfile } from '@waiver-warrior/core';
+import { draftProfileSchema, type DraftProfile } from '@draft-duck/core';
 import { create } from 'zustand';
 import { createJSONStorage, persist, type StateStorage } from 'zustand/middleware';
 
-// Saved DraftProfile under ww.draftProfile. Invalid JSON is dropped so the quiz restarts from defaults.
+// Saved DraftProfile under dd.draftProfile. Invalid JSON is dropped so the quiz restarts from defaults.
 
-const STORAGE_KEY = 'ww.draftProfile';
+const STORAGE_KEY = 'dd.draftProfile';
 
 type DraftProfileState = {
     profile: DraftProfile | null;

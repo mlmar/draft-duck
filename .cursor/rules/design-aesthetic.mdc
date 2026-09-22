@@ -38,4 +38,4 @@ alwaysApply: false
 - No `uppercase` or wide letter-spacing kickers. Hierarchy comes from weight and size.
 - Use shadcn tokens (`bg-background`, `text-foreground`, `text-primary`, `text-muted-foreground`) instead of one-off hex.
 - Mobile-first. Stack with rem spacing. `md:` is for extra width and heading size, not a second layout.
-- Local src imports use `@/`. Cross-package imports stay `@waiver-warrior/core`.
+- Local src imports use `@/`. Cross-package imports stay `@draft-duck/core`.
