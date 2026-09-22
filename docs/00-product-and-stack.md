@@ -106,7 +106,7 @@ All JSON. Prefix `/api` is optional; pick one in M1 and keep it.
 | `GET`  | `/health` | —                           | `{ ok: true }`                |
 | `POST` | `/rank`   | `{ profile: DraftProfile }` | `{ players: RankedPlayer[] }` |
 
-`RankedPlayer` includes `playerId`, identity fields, per-game cats, per-cat z, `composite`, `rank`. Exact field list is locked in M2.
+`RankedPlayer` includes `playerId`, identity fields, per-game cats, per-cat z, `composite`, `rank`, `fitRank`, `consensusRank`. Exact field list is locked in M2.
 
 `GET /players` is optional in M1 for debugging the ingested universe; not required for the product loop.
 
