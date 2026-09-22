@@ -1,20 +1,18 @@
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Link } from '@tanstack/react-router';
+import { createLink } from '@tanstack/react-router';
 import type { VariantProps } from 'class-variance-authority';
-import type { ReactNode } from 'react';
+import { forwardRef, type AnchorHTMLAttributes } from 'react';
 
-type LinkButtonProps = {
-    to: '/' | '/onboard' | '/draft' | '/about' | '/how-it-works';
-    search?: { assist?: '1'; values?: 'pm' };
-    children: ReactNode;
-} & VariantProps<typeof buttonVariants>;
+type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & VariantProps<typeof buttonVariants>;
 
-export function LinkButton({ to, search, children, variant, size }: LinkButtonProps) {
+// Host is an <a> so createLink can attach href and the Button styles still apply.
+const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(({ variant, size, ...props }, ref) => {
     return (
         <Button asChild variant={variant} size={size}>
-            <Link to={to} search={search}>
-                {children}
-            </Link>
+            <a ref={ref} {...props} />
         </Button>
     );
-}
+});
+ButtonLink.displayName = 'ButtonLink';
+
+export const LinkButton = createLink(ButtonLink);

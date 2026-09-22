@@ -1,10 +1,21 @@
-import { PendingFallback } from '@/components/pending-fallback';
 import { LinkButton } from '@/components/link-button';
+import { PendingFallback } from '@/components/pending-fallback';
+import { PageShell } from '@/components/page-shell';
 import appCss from '@/styles/global.css?url';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 const DEFAULT_DESCRIPTION = 'Category-league fantasy basketball helper: quiz, weighted ranks, optional round buckets.';
+
+function createQueryClient() {
+    return new QueryClient({
+        defaultOptions: {
+            queries: { retry: false },
+            mutations: { retry: false }
+        }
+    });
+}
 
 export const Route = createRootRoute({
     head: () => ({
@@ -30,13 +41,16 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: ReactNode }) {
+    // Created here so prerender does not share one client across requests.
+    const [queryClient] = useState(createQueryClient);
+
     return (
         <html lang='en'>
             <head>
                 <HeadContent />
             </head>
             <body className='min-h-dvh bg-background font-sans text-foreground antialiased'>
-                {children}
+                <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
                 <Scripts />
             </body>
         </html>
@@ -45,12 +59,12 @@ function RootDocument({ children }: { children: ReactNode }) {
 
 function NotFound() {
     return (
-        <main className='mx-auto flex min-h-dvh max-w-lg flex-col justify-center px-4 py-10 md:max-w-2xl'>
+        <PageShell className='justify-center'>
             <h1>Page not found</h1>
             <p>That route is not in this app.</p>
             <p className='mt-8 mb-0'>
                 <LinkButton to='/'>Home</LinkButton>
             </p>
-        </main>
+        </PageShell>
     );
 }

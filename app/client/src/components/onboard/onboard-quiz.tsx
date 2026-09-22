@@ -4,18 +4,21 @@ import { Button } from '@/components/ui/button';
 import { canContinue, DEFAULT_QUIZ_DRAFT, profileToQuizDraft, quizDraftToProfile, type QuizDraft } from '@/lib/quiz';
 import { useDraftProfileStore } from '@/stores/draft-profile';
 import { draftProfileSchema } from '@waiver-warrior/core';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
-// Quiz for /onboard. Owns the in-progress draft, which STEPS screen is showing, and persist hydrate.
+// Quiz for /onboard. Owns the in-progress draft and persist hydrate. The current screen is ?step=.
 export function OnboardQuiz() {
-    const navigate = useNavigate();
+    const search = useSearch({ from: '/onboard' });
+    const navigate = useNavigate({ from: '/onboard' });
     const setProfile = useDraftProfileStore((state) => state.setProfile);
     const [draft, setDraft] = useState<QuizDraft>(DEFAULT_QUIZ_DRAFT);
-    const [stepIndex, setStepIndex] = useState(0);
     const [parseError, setParseError] = useState<string | null>(null);
     // Snapshot at hydrate so a first-time rank does not suddenly show the restore banner.
     const [hasSavedProfile, setHasSavedProfile] = useState(false);
+
+    const fromSearch = STEPS.findIndex((entry) => entry.id === search.step);
+    const stepIndex = fromSearch === -1 ? 0 : fromSearch;
 
     // Persist hydrates from localStorage after mount. Prefill once that lands.
     useEffect(() => {
@@ -37,10 +40,20 @@ export function OnboardQuiz() {
     const isFirst = stepIndex === 0;
     const isReview = stepIndex === STEPS.length - 1;
 
+    function goToStep(index: number) {
+        const clamped = Math.min(Math.max(index, 0), STEPS.length - 1);
+        const next = STEPS[clamped];
+        if (!next) return;
+        void navigate({
+            search: { step: next.id },
+            replace: true
+        });
+    }
+
     function goNext(nextDraft: QuizDraft) {
         setParseError(null);
         setDraft(nextDraft);
-        setStepIndex((index) => Math.min(index + 1, STEPS.length - 1));
+        goToStep(stepIndex + 1);
     }
 
     function handleContinue() {
@@ -68,13 +81,13 @@ export function OnboardQuiz() {
 
     function handleBack() {
         setParseError(null);
-        setStepIndex((index) => Math.max(index - 1, 0));
+        goToStep(stepIndex - 1);
     }
 
     function jumpToReview() {
         // One hop. The progress bar eases from the current step to the last, not through each skip.
         setParseError(null);
-        setStepIndex(STEPS.length - 1);
+        goToStep(STEPS.length - 1);
     }
 
     const restoreBanner =
