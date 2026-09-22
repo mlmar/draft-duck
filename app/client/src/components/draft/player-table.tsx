@@ -9,7 +9,7 @@ import {
     type CatKey,
     type DraftProfile,
     type RankedPlayer
-} from '@waiver-warrior/core';
+} from '@draft-duck/core';
 
 export type PlayerTableGroup = {
     id: string;

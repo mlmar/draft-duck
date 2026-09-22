@@ -48,7 +48,7 @@ No Yahoo ids on `DraftProfile`.
 
 ### Persistence
 
-- Key: `ww.draftProfile` (or similar, namespaced).
+- Key: `dd.draftProfile` (or similar, namespaced).
 - Revisit `/onboard` should restore the last profile and allow edit.
 - Invalid / outdated JSON: drop and restart quiz (Zod failure).
 

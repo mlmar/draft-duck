@@ -7,10 +7,10 @@ export const Route = createFileRoute('/how-it-works')({
     component: HowItWorksPage,
     head: () => ({
         meta: [
-            { title: 'Scoring - Waiver Warrior' },
+            { title: 'Scoring - Draft Duck' },
             {
                 name: 'description',
-                content: 'How Waiver Warrior turns category stances into a weighted z-score board.'
+                content: 'How Draft Duck turns category stances into a weighted z-score board.'
             }
         ]
     })

@@ -22,7 +22,7 @@ export const Route = createRootRoute({
         meta: [
             { charSet: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-            { title: 'Waiver Warrior' },
+            { title: 'Draft Duck' },
             { name: 'description', content: DEFAULT_DESCRIPTION }
         ],
         links: [{ rel: 'stylesheet', href: appCss }]

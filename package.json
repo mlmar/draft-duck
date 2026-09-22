@@ -1,5 +1,5 @@
 {
-    "name": "waiver-warrior",
+    "name": "draft-duck",
     "private": true,
     "type": "module",
     "workspaces": [
@@ -8,9 +8,9 @@
         "app/core"
     ],
     "scripts": {
-        "dev:client": "npm run dev -w @waiver-warrior/client",
-        "dev:api": "npm run dev -w @waiver-warrior/api",
-        "test": "npm run test -w @waiver-warrior/core",
+        "dev:client": "npm run dev -w @draft-duck/client",
+        "dev:api": "npm run dev -w @draft-duck/api",
+        "test": "npm run test -w @draft-duck/core",
         "format": "prettier --write .",
         "prepare": "husky"
     },

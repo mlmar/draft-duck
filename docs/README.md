@@ -1,4 +1,4 @@
-# Waiver Warrior roadmap
+# Draft Duck roadmap
 
 Category-league fantasy basketball helper: quiz for CAT preferences, rank players with weighted z-scores, then optionally group that board into draft-round buckets.
 

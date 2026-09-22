@@ -25,7 +25,7 @@ export const Route = createFileRoute('/draft')({
     },
     component: DraftPage,
     head: () => ({
-        meta: [{ title: 'Draft - Waiver Warrior' }]
+        meta: [{ title: 'Draft - Draft Duck' }]
     })
 });
 

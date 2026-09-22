@@ -7,7 +7,7 @@ Move `app/client` from Astro islands to TanStack Start. Keep ranking on Fastify.
 ## What did not change
 
 - Ranker formulas, operator JSON, and `POST /rank` request/response shape.
-- Quiz steps, `ww.draftProfile` persist, and the ranked table behavior.
+- Quiz steps, `dd.draftProfile` persist, and the ranked table behavior.
 - No accounts, no Yahoo, no Start server functions for ranking.
 
 ## Tradeoffs
@@ -32,7 +32,7 @@ The quiz and board are the same React trees as before. `/draft` search owns view
 ## User-visible vs contract
 
 - **UI:** Home now links to Scoring and About. Onboard has a home link. Client-side navigation between those routes. Assist and +/- follow the URL.
-- **Contract:** `DraftProfile` and `POST /rank` are unchanged. `PUBLIC_API_URL` still points at Fastify. `ww.draftProfile` is still the profile. View flags are not stored there.
+- **Contract:** `DraftProfile` and `POST /rank` are unchanged. `PUBLIC_API_URL` still points at Fastify. `dd.draftProfile` is still the profile. View flags are not stored there.
 
 ## Known gaps
 
@@ -45,8 +45,8 @@ The quiz and board are the same React trees as before. `/draft` search owns view
 1. Open `/`. Start goes to `/onboard`. Scoring and About are readable without the API.
 2. Complete the quiz. Lands on `/draft?assist=1` with a ranked table (API running).
 3. Toggle assistance off, then +/-. URL drops `assist` and adds `values=pm`. Refresh keeps that view. Open `/draft` with no query: flat table and raw stats.
-4. Clear `ww.draftProfile` and open `/draft` again: lands on `/onboard`.
-5. `npm run build -w @waiver-warrior/client` emits HTML for `/`, `/about`, `/how-it-works`, `/onboard`, and a `_shell.html`. No prerendered `/draft/index.html`.
+4. Clear `dd.draftProfile` and open `/draft` again: lands on `/onboard`.
+5. `npm run build -w @draft-duck/client` emits HTML for `/`, `/about`, `/how-it-works`, `/onboard`, and a `_shell.html`. No prerendered `/draft/index.html`.
 
 ## Next steps
 
