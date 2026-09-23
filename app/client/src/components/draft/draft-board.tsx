@@ -240,16 +240,6 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                     </div>
                     <div className='grid gap-3'>
                         <HeatLegend highlight={highlight} />
-                        <PlayerTable
-                            groups={capped.groups}
-                            enabledCats={profile.enabledCats}
-                            emptyLabel={query ? 'No players match that name.' : 'No players on this board.'}
-                            profile={profile}
-                            highlight={highlight}
-                            valueMode={valueMode}
-                            yourOverallPicks={yourPickSet}
-                            caption={tableCaption}
-                        />
                         {capped.hiddenCount > 0 ? (
                             <p className='mb-0'>
                                 <Button
@@ -262,6 +252,16 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                                 </Button>
                             </p>
                         ) : null}
+                        <PlayerTable
+                            groups={capped.groups}
+                            enabledCats={profile.enabledCats}
+                            emptyLabel={query ? 'No players match that name.' : 'No players on this board.'}
+                            profile={profile}
+                            highlight={highlight}
+                            valueMode={valueMode}
+                            yourOverallPicks={yourPickSet}
+                            caption={tableCaption}
+                        />
                     </div>
                 </div>
             )}
