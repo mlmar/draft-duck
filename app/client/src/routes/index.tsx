@@ -1,6 +1,6 @@
+import { AboutLink } from '@/components/about-link';
 import { BuildCardFace, namedBuildCardClassName } from '@/components/onboard/build-card-face';
 import { PageShell } from '@/components/page-shell';
-import { SiteNav } from '@/components/site-nav';
 import { EntryCtas } from '@/components/entry-ctas';
 import { LinkButton } from '@/components/link-button';
 import { CAT_KEYS, NAMED_BUILD_IDS } from '@draft-duck/core';
@@ -16,7 +16,6 @@ export const Route = createFileRoute('/')({
 function HomePage() {
     return (
         <PageShell className='justify-center'>
-            <p className='font-medium text-primary'>Category quiz</p>
             <h1>Draft Duck</h1>
             <p className='max-w-md'>Tell us how you want to play. We rank the 2025-26 board for that profile.</p>
             <div className='mt-8 grid gap-4'>
@@ -37,13 +36,13 @@ function HomePage() {
                     to='/onboard'
                     search={{ build: 'custom' }}
                     variant='ghost'
-                    className='h-auto w-full justify-start px-4 py-2 md:w-auto'
+                    className='h-auto w-full justify-start px-3 py-2 md:w-auto'
                 >
                     Custom
                 </LinkButton>
             </div>
             <EntryCtas />
-            <SiteNav />
+            <AboutLink />
         </PageShell>
     );
 }

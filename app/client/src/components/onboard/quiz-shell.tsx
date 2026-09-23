@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useEffect, useState, type ReactNode } from 'react';
 
-// Shared chrome: progress, title, description, sticky Back / Continue when those exist.
+// Quiet progress plus the question. Sticky Back / Continue when those exist.
 // Play has no footer. Copy and order stay in STEPS.
 
 type QuizShellProps = {
@@ -41,31 +41,30 @@ export function QuizShell({
     const showFooter = Boolean(onBack || onContinue);
 
     return (
-        <div className='flex min-h-[calc(100dvh-5rem)] flex-col'>
-            <header className='grid gap-2'>
+        <div className='flex min-h-[calc(100dvh-var(--app-header)-2rem)] flex-col'>
+            <header className='grid gap-3'>
                 {banner}
-                <p className='font-medium text-primary'>{stepLabel}</p>
                 <div
                     role='progressbar'
                     aria-valuenow={stepIndex + 1}
                     aria-valuemin={1}
                     aria-valuemax={stepCount}
                     aria-label={stepLabel}
-                    className='h-2 w-full overflow-hidden rounded-lg bg-muted'
+                    className='h-1 w-full overflow-hidden rounded-lg bg-muted'
                 >
                     <div
                         className={cn(
-                            'h-full w-full origin-left bg-primary',
+                            'h-full w-full origin-left bg-brand',
                             animateFill && 'transition-transform duration-300 ease-out motion-reduce:transition-none'
                         )}
                         style={{ transform: `scaleX(${fraction})` }}
                     />
                 </div>
-                <h1 className='mb-0'>{title}</h1>
+                <h1 className='mb-0 text-xl font-semibold tracking-tight md:text-2xl'>{title}</h1>
                 {description ? <p className='mb-0 text-muted-foreground'>{description}</p> : null}
             </header>
 
-            <div className='flex-1 pt-8'>{children}</div>
+            <div className='pt-5'>{children}</div>
 
             {showFooter ? (
                 <div className='sticky bottom-0 z-10 -mx-4 mt-8 border-t border-border bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]'>

@@ -32,10 +32,10 @@ alwaysApply: false
 
 - Font is Public Sans. Map it as `--font-sans`. Do not add a second display face.
 - Light theme only. No `.dark` block, no theme toggle, no dark-mode first drafts.
-- Primary is `#78A3CF` / `rgb(120, 163, 207)`. Primary-foreground is dark zinc, not white.
+- Buttons use ink `--primary` (dark zinc) with light `--primary-foreground`. `#78A3CF` is `--brand` / `--ring` only: progress, links, your-pick fill. Do not fill default buttons with the brand wash.
 - Body, buttons, and labels are `1rem` (`text-base`) or larger. `text-sm` is for secondary meta only. Avoid `text-xs` for anything a user needs to read.
 - Use rem for type, padding, margin, gap, width, height, and max-width. Use px only for border-radius (`--radius: 8px`). No rem radius. No `rounded-full` pills.
-- No `uppercase` or wide letter-spacing kickers. Hierarchy comes from weight and size.
-- Use shadcn tokens (`bg-background`, `text-foreground`, `text-primary`, `text-muted-foreground`) instead of one-off hex.
+- No `uppercase` or wide letter-spacing kickers. No colored eyebrows. Hierarchy comes from weight and size.
+- Use shadcn tokens (`bg-background`, `text-foreground`, `text-primary`, `text-brand`, `text-muted-foreground`) instead of one-off hex.
 - Mobile-first. Stack with rem spacing. `md:` is for extra width and heading size, not a second layout.
 - Local src imports use `@/`. Cross-package imports stay `@draft-duck/core`.
