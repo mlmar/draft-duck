@@ -5,12 +5,13 @@ import { applyArchetype } from '@/lib/quiz';
 import { isNamedBuildVisible, NAMED_BUILD_IDS, type NamedBuildId } from '@draft-duck/core';
 
 // How do you want to play. Named cards write a full stance map. Custom is a quieter last control.
+// Tap applies the map and leaves; Continue is not on this screen.
 
-export function PlayStep({ value, onChange }: QuizStepProps) {
+export function PlayStep({ value, onChosen }: QuizStepProps) {
     const visible = NAMED_BUILD_IDS.filter((id) => isNamedBuildVisible(id, value.enabledCats));
 
     function select(id: NamedBuildId | 'custom') {
-        onChange(applyArchetype(value, id));
+        onChosen?.(applyArchetype(value, id));
     }
 
     return (
