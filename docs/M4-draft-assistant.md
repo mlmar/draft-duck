@@ -11,7 +11,7 @@ On `/draft`, the saved `DraftProfile` ranks the universe into a **stats table**.
 - Profile editor on `/draft` (league size, rounds, draft type, cats, stances, intensity). Valid edits persist to `dd.draftProfile` and `POST /rank` again
 - Draft assistance toggle (off by default unless `?assist=1`): `draftRounds` subsections of width `leagueSize`; last round is the leftover tail. View flags live in the URL, not `localStorage`.
 - Redirect to `/onboard` if no valid `DraftProfile` in storage
-- Same composites as `/rank`. Partition is a slice, not a re-z-score
+- Table order is `/rank` `rank` (availability-aware). `composite` stays fit and can disagree with `rank`. Partition slices that list; it does not re-z.
 
 ## Out of scope
 
@@ -42,6 +42,10 @@ Width = league size (picks in a round). Snake vs linear does not change who sits
 
 12-team, 13-round: rounds 1–12 have 12 players; round 13 is rank 145 through the end of the CSV universe.
 
+### Availability
+
+Punt/Need boards no longer bury consensus stars into late rounds. The floor lives in `rank()`: one round of slack vs all-neutral `consensusRank`. Assist still does not re-rank. Algorithm and remaining gaps: [M2 availability floor](M2-ranking-engine.md#availability-floor).
+
 ### Settings
 
 First-time quiz stays on `/onboard`. After that, `/draft` edits the same `DraftProfile` fields. Archetype swipe stays quiz-only (it is not on the schema). Intensity sliders debounce so a drag is not one rank call per tick. Invalid in-progress values keep the last good table.
@@ -54,7 +58,8 @@ First-time quiz stays on `/onboard`. After that, `/draft` edits the same `DraftP
 - Assistance off: no round headings. Assistance on: `draftRounds` subsections, equal size except the last, which is the tail.
 - 12-team, 13-round: round 5 is ranks 49–60; round 13 is longer than 12.
 - Refresh restores the profile. `?assist=1` and `?values=pm` keep assistance and +/-. No query means flat table and raw stats.
-- Composites in the table match `/rank` for that profile (spot-check).
+- Composites in the table match `/rank` for that profile (spot-check). `composite` is still fit; `rank` can differ after the floor.
+- Fortress round buckets follow floored `rank` (Curry/Harden not round 4+). No extra client columns.
 
 ## Suggested build order
 

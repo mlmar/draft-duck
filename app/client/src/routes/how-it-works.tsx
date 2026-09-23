@@ -23,7 +23,8 @@ function HowItWorksPage() {
             <h1>How the board is ranked</h1>
             <p>
                 Every player is scored against the same filtered 2025-26 per-game universe. The quiz does not invent
-                stats. It only changes how much each category counts. The table is the result of those weights.
+                stats. It only changes how much each category counts. Rank is those weights, then a consensus floor so a
+                punt board does not bury names the rest of the room will take early.
             </p>
 
             <h2>Z-scores, then weights</h2>
@@ -43,11 +44,19 @@ function HowItWorksPage() {
                 the same as punting them.
             </p>
 
+            <h2>Consensus floor</h2>
+            <p>
+                Punt and Need can drop a star far down the fit list. Rank floors those names against an all-neutral
+                board on the same cats: they cannot sit more than one round below that consensus. Specialists who rise
+                stay put. The number under the name is still fit, so rank and that score can disagree. This is not
+                market ADP.
+            </p>
+
             <h2>Draft assistance</h2>
             <p className='mb-0'>
-                Assistance does not re-rank. It slices the same ordered list into round buckets of league size. The last
-                round holds everyone past a full roster. Snake versus linear does not change who sits in a bucket. Your
-                pick slot only marks which name in each round is yours.
+                Assistance does not re-rank. It slices that list into round buckets of league size. The last round holds
+                everyone past a full roster. Snake versus linear does not change who sits in a bucket. Your pick slot
+                only marks which name in each round is yours.
             </p>
             <EntryCtas />
             <SiteNav />

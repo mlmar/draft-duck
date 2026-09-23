@@ -19,7 +19,7 @@ The differentiator should be: you answer CAT questions, the board is the consequ
 ## What to keep
 
 - No accounts. Profile stays `dd.draftProfile`.
-- Ranker math, operator weights, and `POST /rank` stay put.
+- Ranker formulas, operator weights, and `POST /rank` stay put. Rank order already includes the consensus floor (punt boards do not bury stars). The three passes must not blend fit with consensus or fake ADP from this board.
 - Public Sans, light theme, primary `#78A3CF`, no pills, no uppercase kickers. See the design-aesthetic rule.
 - v1 still has no taken list, Yahoo, auction, or AI copy.
 - Quiz step modules stay data-driven (`STEPS`). Reorder and chrome can change without rewriting each screen.
@@ -339,7 +339,7 @@ Pick 7 in a 12-team snake: overall 7, 18, 31, 42, and so on. The player at `rank
 
 Simple view after quiz (`?assist=1&view=simple`): one pick card per round. The player at `ranked[overall - 1]`. Card chrome: name, pos, pick number, 2-3 fit marks, one why-line. Weak Need cat as muted copy, not a saturated warning banner. No uppercase "PICK SUGGESTION" kicker.
 
-Caption: "If the room drafted this board in order, this is the name at your pick."
+Caption: "If the room drafted this board in order, this is the name at your pick." The caption is honest for falls because the availability floor promotes consensus stars. Reaches (Gobert/Giannis early on Fortress) still need a later `consensusRank` chip, not a fake ADP warning.
 
 No slot: show the first name in that round. Do not include names before the slot, and do not show the next two on the board. One target, not a window.
 
@@ -355,7 +355,7 @@ On the detailed grid, still mark the slot row (`Your pick · 7th`) with a quiet 
 - Do not re-z-score for early vs late. Slot is a lens, not a weight.
 - Do not auto-pick for other teams. No CPU, no ADP opponent model. M4 stays.
 - Do not show an if-then tree ("If you took A, target X"). That needs a taken list and an opponent model. Without that, Round 2 is just overall pick 18 on the same list.
-- Do not say "ADP is 45, don't waste Pick 18." CSV has no ADP. Using this board's rank 45 as "reach at pick 18" is circular.
+- Do not say "ADP is 45, don't waste Pick 18." CSV has no ADP. `consensusRank` is already on `RankedPlayer` as an internal all-neutral proxy. Treating it as market ADP is still wrong.
 
 If `draftSlot` is missing (old profiles), treat assistance as today's unlabeled buckets. Do not invent pick 1.
 
@@ -404,7 +404,7 @@ Keep one `PlayerTable`. Simple is fewer columns and fewer rows plus the pick car
 Parked. Not in the three v1 passes.
 
 - **Up to 3 names at the slot.** BPA at `ranked[overall - 1]`, then the next two on this board. Same card chrome. Fewer than 3 only at the tail. No names before the slot.
-- **ADP reaching warnings.** Needs an ADP data source. Still no CPU mock. Do not fake ADP from this board's ranks.
+- **ADP reaching warnings.** Needs an ADP data source. Same splice, floor key becomes ADP overall pick; keep `consensusRank` as our balanced board. Still no CPU mock. Do not derive ADP from `rank`.
 - **If-then trees** ("If you took A, target X") only after a taken list exists.
 
 ## Recommended sequence
@@ -447,9 +447,11 @@ Checks:
 
 ## Reference
 
+- [M2-ranking-engine.md](../M2-ranking-engine.md)
 - [M3-onboarding.md](../M3-onboarding.md)
 - [M4-draft-assistant.md](../M4-draft-assistant.md)
 - [M5-extensibility.md](../M5-extensibility.md)
 - [2026-09-16-onboarding-quiz.md](../changes/2026-09-16-onboarding-quiz.md)
 - [2026-09-20-draft-board-heatmap.md](../changes/2026-09-20-draft-board-heatmap.md)
+- [2026-09-22-ranking-availability.md](../changes/2026-09-22-ranking-availability.md)
 - PR #4 change note (on that branch): `docs/changes/2026-09-21-tanstack-start.md`
