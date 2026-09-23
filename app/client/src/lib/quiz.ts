@@ -159,13 +159,7 @@ export function canPersist(draft: QuizDraft): boolean {
     return Number.isInteger(draft.draftRounds) && draft.draftRounds > 0 && draft.enabledCats.length >= 1;
 }
 
-// Simple view is slot names. No slot would land on an empty list.
-export function boardSearch(profile: Pick<DraftProfile, 'draftSlot'>): {
-    assist: '1';
-    view?: 'simple';
-} {
-    return {
-        assist: '1',
-        view: profile.draftSlot ? 'simple' : undefined
-    };
+// Assist is shareable. Simple vs full is session chrome, not a search param.
+export function boardSearch(): { assist: '1' } {
+    return { assist: '1' };
 }

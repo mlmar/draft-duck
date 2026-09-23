@@ -11,6 +11,7 @@ export {
     namedBuildHelper,
     profileHeadline,
     restoreSummary,
+    stanceSummary,
     stancesForArchetype
 } from './named-builds.ts';
 export type { NamedBuild, NamedBuildId } from './named-builds.ts';

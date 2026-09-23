@@ -18,14 +18,19 @@ const DRAFT_TYPES = [
     { value: 'linear' as const, label: 'Linear', description: 'Same order every round' }
 ];
 
-export function LeagueStep({ value, onChange }: QuizStepProps) {
+type LeagueStepProps = QuizStepProps & {
+    // Quiz keeps chips so first-run scan does not change. Drawer uses a select so 14 chips do not wrap.
+    slotControl?: 'chips' | 'select';
+};
+
+export function LeagueStep({ value, onChange, slotControl = 'chips' }: LeagueStepProps) {
     const slotOptions = Array.from({ length: value.leagueSize }, (_, index) => {
         const slot = index + 1;
         return { value: slot, label: String(slot) };
     });
 
     return (
-        <div className='grid gap-6'>
+        <div className='grid gap-8'>
             <div className='grid gap-2'>
                 <p className='mb-0 font-medium'>League size</p>
                 <ChoiceRow
@@ -39,7 +44,7 @@ export function LeagueStep({ value, onChange }: QuizStepProps) {
                 />
             </div>
             <div className='grid max-w-40 gap-2'>
-                <Label htmlFor='draft-rounds'>Draft rounds</Label>
+                <Label htmlFor='draft-rounds'>Rounds</Label>
                 <Input
                     id='draft-rounds'
                     type='number'
@@ -60,15 +65,33 @@ export function LeagueStep({ value, onChange }: QuizStepProps) {
                 />
             </div>
             <div className='grid gap-2'>
-                <p className='mb-0 font-medium'>Your pick (optional)</p>
-                <ChoiceRow
-                    value={value.draftSlot}
-                    options={slotOptions}
-                    onChange={(draftSlot) =>
-                        // Clicking the selected chip clears it. Slot is optional.
-                        onChange(setDraftSlot(value, draftSlot === value.draftSlot ? 0 : draftSlot))
-                    }
-                />
+                <p className='mb-0 font-medium'>{slotControl === 'select' ? 'Your pick' : 'Your pick (optional)'}</p>
+                {slotControl === 'select' ? (
+                    <select
+                        id='draft-slot'
+                        className='h-11 w-full max-w-40 rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
+                        value={value.draftSlot ?? ''}
+                        onChange={(event) =>
+                            onChange(setDraftSlot(value, Number.parseInt(event.target.value, 10) || 0))
+                        }
+                    >
+                        <option value=''>None</option>
+                        {slotOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                ) : (
+                    <ChoiceRow
+                        value={value.draftSlot}
+                        options={slotOptions}
+                        onChange={(draftSlot) =>
+                            // Clicking the selected chip clears it. Slot is optional.
+                            onChange(setDraftSlot(value, draftSlot === value.draftSlot ? 0 : draftSlot))
+                        }
+                    />
+                )}
             </div>
         </div>
     );

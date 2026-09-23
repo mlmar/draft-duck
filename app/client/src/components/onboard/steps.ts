@@ -21,20 +21,18 @@ export const STEPS: QuizStepDef[] = [
     {
         id: 'play',
         title: 'How do you want to play?',
-        description:
-            'A named build writes the stance map. Custom starts Neutral; tune Need / Punt on Review or the board.',
+        description: 'Tap a build to continue.',
         Component: PlayStep
     },
     {
         id: 'league',
         title: 'League',
-        description: 'Size, rounds, snake or linear, and optionally the pick you will sit in.',
         Component: LeagueStep
     },
     {
         id: 'review',
-        title: 'Review',
-        description: 'These are the names at your pick if the room drafted this board in order.',
+        title: 'Your picks',
+        description: 'If everyone took this board in order, these are the names at your pick.',
         submit: true,
         continueLabel: 'Rank my board',
         Component: ReviewStep
