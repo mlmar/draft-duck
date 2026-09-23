@@ -64,7 +64,10 @@ export function LeagueStep({ value, onChange }: QuizStepProps) {
                 <ChoiceRow
                     value={value.draftSlot}
                     options={slotOptions}
-                    onChange={(draftSlot) => onChange(setDraftSlot(value, draftSlot))}
+                    onChange={(draftSlot) =>
+                        // Clicking the selected chip clears it. Slot is optional.
+                        onChange(setDraftSlot(value, draftSlot === value.draftSlot ? 0 : draftSlot))
+                    }
                 />
             </div>
         </div>

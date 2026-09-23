@@ -16,12 +16,13 @@ export type QuizStepDef = {
     Component: ComponentType<QuizStepProps>;
 };
 
-// Play tap goes to league. Custom writes Neutral; stance edits live on Review.
+// Play tap goes to league. Custom writes Neutral; stance edits live on Review or the board.
 export const STEPS: QuizStepDef[] = [
     {
         id: 'play',
         title: 'How do you want to play?',
-        description: 'A named build writes the stance map. Custom starts Neutral; tune Need / Punt on Review.',
+        description:
+            'A named build writes the stance map. Custom starts Neutral; tune Need / Punt on Review or the board.',
         Component: PlayStep
     },
     {

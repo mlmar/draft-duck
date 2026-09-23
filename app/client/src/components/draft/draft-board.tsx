@@ -119,6 +119,9 @@ export function DraftBoard({
     const simpleGroups = [{ id: 'picks', players: slotPlayers }];
 
     const headline = profileHeadline(profile);
+    // Simple is slot names. No slot would be an empty list, so stay on the full table.
+    const hasSlot = Boolean(profile.draftSlot);
+    const showSimple = simpleView && hasSlot;
 
     return (
         <div className='grid gap-8'>
@@ -131,11 +134,9 @@ export function DraftBoard({
                 <p className='mb-0 font-medium text-primary'>Board</p>
                 <h1 className='mb-0'>Ranked for your CAT profile</h1>
                 <p className='mb-0 font-medium'>{headline}</p>
-                {simpleView ? (
+                {showSimple ? (
                     <p className='mb-0 max-w-xl text-muted-foreground'>
-                        {profile.draftSlot
-                            ? 'If the room drafted this board in order, this is the name at your pick.'
-                            : 'Set your pick in Edit league to see names at each slot.'}
+                        If the room drafted this board in order, this is the name at your pick.
                     </p>
                 ) : (
                     <p className='mb-0 max-w-xl'>
@@ -143,11 +144,13 @@ export function DraftBoard({
                     </p>
                 )}
                 <div className='flex flex-wrap items-center gap-3'>
-                    {simpleView ? null : (
+                    {hasSlot ? (
+                        <Button type='button' variant='outline' onClick={() => onSimpleViewChange(!showSimple)}>
+                            {showSimple ? 'Full table' : 'Simple view'}
+                        </Button>
+                    ) : null}
+                    {showSimple ? null : (
                         <>
-                            <Button type='button' variant='outline' onClick={() => onSimpleViewChange(true)}>
-                                Simple view
-                            </Button>
                             <Button
                                 type='button'
                                 variant={assist ? 'default' : 'outline'}
@@ -189,21 +192,9 @@ export function DraftBoard({
             {rankQuery.isFetching ? <p className='mb-0'>Ranking the board…</p> : null}
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
 
-            {simpleView ? (
+            {showSimple ? (
                 <div className='grid gap-3'>
-                    <div className='flex items-start justify-between gap-x-4 gap-y-2'>
-                        <div className='min-w-0 flex-1'>
-                            <HeatLegend highlight={highlight} />
-                        </div>
-                        <Button
-                            type='button'
-                            variant='outline'
-                            className='shrink-0'
-                            onClick={() => onSimpleViewChange(false)}
-                        >
-                            Full table
-                        </Button>
-                    </div>
+                    <HeatLegend highlight={highlight} />
                     <PlayerTable
                         groups={simpleGroups}
                         enabledCats={profile.enabledCats}
