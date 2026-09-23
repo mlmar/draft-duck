@@ -64,7 +64,7 @@ export function QuizShell({
                 {description ? <p className='mb-0 text-muted-foreground'>{description}</p> : null}
             </header>
 
-            <div className='pt-5'>{children}</div>
+            <div className='pt-5 pb-24'>{children}</div>
 
             {showFooter ? (
                 <div className='sticky bottom-0 z-10 -mx-4 mt-8 border-t border-border bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]'>
