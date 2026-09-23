@@ -37,7 +37,7 @@ export const Route = createFileRoute('/onboard')({
 
 function OnboardPage() {
     return (
-        <PageShell>
+        <PageShell inset='quiz'>
             <OnboardQuiz />
         </PageShell>
     );

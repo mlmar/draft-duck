@@ -1,3 +1,4 @@
+import { AppFrame } from '@/components/app-frame';
 import { LinkButton } from '@/components/link-button';
 import { PendingFallback } from '@/components/pending-fallback';
 import { PageShell } from '@/components/page-shell';
@@ -6,7 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
 
-const DEFAULT_DESCRIPTION = 'Category-league fantasy basketball helper: quiz, weighted ranks, optional round buckets.';
+const DEFAULT_DESCRIPTION = 'Tell us how you want to play. We rank the 2025-26 board for that profile.';
 
 function createQueryClient() {
     return new QueryClient({
@@ -21,7 +22,7 @@ export const Route = createRootRoute({
     head: () => ({
         meta: [
             { charSet: 'utf-8' },
-            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+            { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
             { title: 'Draft Duck' },
             { name: 'description', content: DEFAULT_DESCRIPTION }
         ],
@@ -35,7 +36,9 @@ export const Route = createRootRoute({
 function RootComponent() {
     return (
         <RootDocument>
-            <Outlet />
+            <AppFrame>
+                <Outlet />
+            </AppFrame>
         </RootDocument>
     );
 }
