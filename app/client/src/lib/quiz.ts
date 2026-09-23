@@ -147,16 +147,8 @@ export function profileToQuizDraft(profile: DraftProfile): QuizDraft {
 
 export function canContinue(stepId: string, draft: QuizDraft): boolean {
     if (stepId === 'league') {
-        const roundsOk = Number.isInteger(draft.draftRounds) && draft.draftRounds > 0;
-        const slotOk =
-            draft.draftSlot !== undefined &&
-            Number.isInteger(draft.draftSlot) &&
-            draft.draftSlot >= 1 &&
-            draft.draftSlot <= draft.leagueSize;
-        return roundsOk && slotOk;
+        return Number.isInteger(draft.draftRounds) && draft.draftRounds > 0;
     }
-    if (stepId === 'preset') return draft.enabledCats.length >= 1;
-    if (stepId === 'play') return draft.archetypeId !== null;
     return true;
 }
 

@@ -25,7 +25,7 @@ function HomePage() {
                         <LinkButton
                             key={id}
                             to='/onboard'
-                            search={{ step: 'play', build: id }}
+                            search={{ build: id }}
                             variant='outline'
                             className={namedBuildCardClassName}
                         >
@@ -35,7 +35,7 @@ function HomePage() {
                 </div>
                 <LinkButton
                     to='/onboard'
-                    search={{ step: 'play', build: 'custom' }}
+                    search={{ build: 'custom' }}
                     variant='ghost'
                     className='h-auto w-full justify-start px-4 py-2 md:w-auto'
                 >
