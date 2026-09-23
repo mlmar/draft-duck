@@ -29,7 +29,7 @@ export function IntensitySlider({ id, label, value, onChange, disabled = false }
                 value={value}
                 disabled={disabled}
                 onChange={(event) => onChange(Number(event.target.value))}
-                className='w-full accent-primary disabled:cursor-not-allowed'
+                className='w-full accent-brand disabled:cursor-not-allowed'
             />
             <div className='flex justify-between text-muted-foreground'>
                 <span>Less</span>

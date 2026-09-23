@@ -97,3 +97,14 @@ export function restoreSummary(profile: DraftProfile): string {
     if (punts.length === 0) return label;
     return `${label} · punt ${punts.join(', ')}`;
 }
+
+// Live Need / Punt line from the current map, not the named-build helper. Board summary uses this.
+export function stanceSummary(profile: Pick<DraftProfile, 'enabledCats' | 'stances'>): string {
+    const need = profile.enabledCats.filter((cat) => profile.stances[cat] === 'need').map((cat) => CAT_LABELS[cat]);
+    const punt = profile.enabledCats.filter((cat) => profile.stances[cat] === 'punt').map((cat) => CAT_LABELS[cat]);
+    const parts: string[] = [];
+    if (need.length > 0) parts.push(`Need ${need.join(', ')}`);
+    if (punt.length > 0) parts.push(`Punt ${punt.join(', ')}`);
+    if (parts.length === 0) return 'All cats Neutral';
+    return parts.join(' · ');
+}

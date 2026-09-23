@@ -11,7 +11,7 @@ import {
 } from '@/lib/quiz';
 import { useDraftProfileStore } from '@/stores/draft-profile';
 import { draftProfileSchema, restoreSummary } from '@draft-duck/core';
-import { Link, useNavigate, useSearch } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
 // Quiz for /onboard. Owns the in-progress draft and persist hydrate. The current screen is ?step=.
@@ -70,7 +70,7 @@ export function OnboardQuiz() {
         }
         setParseError(null);
         setProfile(parsed.data);
-        void navigate({ to: '/draft', search: boardSearch(parsed.data) });
+        void navigate({ to: '/draft', search: boardSearch() });
     }
 
     function handleContinue() {
@@ -105,33 +105,26 @@ export function OnboardQuiz() {
         ) : null;
 
     return (
-        <>
-            <p className='mb-4'>
-                <Link to='/' className='text-muted-foreground hover:text-foreground'>
-                    Draft Duck
-                </Link>
-            </p>
-            <QuizShell
-                title={step.title}
-                description={step.description}
-                stepIndex={stepIndex}
-                stepCount={STEPS.length}
-                onBack={isFirst ? undefined : handleBack}
-                onContinue={isPlay ? undefined : handleContinue}
-                continueLabel={step.id === 'league' && !draft.draftSlot ? 'Rank my board' : step.continueLabel}
-                continueDisabled={!canContinue(step.id, draft)}
-                banner={restoreBanner}
-            >
-                <StepComponent
-                    value={draft}
-                    onChange={(next) => {
-                        setDraft(next);
-                        setParseError(null);
-                    }}
-                    onChosen={handleChosen}
-                    parseError={parseError}
-                />
-            </QuizShell>
-        </>
+        <QuizShell
+            title={step.title}
+            description={step.description}
+            stepIndex={stepIndex}
+            stepCount={STEPS.length}
+            onBack={isFirst ? undefined : handleBack}
+            onContinue={isPlay ? undefined : handleContinue}
+            continueLabel={step.id === 'league' && !draft.draftSlot ? 'Rank my board' : step.continueLabel}
+            continueDisabled={!canContinue(step.id, draft)}
+            banner={restoreBanner}
+        >
+            <StepComponent
+                value={draft}
+                onChange={(next) => {
+                    setDraft(next);
+                    setParseError(null);
+                }}
+                onChosen={handleChosen}
+                parseError={parseError}
+            />
+        </QuizShell>
     );
 }

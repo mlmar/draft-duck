@@ -4,6 +4,7 @@ import {
     namedBuildHelper,
     profileHeadline,
     restoreSummary,
+    stanceSummary,
     stancesForArchetype
 } from './named-builds.ts';
 import { draftProfileSchema } from './profile.ts';
@@ -89,6 +90,13 @@ describe('profile chrome copy', () => {
         expect(restoreSummary(profile({ archetypeId: 'puntFt', stances: { ftPct: 'punt' } }))).toBe(
             'Fortress · punt FT%'
         );
+    });
+
+    it('reads live stances so a Fortress edit still updates the summary', () => {
+        expect(stanceSummary(profile({ stances: { trb: 'need', blk: 'need', ftPct: 'punt' } }))).toBe(
+            'Need REB, BLK · Punt FT%'
+        );
+        expect(stanceSummary(profile())).toBe('All cats Neutral');
     });
 });
 
