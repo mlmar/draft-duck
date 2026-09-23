@@ -16,7 +16,7 @@ export function EntryCtas() {
 
     return (
         <p className='mt-8 mb-0 flex flex-wrap gap-3'>
-            <LinkButton to='/draft' search={boardSearch(profile)}>
+            <LinkButton to='/draft' search={boardSearch()}>
                 Open board
             </LinkButton>
             <LinkButton to='/onboard' variant='outline'>
