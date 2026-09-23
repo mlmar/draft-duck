@@ -2,6 +2,7 @@ import { QuizShell } from '@/components/onboard/quiz-shell';
 import { STEPS } from '@/components/onboard/steps';
 import {
     applyArchetype,
+    boardSearch,
     canContinue,
     DEFAULT_QUIZ_DRAFT,
     profileToQuizDraft,
@@ -12,8 +13,6 @@ import { useDraftProfileStore } from '@/stores/draft-profile';
 import { draftProfileSchema, restoreSummary } from '@draft-duck/core';
 import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-
-const SIMPLE_BOARD_SEARCH = { assist: '1', view: 'simple' } as const;
 
 // Quiz for /onboard. Owns the in-progress draft and persist hydrate. The current screen is ?step=.
 export function OnboardQuiz() {
@@ -63,16 +62,21 @@ export function OnboardQuiz() {
         // Mount-only. search.build is the landing hint; going to league drops it from the URL.
     }, []);
 
+    function finishQuiz() {
+        const parsed = draftProfileSchema.safeParse(quizDraftToProfile(draft));
+        if (!parsed.success) {
+            setParseError('This profile is not valid yet. Go back and check league size, rounds, and categories.');
+            return;
+        }
+        setParseError(null);
+        setProfile(parsed.data);
+        void navigate({ to: '/draft', search: boardSearch(parsed.data) });
+    }
+
     function handleContinue() {
-        if (step.submit) {
-            const parsed = draftProfileSchema.safeParse(quizDraftToProfile(draft));
-            if (!parsed.success) {
-                setParseError('This profile is not valid yet. Go back and check league size, rounds, and categories.');
-                return;
-            }
-            setParseError(null);
-            setProfile(parsed.data);
-            void navigate({ to: '/draft', search: SIMPLE_BOARD_SEARCH });
+        // No slot: review would be empty. Persist and open the assisted full board.
+        if (step.submit || (step.id === 'league' && !draft.draftSlot)) {
+            finishQuiz();
             return;
         }
 
@@ -114,7 +118,7 @@ export function OnboardQuiz() {
                 stepCount={STEPS.length}
                 onBack={isFirst ? undefined : handleBack}
                 onContinue={isPlay ? undefined : handleContinue}
-                continueLabel={step.continueLabel}
+                continueLabel={step.id === 'league' && !draft.draftSlot ? 'Rank my board' : step.continueLabel}
                 continueDisabled={!canContinue(step.id, draft)}
                 banner={restoreBanner}
             >
