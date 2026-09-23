@@ -19,7 +19,7 @@ The differentiator should be: you answer CAT questions, the board is the consequ
 ## What to keep
 
 - No accounts. Profile stays `dd.draftProfile`.
-- Ranker formulas, operator weights, and `POST /rank` stay put. Rank order already includes the consensus floor (punt boards do not bury stars). The three passes must not blend fit with consensus or fake ADP from this board.
+- Ranker formulas, operator weights, and `POST /rank` stay put. Rank order is fit (punt-weighted) while the consensus floor is off. The three passes must not blend fit with consensus or fake ADP from this board.
 - Public Sans, light theme, primary `#78A3CF`, no pills, no uppercase kickers. See the design-aesthetic rule.
 - v1 still has no taken list, Yahoo, auction, or AI copy.
 - Quiz step modules stay data-driven (`STEPS`). Reorder and chrome can change without rewriting each screen.
@@ -339,7 +339,7 @@ Pick 7 in a 12-team snake: overall 7, 18, 31, 42, and so on. The player at `rank
 
 Simple view after quiz (`?assist=1&view=simple`): one pick card per round. The player at `ranked[overall - 1]`. Card chrome: name, pos, pick number, 2-3 fit marks, one why-line. Weak Need cat as muted copy, not a saturated warning banner. No uppercase "PICK SUGGESTION" kicker.
 
-Caption: "If the room drafted this board in order, this is the name at your pick." The caption is honest for falls because the availability floor promotes consensus stars. Reaches (Gobert/Giannis early on Fortress) still need a later `consensusRank` chip, not a fake ADP warning.
+Caption: "If the room drafted this board in order, this is the name at your pick." With the floor off, that caption is circular for falls: a punt board can leave a consensus star on a late card. Do not fake ADP. Reaches (Gobert/Giannis early on Fortress) still need a later chip.
 
 No slot: show the first name in that round. Do not include names before the slot, and do not show the next two on the board. One target, not a window.
 

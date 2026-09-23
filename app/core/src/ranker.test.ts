@@ -208,7 +208,7 @@ describe('rank', () => {
         const sniper = profile({
             stances: { pts: 'need', fg3: 'need', ftPct: 'need', ast: 'need', stl: 'need', blk: 'punt' }
         });
-        const ranked = rank(universe, sniper, { availabilitySlack: 2 });
+        const ranked = rank(universe, sniper, { availabilityFloor: true, availabilitySlack: 2 });
         const star = byId(ranked, 'blkstar1');
         const specialist = byId(ranked, 'guard001');
         expect(star.fitRank).toBeGreaterThan(star.consensusRank);
@@ -216,6 +216,35 @@ describe('rank', () => {
         expect(star.rank).toBeLessThan(star.fitRank);
         expect(specialist.fitRank).toBe(1);
         expect(specialist.rank).toBe(1);
+    });
+
+    it('keeps fit order when the availability floor is off', () => {
+        const universe = [
+            season({ playerId: 'blkstar1', blk: 4 }),
+            season({
+                playerId: 'guard001',
+                pts: 22,
+                ast: 7,
+                fg3: 3.2,
+                stl: 2.2,
+                blk: 0.2,
+                ftPct: 0.9,
+                fta: 6,
+                ft: 5.4
+            }),
+            ...Array.from({ length: 6 }, (_, index) => season({ playerId: `avg0000${index}` }))
+        ];
+        const sniper = profile({
+            stances: { pts: 'need', fg3: 'need', ftPct: 'need', ast: 'need', stl: 'need', blk: 'punt' }
+        });
+        const off = rank(universe, sniper);
+        const on = rank(universe, sniper, { availabilityFloor: true, availabilitySlack: 2 });
+        const starOff = byId(off, 'blkstar1');
+        const starOn = byId(on, 'blkstar1');
+        expect(off.every((player) => player.rank === player.fitRank)).toBe(true);
+        expect(starOff.rank).toBe(starOff.fitRank);
+        expect(starOn.rank).toBeLessThan(starOn.fitRank);
+        expect(starOff.rank).toBeGreaterThan(starOn.rank);
     });
 
     it('restores fit order when availability slack covers the whole universe', () => {
@@ -260,8 +289,8 @@ describe('rank', () => {
         const fortress = profile({
             stances: { fgPct: 'need', trb: 'need', blk: 'need', pts: 'need', ftPct: 'punt' }
         });
-        const floored = rank(universe, fortress);
-        const fitOnly = rank(universe, fortress, { availabilitySlack: universe.length });
+        const floored = rank(universe, fortress, { availabilityFloor: true });
+        const fitOnly = rank(universe, fortress, { availabilityFloor: true, availabilitySlack: universe.length });
         expect(fitOnly.map((player) => player.playerId)).toEqual(
             [...floored].sort((a, b) => a.fitRank - b.fitRank).map((player) => player.playerId)
         );
@@ -270,13 +299,31 @@ describe('rank', () => {
 });
 
 describe('rank season dump', () => {
-    it('keeps Fortress consensus stars inside one round of slack', async () => {
+    it('keeps Fortress rank as fit order while the availability floor is off', async () => {
         const universe = await new CsvProvider(seasonPath).load();
         const fortress = profile({
             stances: stancesForArchetype('puntFt', CAT_KEYS),
             archetypeId: 'puntFt'
         });
         const ranked = rank(universe, fortress);
+        const curry = byId(ranked, 'curryst01');
+        const harden = byId(ranked, 'hardeja01');
+        const giannis = byId(ranked, 'antetgi01');
+        expect(curry.rank).toBe(curry.fitRank);
+        expect(harden.rank).toBe(harden.fitRank);
+        expect(curry.fitRank).toBeGreaterThan(curry.consensusRank);
+        expect(harden.fitRank).toBeGreaterThan(harden.consensusRank);
+        expect(giannis.rank).toBeLessThan(giannis.consensusRank);
+        expect(giannis.rank).toBe(giannis.fitRank);
+    });
+
+    it('keeps Fortress consensus stars inside one round of slack when the floor is on', async () => {
+        const universe = await new CsvProvider(seasonPath).load();
+        const fortress = profile({
+            stances: stancesForArchetype('puntFt', CAT_KEYS),
+            archetypeId: 'puntFt'
+        });
+        const ranked = rank(universe, fortress, { availabilityFloor: true });
         const curry = byId(ranked, 'curryst01');
         const harden = byId(ranked, 'hardeja01');
         const giannis = byId(ranked, 'antetgi01');

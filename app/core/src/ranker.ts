@@ -1,5 +1,6 @@
 import { DEFAULT_OPERATOR_WEIGHTS } from './operator-weights.ts';
 import { profileWeight } from './profile.ts';
+import { DEFAULT_AVAILABILITY_FLOOR } from './ranker-config.ts';
 import { mean, std, zScore } from './stats.ts';
 import { identitySuggestionHook, type SuggestionHook } from './suggestion-hook.ts';
 import type { CatKey, DraftProfile, PlayerSeason, RankedPlayer } from './types.ts';
@@ -8,7 +9,9 @@ export type RankOptions = {
     operatorWeights?: Record<CatKey, number>;
     // Swap at bootstrap. Default is identity. Do not put ranking math in a hook.
     suggestionHook?: SuggestionHook;
-    // Extra ranks a consensus player may fall. Default is leagueSize (one round). Large values disable the floor.
+    // Default is ranker.json (false). true runs the consensus splice. Tests pass true to cover the floor.
+    availabilityFloor?: boolean;
+    // Extra ranks a consensus player may fall when the floor is on. Default is leagueSize (one round).
     availabilitySlack?: number;
 };
 
@@ -55,9 +58,10 @@ export function rank(universe: PlayerSeason[], profile: DraftProfile, options: R
     const fitRankById = rankById(fitOrder);
     const consensusRankById = rankById(consensusOrder);
 
-    // One round of slack vs the all-neutral board. Only promotes; punt specialists who rose stay put.
+    // v1 is fit order. The floor is off in ranker.json so a punt board can bury poor-fit stars.
+    const availabilityFloor = options.availabilityFloor ?? DEFAULT_AVAILABILITY_FLOOR;
     const slack = options.availabilitySlack ?? profile.leagueSize;
-    const ordered = applyAvailabilityFloor(fitOrder, consensusOrder, slack);
+    const ordered = availabilityFloor ? applyAvailabilityFloor(fitOrder, consensusOrder, slack) : fitOrder;
 
     const ranked = ordered.map((player, index) => {
         const { consensusComposite: _consensusComposite, ...rest } = player;

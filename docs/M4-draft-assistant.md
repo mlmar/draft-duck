@@ -11,7 +11,7 @@ On `/draft`, the saved `DraftProfile` ranks the universe into a **stats table**.
 - Profile editor on `/draft` (league size, rounds, draft type, cats, stances, intensity). Valid edits persist to `dd.draftProfile` and `POST /rank` again
 - Draft assistance toggle (off by default unless `?assist=1`): `draftRounds` subsections of width `leagueSize`; last round is the leftover tail. View flags live in the URL, not `localStorage`.
 - Redirect to `/onboard` if no valid `DraftProfile` in storage
-- Table order is `/rank` `rank` (availability-aware). `composite` stays fit and can disagree with `rank`. Partition slices that list; it does not re-z.
+- Table order is `/rank` `rank`. While the availability floor is off, that is fit order (punt-weighted). Partition slices that list; it does not re-z.
 
 ## Out of scope
 
@@ -44,7 +44,9 @@ Width = league size (picks in a round). Snake vs linear does not change who sits
 
 ### Availability
 
-Punt/Need boards no longer bury consensus stars into late rounds. The floor lives in `rank()`: one round of slack vs all-neutral `consensusRank`. Assist still does not re-rank. Algorithm and remaining gaps: [M2 availability floor](M2-ranking-engine.md#availability-floor).
+v1 draft position is the punt-weighted fit list. Assist slices that order; it does not re-rank. A Fortress board can bury Curry and Harden. That is necessary: we do not have ADP, and promoting against an all-neutral proxy hid the punt.
+
+The consensus floor still exists in `rank()`, off by default in `ranker.json`. Turn it on and restart the API. Algorithm: [M2 availability floor](M2-ranking-engine.md#availability-floor).
 
 ### Settings
 
@@ -58,8 +60,8 @@ First-time quiz stays on `/onboard`. After that, `/draft` edits the same `DraftP
 - Assistance off: no round headings. Assistance on: `draftRounds` subsections, equal size except the last, which is the tail.
 - 12-team, 13-round: round 5 is ranks 49–60; round 13 is longer than 12.
 - Refresh restores the profile. `?assist=1` and `?values=pm` keep assistance and +/-. No query means flat table and raw stats.
-- Composites in the table match `/rank` for that profile (spot-check). `composite` is still fit; `rank` can differ after the floor.
-- Fortress round buckets follow floored `rank` (Curry/Harden not round 4+). No extra client columns.
+- Composites in the table match `/rank` for that profile (spot-check). While the floor is off, `rank === fitRank`.
+- Fortress round buckets can bury Curry/Harden. Assist still slices that list. No extra client columns.
 
 ## Suggested build order
 
