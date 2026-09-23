@@ -23,8 +23,8 @@ function HowItWorksPage() {
             <h1>How the board is ranked</h1>
             <p>
                 Every player is scored against the same filtered 2025-26 per-game universe. The quiz does not invent
-                stats. It only changes how much each category counts. Rank is those weights, then a consensus floor so a
-                punt board does not bury names the rest of the room will take early.
+                stats. It only changes how much each category counts. Rank is that weighted list. A punt or Need board
+                can drop a poor-fit star; that is the punt working.
             </p>
 
             <h2>Z-scores, then weights</h2>
@@ -42,14 +42,6 @@ function HowItWorksPage() {
             <p>
                 Punt zeroes that cat in the sum. An 8-cat preset drops turnovers from the board entirely, which is not
                 the same as punting them.
-            </p>
-
-            <h2>Consensus floor</h2>
-            <p>
-                Punt and Need can drop a star far down the fit list. Rank floors those names against an all-neutral
-                board on the same cats: they cannot sit more than one round below that consensus. Specialists who rise
-                stay put. The number under the name is still fit, so rank and that score can disagree. This is not
-                market ADP.
             </p>
 
             <h2>Draft assistance</h2>

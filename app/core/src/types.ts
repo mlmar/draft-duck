@@ -62,12 +62,12 @@ export type DraftProfile = {
 // RankedPlayer.z only includes enabled cats. Disabled cats are omitted, not zeroed.
 export type RankedPlayer = PlayerSeason & {
     z: Partial<Record<CatKey, number>>;
-    /** Profile-weighted fit. Punt cats contribute 0. Rank may differ after the availability floor. */
+    /** Profile-weighted fit. Punt cats contribute 0. Rank equals this order while the availability floor is off. */
     composite: number;
     rank: number;
     /** 1-based order by fit composite only, before the availability floor. */
     fitRank: number;
-    /** 1-based all-neutral order on the same enabled cats. Availability proxy until we have ADP. */
+    /** 1-based all-neutral order on the same enabled cats. Still computed when the floor is off. */
     consensusRank: number;
     /** Unused in v1. Filled only by an annotator, never by z-score math. */
     notes?: string;

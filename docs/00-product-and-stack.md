@@ -82,6 +82,7 @@ draft-duck/
     core/                # ingest + ranker + Zod
       config/
         category-weights.json
+        ranker.json
     data/                # 25_26_*.csv (source of truth for v1)
   docs/
 ```

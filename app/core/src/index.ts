@@ -24,6 +24,7 @@ export type { CsvProviderOptions } from './csv-provider.ts';
 export { draftProfileSchema, rankRequestSchema, profileWeight } from './profile.ts';
 export type { RankRequest } from './profile.ts';
 export { DEFAULT_OPERATOR_WEIGHTS } from './operator-weights.ts';
+export { DEFAULT_AVAILABILITY_FLOOR } from './ranker-config.ts';
 export { mean, std, zScore } from './stats.ts';
 export { rank } from './ranker.ts';
 export type { RankOptions } from './ranker.ts';

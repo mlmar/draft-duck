@@ -49,7 +49,7 @@ Do not import CSV paths inside the ranker.
 
 **Intent:** keep z-score math pure. Narrative (punt reasons, later AI or injury copy) must not live inside the ranker.
 
-`rank()` scores, applies the availability floor, assigns 1-based `rank`, then calls `annotate`. The default is identity, so `/rank` today is rank-then-do-nothing. Call identity now instead of skipping `annotate` so ranking HTTP and any later draft slice share one composition point. A real annotator is a bootstrap swap, not a second branch in the z-score loop.
+`rank()` scores, optionally applies the availability floor (`ranker.json`, off by default), assigns 1-based `rank`, then calls `annotate`. The default is identity, so `/rank` today is rank-then-do-nothing. Call identity now instead of skipping `annotate` so ranking HTTP and any later draft slice share one composition point. A real annotator is a bootstrap swap, not a second branch in the z-score loop.
 
 **Later annotator contract:** may set display-only `notes` on `RankedPlayer` (for example “punts FG%”). Must not change `composite`, `rank`, or player order. Must not recompute z-scores. The hook is not where ranking logic lives.
 
