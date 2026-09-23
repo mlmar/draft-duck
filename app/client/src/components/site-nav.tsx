@@ -1,13 +1,12 @@
 import { Link } from '@tanstack/react-router';
 import { useHydratedProfile } from '@/hooks/use-hydrated-profile';
+import { boardSearch } from '@/lib/quiz';
 
 const LINKS = [
     { to: '/', label: 'Home' },
     { to: '/how-it-works', label: 'Scoring' },
     { to: '/about', label: 'About' }
 ] as const;
-
-const BOARD_SEARCH = { assist: '1', view: 'simple' } as const;
 
 // Quiet footer links. Board appears after a profile hydrates so first-run chrome stays quiz-first.
 export function SiteNav() {
@@ -26,10 +25,10 @@ export function SiteNav() {
                     {link.label}
                 </Link>
             ))}
-            {showBoard ? (
+            {showBoard && profile ? (
                 <Link
                     to='/draft'
-                    search={BOARD_SEARCH}
+                    search={boardSearch(profile)}
                     className='text-muted-foreground hover:text-foreground'
                     activeProps={{ className: 'text-foreground' }}
                 >

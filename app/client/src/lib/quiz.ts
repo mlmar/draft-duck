@@ -87,12 +87,14 @@ export function setCustomCats(draft: QuizDraft, enabledCats: CatKey[]): QuizDraf
 }
 
 // Overwrite every enabled cat. Named cards skip Fine-tune. Custom is a blank Neutral form.
+// Drop intensity so a later Custom Fine-tune cannot revive the previous slider map.
 export function applyArchetype(draft: QuizDraft, id: ArchetypeId): QuizDraft {
     return {
         ...draft,
         archetypeId: id,
         stances: stancesForArchetype(id, draft.enabledCats),
-        includeIntensity: false
+        includeIntensity: false,
+        intensity: {}
     };
 }
 
@@ -155,4 +157,15 @@ export function canContinue(stepId: string, draft: QuizDraft): boolean {
 // Board edits persist without a slot so old profiles still re-rank from the stance bar.
 export function canPersist(draft: QuizDraft): boolean {
     return Number.isInteger(draft.draftRounds) && draft.draftRounds > 0 && draft.enabledCats.length >= 1;
+}
+
+// Simple view is slot names. No slot would land on an empty list.
+export function boardSearch(profile: Pick<DraftProfile, 'draftSlot'>): {
+    assist: '1';
+    view?: 'simple';
+} {
+    return {
+        assist: '1',
+        view: profile.draftSlot ? 'simple' : undefined
+    };
 }

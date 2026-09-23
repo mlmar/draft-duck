@@ -1,7 +1,6 @@
 import { LinkButton } from '@/components/link-button';
 import { useHydratedProfile } from '@/hooks/use-hydrated-profile';
-
-const BOARD_SEARCH = { assist: '1', view: 'simple' } as const;
+import { boardSearch } from '@/lib/quiz';
 
 // Start for first run. Returning users skip the quiz and can retake from here.
 export function EntryCtas() {
@@ -17,7 +16,7 @@ export function EntryCtas() {
 
     return (
         <p className='mt-8 mb-0 flex flex-wrap gap-3'>
-            <LinkButton to='/draft' search={BOARD_SEARCH}>
+            <LinkButton to='/draft' search={boardSearch(profile)}>
                 Open board
             </LinkButton>
             <LinkButton to='/onboard' variant='outline'>

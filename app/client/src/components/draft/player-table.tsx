@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import {
     CAT_LABELS,
     formatSignedScore,
+    ordinal,
     type CatHighlightStrategy,
     type CatKey,
     type DraftProfile,
@@ -32,7 +33,8 @@ type PlayerTableProps = {
 
 const IDENTITY_COLS = 4;
 
-const colRank = 'w-16 min-w-16';
+// Extra width so Your pick · 7th fits under the rank on highlighted rows.
+const colRank = 'w-28 min-w-28';
 // w-40 clips Gilgeous-Alexander. Keep it fixed, just wider, so the table still does not grow with the name.
 const colName = 'w-64 min-w-64';
 const colTeam = 'w-16 min-w-16';
@@ -40,9 +42,9 @@ const colPos = 'w-16 min-w-16';
 const colCat = 'w-20 min-w-20';
 
 const stickyRank = `sticky left-0 z-10 ${colRank}`;
-const stickyName = `sticky left-16 z-10 ${colName}`;
+const stickyName = `sticky left-28 z-10 ${colName}`;
 const stickyRankHead = `sticky left-0 top-0 z-30 ${colRank} bg-background`;
-const stickyNameHead = `sticky left-16 top-0 z-30 ${colName} bg-background`;
+const stickyNameHead = `sticky left-28 top-0 z-30 ${colName} bg-background`;
 
 // Mix in srgb so #78A3CF stays pale blue. oklch interpolation landed in pink.
 const yourPickFill =
@@ -100,7 +102,7 @@ export function PlayerTable({
     const colSpan = IDENTITY_COLS + enabledCats.length;
 
     return (
-        <Table className='table-fixed min-w-[73rem] border-separate border-spacing-0'>
+        <Table className='table-fixed min-w-[76rem] border-separate border-spacing-0'>
             <colgroup>
                 <col className={colRank} />
                 <col className={colName} />
@@ -151,6 +153,11 @@ export function PlayerTable({
                                     )}
                                 >
                                     {player.rank}
+                                    {isYourPick && profile.draftSlot ? (
+                                        <span className='mt-0.5 block text-sm text-muted-foreground'>
+                                            Your pick · {ordinal(profile.draftSlot)}
+                                        </span>
+                                    ) : null}
                                 </TableCell>
                                 <TableCell className={`${stickyName} ${fill} overflow-hidden`}>
                                     <span className='block truncate font-medium'>{player.name}</span>
