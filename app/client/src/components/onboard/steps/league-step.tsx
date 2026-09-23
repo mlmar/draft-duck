@@ -60,7 +60,7 @@ export function LeagueStep({ value, onChange }: QuizStepProps) {
                 />
             </div>
             <div className='grid gap-2'>
-                <p className='mb-0 font-medium'>Your pick</p>
+                <p className='mb-0 font-medium'>Your pick (optional)</p>
                 <ChoiceRow
                     value={value.draftSlot}
                     options={slotOptions}
