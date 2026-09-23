@@ -1,6 +1,5 @@
 import { QuizShell } from '@/components/onboard/quiz-shell';
-import { visibleSteps } from '@/components/onboard/steps';
-import { Button } from '@/components/ui/button';
+import { STEPS } from '@/components/onboard/steps';
 import {
     applyArchetype,
     canContinue,
@@ -27,12 +26,23 @@ export function OnboardQuiz() {
     const [hasSavedProfile, setHasSavedProfile] = useState(false);
     const [savedSummary, setSavedSummary] = useState<string | null>(null);
 
-    const path = visibleSteps(draft, search.step);
-    const fromSearch = path.findIndex((entry) => entry.id === search.step);
+    const fromSearch = STEPS.findIndex((entry) => entry.id === search.step);
     const stepIndex = fromSearch === -1 ? 0 : fromSearch;
+    const step = STEPS[stepIndex] ?? STEPS[0]!;
+    const StepComponent = step.Component;
+    const isFirst = stepIndex === 0;
+    const isPlay = step.id === 'play';
+    const isReview = Boolean(step.submit);
+
+    function goToStepId(id: string) {
+        void navigate({
+            search: { step: id },
+            replace: true
+        });
+    }
 
     // Persist hydrates from localStorage after mount. Prefill once that lands.
-    // search.build is an entry hint from home. Continue drops it from the URL; do not re-run.
+    // Home ?build= is picking an archetype from the gallery. Land on league, drop build from the URL.
     useEffect(() => {
         const entryBuild = search.build;
         const applySaved = () => {
@@ -44,25 +54,14 @@ export function OnboardQuiz() {
                 setSavedSummary(restoreSummary(profile));
             }
             if (profile || entryBuild) setDraft(next);
+            if (entryBuild) goToStepId('league');
         };
 
         const unsub = useDraftProfileStore.persist.onFinishHydration(applySaved);
         if (useDraftProfileStore.persist.hasHydrated()) applySaved();
         return unsub;
-        // Mount-only. search.build is the landing hint; Continue drops it from the URL.
+        // Mount-only. search.build is the landing hint; going to league drops it from the URL.
     }, []);
-
-    const step = path[stepIndex] ?? path[0]!;
-    const StepComponent = step.Component;
-    const isFirst = stepIndex === 0;
-    const isReview = Boolean(step.submit);
-
-    function goToStepId(id: string) {
-        void navigate({
-            search: { step: id },
-            replace: true
-        });
-    }
 
     function handleContinue() {
         if (step.submit) {
@@ -77,46 +76,28 @@ export function OnboardQuiz() {
             return;
         }
 
-        const nextDraft = step.applyContinue ? step.applyContinue(draft) : draft;
         setParseError(null);
-        setDraft(nextDraft);
-        const nextPath = visibleSteps(nextDraft, step.id);
-        const current = nextPath.findIndex((entry) => entry.id === step.id);
-        const next = nextPath[current + 1] ?? nextPath[nextPath.length - 1];
-        if (next) goToStepId(next.id);
-    }
-
-    function handleSkip() {
-        const nextDraft = step.applySkip ? step.applySkip(draft) : draft;
-        setDraft(nextDraft);
-        const nextPath = visibleSteps(nextDraft, step.id);
-        const current = nextPath.findIndex((entry) => entry.id === step.id);
-        const next = nextPath[current + 1] ?? nextPath[nextPath.length - 1];
+        const next = STEPS[stepIndex + 1] ?? STEPS[STEPS.length - 1];
         if (next) goToStepId(next.id);
     }
 
     function handleBack() {
         setParseError(null);
-        const prev = path[stepIndex - 1];
+        const prev = STEPS[stepIndex - 1];
         if (prev) goToStepId(prev.id);
     }
 
-    function jumpToReview() {
+    function handleChosen(next: QuizDraft) {
+        setDraft(next);
         setParseError(null);
-        const review = path[path.length - 1];
-        if (review) goToStepId(review.id);
+        goToStepId('league');
     }
 
     const restoreBanner =
         hasSavedProfile && !isReview ? (
-            <div className='flex flex-wrap items-baseline gap-x-3 gap-y-1'>
-                <p className='mb-0 text-muted-foreground'>
-                    {savedSummary ? `Editing ${savedSummary}` : 'Editing your last profile'}
-                </p>
-                <Button type='button' variant='ghost' onClick={jumpToReview}>
-                    Jump to review
-                </Button>
-            </div>
+            <p className='mb-0 text-muted-foreground'>
+                {savedSummary ? `Editing ${savedSummary}` : 'Editing your last profile'}
+            </p>
         ) : null;
 
     return (
@@ -130,12 +111,9 @@ export function OnboardQuiz() {
                 title={step.title}
                 description={step.description}
                 stepIndex={stepIndex}
-                stepCount={path.length}
-                optional={step.optional}
+                stepCount={STEPS.length}
                 onBack={isFirst ? undefined : handleBack}
-                onContinue={handleContinue}
-                onSkip={step.optional ? handleSkip : undefined}
-                skipLabel={step.skipLabel}
+                onContinue={isPlay ? undefined : handleContinue}
                 continueLabel={step.continueLabel}
                 continueDisabled={!canContinue(step.id, draft)}
                 banner={restoreBanner}
@@ -146,6 +124,7 @@ export function OnboardQuiz() {
                         setDraft(next);
                         setParseError(null);
                     }}
+                    onChosen={handleChosen}
                     parseError={parseError}
                 />
             </QuizShell>
