@@ -35,6 +35,7 @@ A first-time user (no account) should be able to:
 | [M4-draft-assistant.md](M4-draft-assistant.md)             | Ranked table and optional round sections            |
 | [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md) | M4 implementation plan (current tree)               |
 | [plans/quiz-centered-ux.md](plans/quiz-centered-ux.md)     | Quiz-first onboarding and board UX direction        |
+| [plans/design-system.md](plans/design-system.md)           | Visual system, mobile chrome, draft Settings drawer |
 | [M5-extensibility.md](M5-extensibility.md)                 | NBA adapter, suggestion hook, Yahoo seams           |
 
 Each milestone has **goal, in scope, out of scope, stack/touchpoints, acceptance checks, suggested build order**. M1–M4 are sequential. M5 is “do not paint into a corner” plus later optional work.
