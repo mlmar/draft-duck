@@ -3,6 +3,7 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import viteReact from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, loadEnv } from 'vite';
+import { viteBase } from './src/lib/base-path.ts';
 
 const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
 const srcDir = fileURLToPath(new URL('./src', import.meta.url));
@@ -17,6 +18,8 @@ export default defineConfig(({ mode }) => {
     return {
         envDir: repoRoot,
         envPrefix: ['VITE_', 'PUBLIC_'],
+        // Local stays `/`. Pages build sets PUBLIC_BASE_PATH=/draft-duck/.
+        base: viteBase(env.PUBLIC_BASE_PATH),
         server: {
             port: clientPort,
             host: true

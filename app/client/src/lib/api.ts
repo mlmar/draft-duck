@@ -11,7 +11,7 @@ export async function rankPlayers(profile: DraftProfile): Promise<RankedPlayer[]
         body: JSON.stringify({ profile })
     });
     if (!response.ok) {
-        throw new Error('Could not rank the board. Check that the API is running.');
+        throw new Error('Could not rank the board. Try again in a moment.');
     }
     const data: { players: RankedPlayer[] } = await response.json();
     return data.players;

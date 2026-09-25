@@ -70,7 +70,7 @@ Player types, `CsvProvider`, z-score ranker, operator weights JSON, `DraftProfil
 
 ### Not in v1
 
-Auth, DB, Docker, AI copy, live NBA fetch, Python, Yahoo, auction drafts.
+Auth, DB, AI copy, live NBA fetch, Python, Yahoo, auction drafts. Docker is Cloud Run deploy infra only. See [deploy.md](deploy.md).
 
 ## Repo layout (target)
 
