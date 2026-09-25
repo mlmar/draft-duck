@@ -1,0 +1,47 @@
+# Static client to the build/client branch. Pages serves that branch at /draft-duck/.
+name: Deploy client
+
+on:
+    workflow_dispatch:
+    pull_request:
+        types: [closed]
+        branches: [main]
+
+jobs:
+    deploy:
+        if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: npm
+
+            - run: npm ci
+
+            - name: Require Cloud Run origin
+              env:
+                  PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
+              run: |
+                  if [ -z "$PUBLIC_API_URL" ]; then
+                    echo "Set repository variable PUBLIC_API_URL to the Cloud Run origin (no trailing slash)."
+                    exit 1
+                  fi
+
+            - name: Build
+              run: npm run build -w @draft-duck/client
+              env:
+                  PUBLIC_BASE_PATH: /draft-duck/
+                  PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
+
+            - name: Publish build/client
+              uses: peaceiris/actions-gh-pages@v4
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: app/client/dist/client
+                  publish_branch: build/client
+                  force_orphan: true
