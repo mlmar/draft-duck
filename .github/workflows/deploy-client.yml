@@ -1,15 +1,14 @@
 # Static client to the build/client branch. Pages serves that branch at /draft-duck/.
+# Same triggers as deploy-api: push to main or dispatch. Do not use pull_request closed.
 name: Deploy client
 
 on:
     workflow_dispatch:
-    pull_request:
-        types: [closed]
+    push:
         branches: [main]
 
 jobs:
     deploy:
-        if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -26,11 +25,7 @@ jobs:
             - name: Require Cloud Run origin
               env:
                   PUBLIC_API_URL: ${{ vars.PUBLIC_API_URL }}
-              run: |
-                  if [ -z "$PUBLIC_API_URL" ]; then
-                    echo "Set repository variable PUBLIC_API_URL to the Cloud Run origin (no trailing slash)."
-                    exit 1
-                  fi
+              run: node app/client/scripts/assert-public-api-url.mjs
 
             - name: Build
               run: npm run build -w @draft-duck/client

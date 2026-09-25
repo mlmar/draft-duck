@@ -1,0 +1,44 @@
+# PR gate. Deploy workflows only run after merge. Catch a broken image or missing
+# 404.html here so main never ships a client that cold-opens GitHub's 404.
+name: Verify deploy
+
+on:
+    pull_request:
+        branches: [main]
+
+jobs:
+    verify:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: npm
+
+            - run: npm ci
+
+            - name: Unit tests
+              run: npm test
+
+            - name: Production client build
+              run: npm run build -w @draft-duck/client
+              env:
+                  PUBLIC_BASE_PATH: /draft-duck/
+                  PUBLIC_API_URL: https://example-run.app
+
+            - name: Assert SPA 404 is in the publish dir
+              run: test -f app/client/dist/client/404.html && test -f app/client/dist/client/_shell.html
+
+            - uses: docker/setup-buildx-action@v3
+
+            - name: Docker build (no push)
+              uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  push: false
+                  load: true
+                  tags: draft-duck-api:verify
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max,ignore-error=true

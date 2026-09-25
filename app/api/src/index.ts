@@ -6,7 +6,8 @@ import { fileURLToPath } from 'node:url';
 
 // Cloud Run injects PORT. Local .env keeps API_PORT=3300.
 const PORT = readPort('PORT') ?? readPort('API_PORT') ?? 3300;
-const HOST = process.env.HOST ?? '0.0.0.0';
+// Loopback for npm run dev:api. The image sets HOST=0.0.0.0. Do not flip this default.
+const HOST = process.env.HOST ?? '127.0.0.1';
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ?? 'http://localhost:3000';
 const csvPath = process.env.CSV_PATH ?? fileURLToPath(new URL('../../data/25_26_per_game.csv', import.meta.url));
 
