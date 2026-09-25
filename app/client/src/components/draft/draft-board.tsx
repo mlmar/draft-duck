@@ -20,7 +20,7 @@ import {
 } from '@draft-duck/core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { Hash, Layers, List, Plus, Settings, Table2, type LucideIcon } from 'lucide-react';
+import { Hash, Layers, List, Settings, Table2, type LucideIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type Ref } from 'react';
 
 const INTENSITY_DEBOUNCE_MS = 200;
@@ -224,25 +224,22 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                         onClick={() => handleSimpleViewChange(!showSimple)}
                     />
                 ) : null}
-                {/* Invisible keeps Assist / +/- width so Settings does not slide when simple hides them. */}
-                <div
-                    className={cn('flex items-center gap-2', showSimple && 'invisible')}
-                    inert={showSimple || undefined}
-                    aria-hidden={showSimple}
-                >
-                    <ToolbarButton
-                        icon={Layers}
-                        label='Draft assistance'
-                        pressed={assist}
-                        onClick={() => onAssistChange(!assist)}
-                    />
-                    <ToolbarButton
-                        icon={plusMinus ? Plus : Hash}
-                        label={plusMinus ? '+/-' : 'Raw stats'}
-                        pressed={plusMinus}
-                        onClick={() => onValueModeChange(plusMinus ? 'raw' : 'plusMinus')}
-                    />
-                </div>
+                {showSimple ? null : (
+                    <>
+                        <ToolbarButton
+                            icon={Layers}
+                            label='Draft assistance'
+                            pressed={assist}
+                            onClick={() => onAssistChange(!assist)}
+                        />
+                        <ToolbarButton
+                            icon={Hash}
+                            label={plusMinus ? '+/-' : 'Raw stats'}
+                            pressed={plusMinus}
+                            onClick={() => onValueModeChange(plusMinus ? 'raw' : 'plusMinus')}
+                        />
+                    </>
+                )}
                 {settingsButton}
             </div>
 
@@ -256,7 +253,6 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                             If the room drafted this board in order, this is the name at your pick.
                         </p>
                         <PlayerTable
-                            compact
                             groups={simpleGroups}
                             enabledCats={profile.enabledCats}
                             emptyLabel='Set your pick in Settings to see names at each slot.'
