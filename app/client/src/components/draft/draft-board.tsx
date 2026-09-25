@@ -1,8 +1,9 @@
 import { PlayerTable, type CatValueMode } from '@/components/draft/player-table';
 import { SettingsDrawer } from '@/components/draft/settings-drawer';
+import { LoadingCopy } from '@/components/loading-copy';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce, useDebouncedValue } from '@/hooks/use-debounce';
 import { rankPlayers } from '@/lib/api';
 import { readBoardView, writeBoardView } from '@/lib/board-view';
 import { applyDisplayCap } from '@/lib/display-cap';
@@ -20,10 +21,11 @@ import {
 } from '@draft-duck/core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { Layers, List, Settings, Table2, type LucideIcon } from 'lucide-react';
+import { Eye, Layers, Settings, type LucideIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type Ref } from 'react';
 
 const INTENSITY_DEBOUNCE_MS = 200;
+const SEARCH_DEBOUNCE_MS = 200;
 const CAT_HIGHLIGHT_MODE = DEFAULT_CAT_HIGHLIGHT_MODE;
 
 type DraftBoardProps = {
@@ -80,6 +82,8 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
     const [draft, setDraft] = useState<QuizDraft | null>(null);
     const [hydrated, setHydrated] = useState(false);
     const [nameQuery, setNameQuery] = useState('');
+    // Input stays live. The table filters after the pause so each key is not a full rebuild.
+    const debouncedNameQuery = useDebouncedValue(nameQuery, SEARCH_DEBOUNCE_MS);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [showRest, setShowRest] = useState(false);
     const [simpleView, setSimpleView] = useState(() => readBoardView() !== 'full');
@@ -143,24 +147,31 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
     const yourPickSet = useMemo(() => new Set(yourPicks), [yourPicks]);
 
     if (!hydrated || draft === null || profile === null) {
-        return <p className='mb-0'>lining them up…</p>;
+        return (
+            <div className='grid min-h-[60vh] place-items-center'>
+                <LoadingCopy />
+            </div>
+        );
     }
 
     const sections = partitionByRound(players, profile.leagueSize, profile.draftRounds);
     const rankError = rankQuery.error instanceof Error ? rankQuery.error.message : null;
     const highlight = catHighlightStrategy(CAT_HIGHLIGHT_MODE);
-    const query = nameQuery.trim().toLowerCase();
+    const query = debouncedNameQuery.trim().toLowerCase();
     const groups = assist
-        ? sections.map((section) => ({
-              id: `round-${section.round}`,
-              label: `Round ${section.round} · ${section.players.length} ${
-                  section.players.length === 1 ? 'player' : 'players'
-              }`,
-              players: filterByName(section.players, query)
-          }))
+        ? sections
+              .map((section) => ({
+                  id: `round-${section.round}`,
+                  label: `Round ${section.round} · ${section.players.length} ${
+                      section.players.length === 1 ? 'player' : 'players'
+                  }`,
+                  players: filterByName(section.players, query)
+              }))
+              // High draftRounds and a name search can leave empty buckets. Skip those headers.
+              .filter((group) => group.players.length > 0)
         : [{ id: 'board', players: filterByName(players, query) }];
     const displayCap = profile.leagueSize * profile.draftRounds;
-    const capped = applyDisplayCap(query ? groups.filter((group) => group.players.length > 0) : groups, {
+    const capped = applyDisplayCap(groups, {
         cap: displayCap,
         lift: Boolean(query) || showRest,
         clipLastGroup: assist
@@ -214,48 +225,61 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
 
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
 
-            {/* Stays in flow until it hits the app header, then pins. Headline scrolls away.
-                z-40 matches the chrome so Rank/Name heads (z-30) cannot paint over the buttons. */}
-            <div className='sticky top-[var(--app-header)] z-40 -mx-1 flex items-center gap-2 bg-background px-1 py-2'>
-                {hasSlot ? (
-                    <ToolbarButton
-                        icon={showSimple ? Table2 : List}
-                        label={showSimple ? 'Full table' : 'Simple view'}
-                        // min-w covers both labels so the first control does not resize on toggle.
-                        className='md:min-w-44'
-                        onClick={() => handleSimpleViewChange(!showSimple)}
-                    />
-                ) : null}
-                {showSimple ? null : (
-                    <>
+            {/* Pins at the top of the viewport. Headline scrolls away.
+                Search sits here too so the page is the only vertical scroller. */}
+            <div className='sticky top-[env(safe-area-inset-top,0px)] z-40 -mx-1 grid gap-2 bg-background px-1 py-2'>
+                <div className='flex items-center gap-2'>
+                    {hasSlot ? (
                         <ToolbarButton
-                            icon={Layers}
-                            label='Draft assistance'
-                            pressed={assist}
-                            onClick={() => onAssistChange(!assist)}
+                            icon={Eye}
+                            label={showSimple ? 'Full table' : 'Simple view'}
+                            // min-w covers both labels so the first control does not resize on toggle.
+                            className='md:min-w-44'
+                            onClick={() => handleSimpleViewChange(!showSimple)}
                         />
-                        <Button
-                            type='button'
-                            variant={plusMinus ? 'default' : 'outline'}
-                            aria-label={plusMinus ? '+- Z Scores' : '# Raw Stats'}
-                            aria-pressed={plusMinus}
-                            // Phone matches other toolbar squares. Desktop holds the longer label still.
-                            className='size-11 px-0 md:h-11 md:w-auto md:min-w-36 md:px-4'
-                            onClick={() => onValueModeChange(plusMinus ? 'raw' : 'plusMinus')}
-                        >
-                            {plusMinus ? (
-                                <>
-                                    +-<span className='hidden md:inline'> Z Scores</span>
-                                </>
-                            ) : (
-                                <>
-                                    #<span className='hidden md:inline'> Raw Stats</span>
-                                </>
-                            )}
-                        </Button>
-                    </>
+                    ) : null}
+                    {showSimple ? null : (
+                        <>
+                            <ToolbarButton
+                                icon={Layers}
+                                label='Draft assistance'
+                                pressed={assist}
+                                onClick={() => onAssistChange(!assist)}
+                            />
+                            <Button
+                                type='button'
+                                variant={plusMinus ? 'default' : 'outline'}
+                                aria-label={plusMinus ? '+- Z Scores' : '# Raw Stats'}
+                                aria-pressed={plusMinus}
+                                // Phone matches other toolbar squares. Desktop holds the longer label still.
+                                className='size-11 px-0 md:h-11 md:w-auto md:min-w-36 md:px-4'
+                                onClick={() => onValueModeChange(plusMinus ? 'raw' : 'plusMinus')}
+                            >
+                                {plusMinus ? (
+                                    <>
+                                        +-<span className='hidden md:inline'> Z Scores</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        #<span className='hidden md:inline'> Raw Stats</span>
+                                    </>
+                                )}
+                            </Button>
+                        </>
+                    )}
+                    {settingsButton}
+                </div>
+                {showSimple ? null : (
+                    <div className='max-w-sm'>
+                        <Input
+                            type='search'
+                            value={nameQuery}
+                            onChange={(event) => setNameQuery(event.target.value)}
+                            placeholder='Search players'
+                            aria-label='Search players'
+                        />
+                    </div>
                 )}
-                {settingsButton}
             </div>
 
             <div
@@ -268,7 +292,7 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                             If the room drafted this board in order, this is the name at your pick.
                         </p>
                         {rankQuery.isFetching && slotPlayers.length === 0 ? (
-                            <p className='mb-0'>lining them up…</p>
+                            <LoadingCopy />
                         ) : (
                             <PlayerTable
                                 groups={simpleGroups}
@@ -284,15 +308,6 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                     </>
                 ) : (
                     <>
-                        <div className='max-w-sm'>
-                            <Input
-                                type='search'
-                                value={nameQuery}
-                                onChange={(event) => setNameQuery(event.target.value)}
-                                placeholder='Search players'
-                                aria-label='Search players'
-                            />
-                        </div>
                         <PlayerTable
                             groups={capped.groups}
                             enabledCats={profile.enabledCats}
