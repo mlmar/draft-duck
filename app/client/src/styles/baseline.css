@@ -41,5 +41,5 @@ p {
 
 button {
     /* Same chrome as the unvaried shadcn Button. Variants still override from utilities. */
-    @apply inline-flex h-11 shrink-0 items-center justify-center rounded-lg border border-transparent bg-primary px-4 text-base font-medium whitespace-nowrap text-primary-foreground transition-all outline-none select-none hover:bg-primary/80 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex h-11 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent bg-primary px-4 text-base font-medium whitespace-nowrap text-primary-foreground transition-all outline-none select-none hover:bg-primary/80 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50;
 }
