@@ -2,7 +2,7 @@
 
 Category-league fantasy basketball helper: quiz for CAT preferences, rank players with weighted z-scores, then optionally group that board into draft-round buckets.
 
-This folder is the living product plan. Build in milestone order. Do not start Yahoo, auth, or AI analysis until v1 is shipped.
+This folder is the living product plan. v1 (M1–M4) is the product. **Current work is deploying that helper** ([deploy.md](deploy.md)). Yahoo, auth, live NBA fetch, and AI are the second half: live-season services, not this deploy.
 
 ## Status
 
@@ -37,6 +37,7 @@ A first-time user (no account) should be able to:
 | [plans/quiz-centered-ux.md](plans/quiz-centered-ux.md)     | Quiz-first onboarding and board UX direction        |
 | [plans/design-system.md](plans/design-system.md)           | Visual system, mobile chrome, draft Settings drawer |
 | [M5-extensibility.md](M5-extensibility.md)                 | NBA adapter, suggestion hook, Yahoo seams           |
+| [deploy.md](deploy.md)                                     | Pages + Cloud Run, WIF, GitHub Actions              |
 
 Each milestone has **goal, in scope, out of scope, stack/touchpoints, acceptance checks, suggested build order**. M1–M4 are sequential. M5 is “do not paint into a corner” plus later optional work.
 
@@ -46,6 +47,6 @@ Product specs stay in `docs/M1`–`docs/M5`. Implementation plans live under [`d
 
 TanStack Start SPA with selective prerender (`app/client`) → Fastify (`app/api`) → shared TypeScript ranker (`app/core`). Details in [00-product-and-stack.md](00-product-and-stack.md).
 
-## Explicitly later (not this app yet)
+## Second half (live season, not this deploy)
 
-Yahoo OAuth, upload current team, live league standings, injury/news, auction drafts, AI writeups. Recorded only as seams in [M5-extensibility.md](M5-extensibility.md).
+Yahoo OAuth, accounts, live NBA stats, injury/news, auction drafts, AI writeups. Recorded only as seams in [M5-extensibility.md](M5-extensibility.md). Do not start those until the draft helper is public.

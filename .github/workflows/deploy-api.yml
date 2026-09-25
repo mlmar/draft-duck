@@ -1,0 +1,56 @@
+# Build the API image, push to Artifact Registry, point Cloud Run at that digest.
+name: Deploy API
+
+on:
+    workflow_dispatch:
+    pull_request:
+        types: [closed]
+        branches: [main]
+
+jobs:
+    deploy:
+        if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            id-token: write
+        env:
+            PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+            REGION: ${{ vars.GCP_REGION }}
+            AR_REPO: ${{ vars.GCP_AR_REPOSITORY }}
+            SERVICE: ${{ vars.CLOUD_RUN_SERVICE }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: google-github-actions/auth@v3
+              with:
+                  project_id: ${{ vars.GCP_PROJECT_ID }}
+                  workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+                  service_account: ${{ vars.WIF_SERVICE_ACCOUNT }}
+
+            - uses: google-github-actions/setup-gcloud@v2
+
+            - name: Docker auth for Artifact Registry
+              run: gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
+
+            - uses: docker/setup-buildx-action@v3
+
+            - name: Build and push
+              uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  push: true
+                  tags: |
+                      ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/draft-duck-api:${{ github.sha }}
+                      ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/draft-duck-api:latest
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
+
+            # SHA tag, not :latest. Cloud Run pins the digest on this revision.
+            - uses: google-github-actions/deploy-cloudrun@v2
+              with:
+                  service: ${{ env.SERVICE }}
+                  region: ${{ env.REGION }}
+                  image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/draft-duck-api:${{ github.sha }}
+                  env_vars: CLIENT_ORIGIN=https://mlmar.github.io
+                  flags: --allow-unauthenticated --startup-probe=httpGet.path=/health,httpGet.port=8080

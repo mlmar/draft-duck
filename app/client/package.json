@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite dev --host",
-        "build": "vite build",
+        "build": "vite build && node scripts/copy-spa-404.mjs",
         "preview": "vite preview --host"
     },
     "dependencies": {

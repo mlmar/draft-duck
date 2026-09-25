@@ -4,7 +4,9 @@ import Fastify from 'fastify';
 import { CsvProvider, rank, rankRequestSchema, type PlayerStatsProvider } from '@draft-duck/core';
 import { fileURLToPath } from 'node:url';
 
-const PORT = readPort('API_PORT', 3300);
+// Cloud Run injects PORT. Local .env keeps API_PORT=3300.
+const PORT = readPort('PORT') ?? readPort('API_PORT') ?? 3300;
+const HOST = process.env.HOST ?? '0.0.0.0';
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ?? 'http://localhost:3000';
 const csvPath = process.env.CSV_PATH ?? fileURLToPath(new URL('../../data/25_26_per_game.csv', import.meta.url));
 
@@ -30,11 +32,11 @@ app.post('/rank', async (request, reply) => {
     return { players: rank(players, parsed.data.profile) };
 });
 
-await app.listen({ port: PORT, host: '127.0.0.1' });
+await app.listen({ port: PORT, host: HOST });
 
-function readPort(name: string, fallback: number): number {
+function readPort(name: string): number | undefined {
     const raw = process.env[name];
-    if (raw === undefined || raw.trim() === '') return fallback;
+    if (raw === undefined || raw.trim() === '') return undefined;
     const port = Number(raw);
     if (!Number.isInteger(port) || port <= 0) {
         throw new Error(`${name} must be a positive integer, got ${JSON.stringify(raw)}`);
