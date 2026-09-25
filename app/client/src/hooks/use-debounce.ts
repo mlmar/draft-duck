@@ -36,7 +36,7 @@ export function useDebounce<Args extends unknown[]>(
     return Object.assign(run, { cancel });
 }
 
-// Value debounce. Updates after delayMs when `value` changes, including on mount. Not used on the board yet.
+// Value debounce. Updates after delayMs when `value` changes, including on mount. Board search uses this.
 export function useDebouncedValue<T>(value: T, delayMs: number = DEFAULT_DELAY_MS): T {
     const [debounced, setDebounced] = useState(value);
 
