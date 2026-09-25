@@ -2,8 +2,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useEffect, useState, type ReactNode } from 'react';
 
-// Quiet progress plus the question. Sticky Back / Continue when those exist.
-// Play has no footer. Copy and order stay in STEPS.
+// Quiet progress plus the question. Sticky Back / Continue. Copy and order stay in STEPS.
 
 type QuizShellProps = {
     title: string;

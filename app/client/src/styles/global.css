@@ -93,8 +93,6 @@
     /* Header is in flow. Tabs are fixed, so pages pad with --app-tabs. Quiz zeros tabs. */
     --app-header: calc(3rem + env(safe-area-inset-top, 0px));
     --app-tabs: 0px;
-    /* Title, toolbar, search, and legend above the contained grid. */
-    --board-table-max: calc(100dvh - var(--app-header) - var(--app-tabs) - 16rem);
 }
 
 @media (max-width: 767px) {

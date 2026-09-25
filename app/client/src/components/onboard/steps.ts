@@ -1,4 +1,3 @@
-import { PlayStep } from '@/components/onboard/steps/play-step';
 import { LeagueStep } from '@/components/onboard/steps/league-step';
 import { ReviewStep } from '@/components/onboard/steps/review-step';
 import type { QuizStepProps } from '@/components/onboard/step-types';
@@ -16,14 +15,8 @@ export type QuizStepDef = {
     Component: ComponentType<QuizStepProps>;
 };
 
-// Play tap goes to league. Custom writes Neutral; stance edits live on Review or the board.
+// Home is the stance picker. League is first. Custom writes Neutral on the home card.
 export const STEPS: QuizStepDef[] = [
-    {
-        id: 'play',
-        title: 'How do you want to play?',
-        description: 'Tap a build to continue.',
-        Component: PlayStep
-    },
     {
         id: 'league',
         title: 'League',
@@ -34,7 +27,7 @@ export const STEPS: QuizStepDef[] = [
         title: 'Your picks',
         description: 'If everyone took this board in order, these are the names at your pick.',
         submit: true,
-        continueLabel: 'Rank my board',
+        continueLabel: 'See full board',
         Component: ReviewStep
     }
 ];

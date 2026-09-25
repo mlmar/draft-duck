@@ -26,10 +26,10 @@ export const Route = createFileRoute('/onboard')({
     component: OnboardPage,
     head: () => ({
         meta: [
-            { title: 'Onboard - Draft Duck' },
+            { title: 'Onboard - draft duck' },
             {
                 name: 'description',
-                content: 'Tell us how you want to play, then rank the 2025-26 board for that profile.'
+                content: "Pick a stance, we'll rank it. get your ducks in a row."
             }
         ]
     })

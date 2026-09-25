@@ -9,14 +9,14 @@ type PageShellProps = {
     inset?: 'default' | 'quiz';
 };
 
-// Shared width. Header is sticky in flow. Tab bar is fixed, so bottom padding uses --app-tabs.
+// Default is the reading column. wide is the board, full viewport. Header is sticky in flow. Tab bar is fixed, so bottom padding uses --app-tabs.
 export function PageShell({ children, className, wide = false, inset = 'default' }: PageShellProps) {
     return (
         <main
             className={cn(
                 'mx-auto px-4',
                 inset === 'quiz' ? 'py-4' : 'py-6 md:py-8',
-                wide ? 'max-w-6xl' : 'flex max-w-lg flex-col md:max-w-2xl',
+                wide ? 'max-w-none' : 'flex max-w-lg flex-col md:max-w-2xl',
                 'min-h-[calc(100dvh-var(--app-header))] pb-[calc(1.5rem+var(--app-tabs))]',
                 className
             )}

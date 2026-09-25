@@ -46,7 +46,7 @@ export const ARCHETYPE_IDS = ['balanced', 'puntFg', 'puntFt', 'guards', 'stocks'
 export type ArchetypeId = (typeof ARCHETYPE_IDS)[number];
 
 export type DraftProfile = {
-    leagueSize: 8 | 10 | 12 | 14;
+    leagueSize: number;
     draftRounds: number;
     draftType: 'snake' | 'linear';
     enabledCats: CatKey[];
