@@ -29,7 +29,6 @@ type PlayerTableProps = {
     highlight: CatHighlightStrategy;
     valueMode: CatValueMode;
     yourOverallPicks?: ReadonlySet<number>;
-    caption?: string;
 };
 
 const IDENTITY_COLS = 4;
@@ -42,8 +41,8 @@ const colCat = 'w-16 min-w-16';
 
 const stickyRank = `sticky left-0 z-10 ${colRank}`;
 const stickyName = `sticky left-16 z-10 ${colName}`;
-const stickyRankHead = `sticky left-0 top-0 z-30 ${colRank} bg-background`;
-const stickyNameHead = `sticky left-16 top-0 z-30 ${colName} bg-background`;
+const stickyRankHead = `sticky left-0 top-[var(--app-header)] z-30 ${colRank} bg-background`;
+const stickyNameHead = `sticky left-16 top-[var(--app-header)] z-30 ${colName} bg-background`;
 
 // Mix in srgb so #78A3CF stays pale blue. oklch interpolation landed in pink.
 const yourPickFill =
@@ -57,27 +56,8 @@ function rowFill(odd: boolean, isYourPick: boolean): string {
     return isYourPick ? yourPickFill : stripeFill(odd);
 }
 
-export function HeatLegend({ highlight }: { highlight: CatHighlightStrategy }) {
-    return (
-        <p className='mb-0 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground'>
-            <span className='flex items-center gap-2'>
-                <span className='size-4 rounded-lg bg-[var(--heat-bad)]' aria-hidden='true' />
-                {highlight.legend.worse}
-            </span>
-            <span className='flex items-center gap-2'>
-                <span className='size-4 rounded-lg bg-muted' aria-hidden='true' />
-                {highlight.legend.average}
-            </span>
-            <span className='flex items-center gap-2'>
-                <span className='size-4 rounded-lg bg-[var(--heat-good)]' aria-hidden='true' />
-                {highlight.legend.better}
-            </span>
-        </p>
-    );
-}
-
-// One overflow from Table. Groups are tbodies so assistance rounds share a scrollbar.
-// Bounded height makes thead stick inside the box. Rank/name stick left.
+// One overflow from Table for horizontal scroll. The page scrolls vertically.
+// Rank/name stick left. Header sticks under the app chrome.
 // table-fixed plus pinned col widths: raw vs +/- (and long names) must not move columns.
 // Opaque fills on sticky cells, not inherit, so heat mixes cannot show through on scroll.
 // border-separate so collapse does not break left stickies.
@@ -89,8 +69,7 @@ export function PlayerTable({
     profile,
     highlight,
     valueMode,
-    yourOverallPicks,
-    caption
+    yourOverallPicks
 }: PlayerTableProps) {
     const hasPlayers = groups.some((group) => group.players.length > 0);
     if (!hasPlayers) {
@@ -100,105 +79,100 @@ export function PlayerTable({
     const colSpan = IDENTITY_COLS + enabledCats.length;
 
     return (
-        <div className='grid gap-3'>
-            {caption ? <p className='mb-0 text-sm text-muted-foreground'>{caption}</p> : null}
-            <Table
-                className='table-fixed min-w-[56rem] border-separate border-spacing-0'
-                containerClassName='max-h-[var(--board-table-max)]'
-            >
-                <colgroup>
-                    <col className={colRank} />
-                    <col className={colName} />
-                    <col className={colTeam} />
-                    <col className={colPos} />
-                    {enabledCats.map((cat) => (
-                        <col key={cat} className={colCat} />
-                    ))}
-                </colgroup>
-                <TableHeader className='sticky top-0 z-20 bg-background'>
-                    <TableRow className='text-muted-foreground hover:bg-transparent'>
-                        <TableHead className={stickyRankHead}>Rank</TableHead>
-                        <TableHead className={stickyNameHead}>Name</TableHead>
-                        <TableHead className={`hidden bg-background md:table-cell ${colTeam}`}>
-                            <span className='text-sm font-normal'>Team</span>
-                        </TableHead>
-                        <TableHead className={`bg-background ${colPos}`}>
-                            <span className='text-sm font-normal'>Pos</span>
-                        </TableHead>
-                        {enabledCats.map((cat) => (
-                            <TableHead key={cat} className={`bg-background text-right text-sm ${colCat}`}>
-                                {CAT_LABELS[cat]}
-                            </TableHead>
-                        ))}
-                    </TableRow>
-                </TableHeader>
-                {groups.map((group) => (
-                    <TableBody key={group.id}>
-                        {group.label ? (
-                            <TableRow className='bg-muted/60 hover:bg-muted/60'>
-                                <TableCell colSpan={colSpan} className='font-medium'>
-                                    {/* Colspan cells span the table. Stick the label, not the cell. */}
-                                    <span className='sticky left-3'>{group.label}</span>
-                                </TableCell>
-                            </TableRow>
-                        ) : null}
-                        {group.players.map((player, index) => {
-                            const isYourPick = yourOverallPicks?.has(player.rank) ?? false;
-                            const fill = rowFill(index % 2 === 1, isYourPick);
-                            return (
-                                <TableRow key={player.playerId} className={cn('group', fill)}>
-                                    <TableCell
-                                        className={cn(
-                                            stickyRank,
-                                            fill,
-                                            'tabular-nums',
-                                            isYourPick && 'border-l-2 border-l-brand'
-                                        )}
-                                    >
-                                        {player.rank}
-                                        {isYourPick && profile.draftSlot ? (
-                                            <span className='mt-0.5 block text-sm text-muted-foreground'>
-                                                Your pick · {ordinal(profile.draftSlot)}
-                                            </span>
-                                        ) : null}
-                                    </TableCell>
-                                    <TableCell className={`${stickyName} ${fill} overflow-hidden`}>
-                                        <span className='block truncate font-medium'>{player.name}</span>
-                                        <span className='mt-0.5 block text-sm text-muted-foreground'>
-                                            {player.composite.toFixed(2)}
-                                        </span>
-                                    </TableCell>
-                                    <TableCell
-                                        className={`hidden text-sm text-muted-foreground md:table-cell ${colTeam}`}
-                                    >
-                                        {player.team}
-                                    </TableCell>
-                                    <TableCell className={`text-sm text-muted-foreground ${colPos}`}>
-                                        {player.pos}
-                                    </TableCell>
-                                    {enabledCats.map((cat) => {
-                                        const heat = highlight.score({ player, cat, profile });
-                                        const value =
-                                            valueMode === 'plusMinus'
-                                                ? formatSignedScore(heat.score)
-                                                : formatCatStat(player, cat);
-                                        return (
-                                            <TableCell
-                                                key={cat}
-                                                className={`text-right text-sm tabular-nums ${colCat}`}
-                                                style={catHeatStyle(heat.score)}
-                                                title={heat.title}
-                                            >
-                                                {value}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
+        <Table
+            className='table-fixed min-w-[56rem] border-separate border-spacing-0'
+            containerClassName='overflow-x-auto'
+        >
+            <colgroup>
+                <col className={colRank} />
+                <col className={colName} />
+                <col className={colTeam} />
+                <col className={colPos} />
+                {enabledCats.map((cat) => (
+                    <col key={cat} className={colCat} />
                 ))}
-            </Table>
-        </div>
+            </colgroup>
+            <TableHeader className='sticky top-[var(--app-header)] z-20 bg-background'>
+                <TableRow className='text-muted-foreground hover:bg-transparent'>
+                    <TableHead className={stickyRankHead}>Rank</TableHead>
+                    <TableHead className={stickyNameHead}>Name</TableHead>
+                    <TableHead className={`hidden bg-background md:table-cell ${colTeam}`}>
+                        <span className='text-sm font-normal'>Team</span>
+                    </TableHead>
+                    <TableHead className={`bg-background ${colPos}`}>
+                        <span className='text-sm font-normal'>Pos</span>
+                    </TableHead>
+                    {enabledCats.map((cat) => (
+                        <TableHead key={cat} className={`bg-background text-right text-sm ${colCat}`}>
+                            {CAT_LABELS[cat]}
+                        </TableHead>
+                    ))}
+                </TableRow>
+            </TableHeader>
+            {groups.map((group) => (
+                <TableBody key={group.id}>
+                    {group.label ? (
+                        <TableRow className='bg-muted/60 hover:bg-muted/60'>
+                            <TableCell colSpan={colSpan} className='font-medium'>
+                                {/* Colspan cells span the table. Stick the label, not the cell. */}
+                                <span className='sticky left-3'>{group.label}</span>
+                            </TableCell>
+                        </TableRow>
+                    ) : null}
+                    {group.players.map((player, index) => {
+                        const isYourPick = yourOverallPicks?.has(player.rank) ?? false;
+                        const fill = rowFill(index % 2 === 1, isYourPick);
+                        return (
+                            <TableRow key={player.playerId} className={cn('group', fill)}>
+                                <TableCell
+                                    className={cn(
+                                        stickyRank,
+                                        fill,
+                                        'tabular-nums',
+                                        isYourPick && 'border-l-2 border-l-brand'
+                                    )}
+                                >
+                                    {player.rank}
+                                    {isYourPick && profile.draftSlot ? (
+                                        <span className='mt-0.5 block text-sm text-muted-foreground'>
+                                            Your pick · {ordinal(profile.draftSlot)}
+                                        </span>
+                                    ) : null}
+                                </TableCell>
+                                <TableCell className={`${stickyName} ${fill} overflow-hidden`}>
+                                    <span className='block truncate font-medium'>{player.name}</span>
+                                    <span className='mt-0.5 block text-sm text-muted-foreground'>
+                                        {player.composite.toFixed(2)}
+                                    </span>
+                                </TableCell>
+                                <TableCell className={`hidden text-sm text-muted-foreground md:table-cell ${colTeam}`}>
+                                    {player.team}
+                                </TableCell>
+                                <TableCell className={`text-sm text-muted-foreground ${colPos}`}>
+                                    {player.pos}
+                                </TableCell>
+                                {enabledCats.map((cat) => {
+                                    const heat = highlight.score({ player, cat, profile });
+                                    const value =
+                                        valueMode === 'plusMinus'
+                                            ? formatSignedScore(heat.score)
+                                            : formatCatStat(player, cat);
+                                    return (
+                                        <TableCell
+                                            key={cat}
+                                            className={`text-right text-sm tabular-nums ${colCat}`}
+                                            style={catHeatStyle(heat.score)}
+                                            title={heat.title}
+                                        >
+                                            {value}
+                                        </TableCell>
+                                    );
+                                })}
+                            </TableRow>
+                        );
+                    })}
+                </TableBody>
+            ))}
+        </Table>
     );
 }

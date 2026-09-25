@@ -51,7 +51,15 @@ export function ChoiceRow<T extends string | number>({
                     >
                         <span>{option.label}</span>
                         {option.description ? (
-                            <span className='font-normal text-muted-foreground'>{option.description}</span>
+                            <span
+                                className={
+                                    isSelected
+                                        ? 'font-normal text-primary-foreground/80'
+                                        : 'font-normal text-muted-foreground'
+                                }
+                            >
+                                {option.description}
+                            </span>
                         ) : null}
                     </Button>
                 );

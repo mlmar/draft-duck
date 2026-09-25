@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
 
-const DEFAULT_DESCRIPTION = 'Tell us how you want to play. We rank the 2025-26 board for that profile.';
+const DEFAULT_DESCRIPTION = "Pick a stance, we'll rank it. get your ducks in a row.";
 
 function createQueryClient() {
     return new QueryClient({

@@ -30,7 +30,6 @@ export function OnboardQuiz() {
     const step = STEPS[stepIndex] ?? STEPS[0]!;
     const StepComponent = step.Component;
     const isFirst = stepIndex === 0;
-    const isPlay = step.id === 'play';
     const isReview = Boolean(step.submit);
 
     function goToStepId(id: string) {
@@ -40,12 +39,21 @@ export function OnboardQuiz() {
         });
     }
 
+    function goHome() {
+        void navigate({ to: '/', replace: true });
+    }
+
     // Persist hydrates from localStorage after mount. Prefill once that lands.
     // Home ?build= is picking an archetype from the gallery. Land on league, drop build from the URL.
+    // No build and no saved profile: home is the stance picker, so bounce back.
     useEffect(() => {
         const entryBuild = search.build;
         const applySaved = () => {
             const profile = useDraftProfileStore.getState().profile;
+            if (!profile && !entryBuild) {
+                goHome();
+                return;
+            }
             let next = profile ? profileToQuizDraft(profile) : DEFAULT_QUIZ_DRAFT;
             if (entryBuild) next = applyArchetype(next, entryBuild);
             if (profile) {
@@ -91,12 +99,6 @@ export function OnboardQuiz() {
         if (prev) goToStepId(prev.id);
     }
 
-    function handleChosen(next: QuizDraft) {
-        setDraft(next);
-        setParseError(null);
-        goToStepId('league');
-    }
-
     const restoreBanner =
         hasSavedProfile && !isReview ? (
             <p className='mb-0 text-muted-foreground'>
@@ -110,9 +112,9 @@ export function OnboardQuiz() {
             description={step.description}
             stepIndex={stepIndex}
             stepCount={STEPS.length}
-            onBack={isFirst ? undefined : handleBack}
-            onContinue={isPlay ? undefined : handleContinue}
-            continueLabel={step.id === 'league' && !draft.draftSlot ? 'Rank my board' : step.continueLabel}
+            onBack={isFirst ? goHome : handleBack}
+            onContinue={handleContinue}
+            continueLabel={step.id === 'league' && !draft.draftSlot ? 'See full board' : step.continueLabel}
             continueDisabled={!canContinue(step.id, draft)}
             banner={restoreBanner}
         >
@@ -122,7 +124,6 @@ export function OnboardQuiz() {
                     setDraft(next);
                     setParseError(null);
                 }}
-                onChosen={handleChosen}
                 parseError={parseError}
             />
         </QuizShell>

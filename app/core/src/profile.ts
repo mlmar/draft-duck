@@ -4,9 +4,18 @@ import { ARCHETYPE_IDS, CAT_KEYS, type CatKey, type CatStance, type DraftProfile
 const catKeySchema = z.enum(CAT_KEYS);
 const catStanceSchema = z.enum(['need', 'neutral', 'punt']);
 
+export const LEAGUE_SIZE_MIN = 4;
+export const LEAGUE_SIZE_MAX = 20;
+
 export const draftProfileSchema = z
     .object({
-        leagueSize: z.union([z.literal(8), z.literal(10), z.literal(12), z.literal(14)]),
+        // Even 4-20. Old 8/10/12/14 profiles still parse.
+        leagueSize: z
+            .number()
+            .int()
+            .min(LEAGUE_SIZE_MIN)
+            .max(LEAGUE_SIZE_MAX)
+            .refine((n) => n % 2 === 0, { message: 'leagueSize must be even' }),
         draftRounds: z.number().int().positive(),
         draftType: z.enum(['snake', 'linear']),
         enabledCats: z.array(catKeySchema).min(1),

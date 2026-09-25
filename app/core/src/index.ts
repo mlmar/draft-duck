@@ -22,7 +22,7 @@ export type { FitMark } from './need-fit.ts';
 export type { PlayerStatsProvider } from './provider.ts';
 export { CsvProvider, DEFAULT_MIN_GAMES } from './csv-provider.ts';
 export type { CsvProviderOptions } from './csv-provider.ts';
-export { draftProfileSchema, rankRequestSchema, profileWeight } from './profile.ts';
+export { draftProfileSchema, rankRequestSchema, profileWeight, LEAGUE_SIZE_MIN, LEAGUE_SIZE_MAX } from './profile.ts';
 export type { RankRequest } from './profile.ts';
 export { DEFAULT_OPERATOR_WEIGHTS } from './operator-weights.ts';
 export { DEFAULT_AVAILABILITY_FLOOR } from './ranker-config.ts';

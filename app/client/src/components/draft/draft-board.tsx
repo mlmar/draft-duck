@@ -1,9 +1,8 @@
-import { HeatLegend, PlayerTable, type CatValueMode } from '@/components/draft/player-table';
+import { PlayerTable, type CatValueMode } from '@/components/draft/player-table';
 import { PickCard } from '@/components/draft/pick-card';
 import { SettingsDrawer } from '@/components/draft/settings-drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { LinkButton } from '@/components/link-button';
 import { useDebounce } from '@/hooks/use-debounce';
 import { rankPlayers } from '@/lib/api';
 import { readBoardView, writeBoardView } from '@/lib/board-view';
@@ -21,8 +20,8 @@ import {
 } from '@draft-duck/core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { Settings } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Hash, Layers, List, Plus, Settings, Table2, type LucideIcon } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState, type Ref } from 'react';
 
 const INTENSITY_DEBOUNCE_MS = 200;
 const CAT_HIGHLIGHT_MODE = DEFAULT_CAT_HIGHLIGHT_MODE;
@@ -33,6 +32,36 @@ type DraftBoardProps = {
     onAssistChange: (on: boolean) => void;
     onValueModeChange: (mode: CatValueMode) => void;
 };
+
+type ToolbarButtonProps = {
+    icon: LucideIcon;
+    label: string;
+    pressed?: boolean;
+    expanded?: boolean;
+    controls?: string;
+    buttonRef?: Ref<HTMLButtonElement>;
+    onClick: () => void;
+};
+
+// Icon plus label on desktop. Icon only below md. aria-label stays either way.
+function ToolbarButton({ icon: Icon, label, pressed, expanded, controls, buttonRef, onClick }: ToolbarButtonProps) {
+    return (
+        <Button
+            ref={buttonRef}
+            type='button'
+            variant={pressed || expanded ? 'default' : 'outline'}
+            aria-label={label}
+            aria-pressed={pressed}
+            aria-expanded={expanded}
+            aria-controls={controls}
+            onClick={onClick}
+            className='size-11 px-0 md:h-11 md:w-auto md:px-4'
+        >
+            <Icon />
+            <span className='hidden md:inline'>{label}</span>
+        </Button>
+    );
+}
 
 export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChange }: DraftBoardProps) {
     const navigate = useNavigate();
@@ -59,7 +88,7 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
         const applySaved = () => {
             const saved = useDraftProfileStore.getState().profile;
             if (!saved) {
-                void navigate({ to: '/onboard', replace: true });
+                void navigate({ to: '/', replace: true });
                 return;
             }
             setDraft(profileToQuizDraft(saved));
@@ -104,7 +133,7 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
     const yourPickSet = useMemo(() => new Set(yourPicks), [yourPicks]);
 
     if (!hydrated || draft === null || profile === null) {
-        return <p className='mb-0'>Loading board…</p>;
+        return <p className='mb-0'>lining them up…</p>;
     }
 
     const sections = partitionByRound(players, profile.leagueSize, profile.draftRounds);
@@ -136,11 +165,18 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
     // Simple is slot names. No slot would be an empty list, so stay on the full table.
     const hasSlot = Boolean(profile.draftSlot);
     const showSimple = simpleView && hasSlot;
-    const tableCaption = query
-        ? 'Search is the full ranked list, including names past the draft.'
-        : showRest
-          ? 'Full ranked list for this profile.'
-          : 'Showing this draft, not the full ranked list.';
+    const plusMinus = valueMode === 'plusMinus';
+
+    const settingsButton = (
+        <ToolbarButton
+            icon={Settings}
+            label='Settings'
+            expanded={settingsOpen}
+            controls='draft-settings'
+            buttonRef={settingsButtonRef}
+            onClick={() => setSettingsOpen(true)}
+        />
+    );
 
     return (
         <div className='grid gap-5'>
@@ -161,49 +197,6 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                 ) : null}
             </header>
 
-            <div className='flex flex-wrap items-center gap-3'>
-                {hasSlot ? (
-                    <Button type='button' variant='outline' onClick={() => handleSimpleViewChange(!showSimple)}>
-                        {showSimple ? 'Full table' : 'Simple view'}
-                    </Button>
-                ) : null}
-                {showSimple ? null : (
-                    <>
-                        <Button
-                            type='button'
-                            variant={assist ? 'default' : 'outline'}
-                            aria-pressed={assist}
-                            onClick={() => onAssistChange(!assist)}
-                        >
-                            {assist ? 'Draft assistance on' : 'Draft assistance off'}
-                        </Button>
-                        <Button
-                            type='button'
-                            className='w-32'
-                            variant={valueMode === 'plusMinus' ? 'default' : 'outline'}
-                            aria-pressed={valueMode === 'plusMinus'}
-                            onClick={() => onValueModeChange(valueMode === 'raw' ? 'plusMinus' : 'raw')}
-                        >
-                            {valueMode === 'plusMinus' ? '+/-' : 'Raw stats'}
-                        </Button>
-                    </>
-                )}
-                <Button
-                    ref={settingsButtonRef}
-                    type='button'
-                    variant='outline'
-                    aria-expanded={settingsOpen}
-                    aria-controls='draft-settings'
-                    onClick={() => setSettingsOpen(true)}
-                >
-                    <Settings />
-                    Settings
-                </Button>
-                <LinkButton to='/onboard' variant='ghost'>
-                    Retake quiz
-                </LinkButton>
-            </div>
-
             <SettingsDrawer
                 open={settingsOpen}
                 onOpenChange={handleSettingsOpenChange}
@@ -216,17 +209,25 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
 
             {showSimple ? (
-                slotCards.length > 0 ? (
-                    <ol className='grid gap-3'>
-                        {slotCards.map(({ overall, round, player }) => (
-                            <li key={`${round}-${player.playerId}`}>
-                                <PickCard round={round} overall={overall} player={player} profile={profile} />
-                            </li>
-                        ))}
-                    </ol>
-                ) : (
-                    <p className='mb-0 text-muted-foreground'>Set your pick in Settings to see names at each slot.</p>
-                )
+                <div className='grid gap-4'>
+                    <div className='flex flex-wrap items-center gap-2'>
+                        <ToolbarButton icon={Table2} label='Full table' onClick={() => handleSimpleViewChange(false)} />
+                        {settingsButton}
+                    </div>
+                    {slotCards.length > 0 ? (
+                        <ol className='grid gap-3'>
+                            {slotCards.map(({ overall, round, player }) => (
+                                <li key={`${round}-${player.playerId}`}>
+                                    <PickCard round={round} overall={overall} player={player} profile={profile} />
+                                </li>
+                            ))}
+                        </ol>
+                    ) : (
+                        <p className='mb-0 text-muted-foreground'>
+                            Set your pick in Settings to see names at each slot.
+                        </p>
+                    )}
+                </div>
             ) : (
                 <div className='grid gap-4'>
                     <div className='max-w-sm'>
@@ -238,31 +239,50 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                             aria-label='Search players'
                         />
                     </div>
-                    <div className='grid gap-3'>
-                        <HeatLegend highlight={highlight} />
-                        {capped.hiddenCount > 0 ? (
-                            <p className='mb-0'>
-                                <Button
-                                    type='button'
-                                    variant='ghost'
-                                    className='h-auto px-0'
-                                    onClick={() => setShowRest(true)}
-                                >
-                                    Show rest of board
-                                </Button>
-                            </p>
+                    <div className='flex flex-wrap items-center gap-2'>
+                        {hasSlot ? (
+                            <ToolbarButton
+                                icon={List}
+                                label='Simple view'
+                                pressed={false}
+                                onClick={() => handleSimpleViewChange(true)}
+                            />
                         ) : null}
-                        <PlayerTable
-                            groups={capped.groups}
-                            enabledCats={profile.enabledCats}
-                            emptyLabel={query ? 'No players match that name.' : 'No players on this board.'}
-                            profile={profile}
-                            highlight={highlight}
-                            valueMode={valueMode}
-                            yourOverallPicks={yourPickSet}
-                            caption={tableCaption}
+                        <ToolbarButton
+                            icon={Layers}
+                            label='Draft assistance'
+                            pressed={assist}
+                            onClick={() => onAssistChange(!assist)}
                         />
+                        <ToolbarButton
+                            icon={plusMinus ? Plus : Hash}
+                            label={plusMinus ? '+/-' : 'Raw stats'}
+                            pressed={plusMinus}
+                            onClick={() => onValueModeChange(plusMinus ? 'raw' : 'plusMinus')}
+                        />
+                        {settingsButton}
                     </div>
+                    <PlayerTable
+                        groups={capped.groups}
+                        enabledCats={profile.enabledCats}
+                        emptyLabel={query ? 'No players match that name.' : 'No players on this board.'}
+                        profile={profile}
+                        highlight={highlight}
+                        valueMode={valueMode}
+                        yourOverallPicks={yourPickSet}
+                    />
+                    {capped.hiddenCount > 0 ? (
+                        <p className='mb-0'>
+                            <Button
+                                type='button'
+                                variant='ghost'
+                                className='h-auto px-0'
+                                onClick={() => setShowRest(true)}
+                            >
+                                Show rest of board
+                            </Button>
+                        </p>
+                    ) : null}
                 </div>
             )}
         </div>
