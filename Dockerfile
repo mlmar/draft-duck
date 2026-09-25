@@ -16,6 +16,8 @@ COPY app/core app/core
 COPY app/data app/data
 
 ENV NODE_ENV=production
+# Cloud Run must reach the process. Local listen stays 127.0.0.1 unless HOST is set.
+ENV HOST=0.0.0.0
 EXPOSE 8080
 
 CMD ["npm", "run", "start", "-w", "@draft-duck/api"]

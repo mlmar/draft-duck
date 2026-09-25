@@ -1,17 +1,17 @@
-// GitHub Pages has no rewrite. /draft hydrates from 404.html copied from the Start shell.
+// GitHub Pages has no rewrite. /draft hydrates from 404.html next to the prerendered pages.
+// Only the publish dir counts. A hit in dist/ or .output/ would exit 0 and Pages would still 404.
+
 import { copyFileSync, existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const clientRoot = fileURLToPath(new URL('..', import.meta.url));
-const candidates = ['dist/client/_shell.html', 'dist/_shell.html', '.output/public/_shell.html'];
+const shell = join(clientRoot, 'dist/client/_shell.html');
+const dest = join(clientRoot, 'dist/client/404.html');
 
-for (const relative of candidates) {
-    const shell = join(clientRoot, relative);
-    if (!existsSync(shell)) continue;
-    copyFileSync(shell, join(dirname(shell), '404.html'));
-    console.log(`Copied ${relative} to 404.html`);
-    process.exit(0);
+if (!existsSync(shell)) {
+    throw new Error(`Could not find dist/client/_shell.html under ${clientRoot}. Publish dir is dist/client.`);
 }
 
-throw new Error(`Could not find _shell.html under ${clientRoot} (${candidates.join(', ')})`);
+copyFileSync(shell, dest);
+console.log('Copied dist/client/_shell.html to dist/client/404.html');

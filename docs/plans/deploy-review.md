@@ -1,5 +1,7 @@
 # Deploy review follow-up
 
+Implemented on this branch. The locks that keep this from regressing are [deploy.md](../deploy.md) (Do not regress), `.github/workflows/verify-deploy.yml`, and the client path/URL tests. `npm test` must keep running both workspaces.
+
 Address the review on [PR #11](https://github.com/mlmar/draft-duck/pull/11) before the first public deploy. Pages + Cloud Run stay the hosts. Ranker, `POST /rank`, quiz order, and board chrome stay put.
 
 No app behavior change except listen bind, URL checks, and the 404 copy path. Yahoo, auth, live NBA, and AI stay later.
