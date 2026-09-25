@@ -2,7 +2,7 @@ import { useHydratedProfile } from '@/hooks/use-hydrated-profile';
 import { boardSearch } from '@/lib/quiz';
 import { Link } from '@tanstack/react-router';
 
-const DESKTOP_LINKS = [
+const SITE_LINKS = [
     { to: '/', label: 'Home' },
     { to: '/how-it-works', label: 'Scoring' },
     { to: '/about', label: 'About' }
@@ -12,7 +12,7 @@ type AppHeaderProps = {
     hideLinks: boolean;
 };
 
-// Sticky wordmark. Desktop also gets site links. Quiz hides those so the funnel has one exit.
+// Sticky wordmark plus site links. Quiz hides the links so the funnel has one exit.
 export function AppHeader({ hideLinks }: AppHeaderProps) {
     const { hydrated, profile } = useHydratedProfile();
     const showBoard = hydrated && profile !== null;
@@ -24,8 +24,8 @@ export function AppHeader({ hideLinks }: AppHeaderProps) {
                     draft duck
                 </Link>
                 {hideLinks ? null : (
-                    <nav className='hidden items-center gap-5 md:flex'>
-                        {DESKTOP_LINKS.map((link) => (
+                    <nav className='flex items-center gap-3 md:gap-5'>
+                        {SITE_LINKS.map((link) => (
                             <Link
                                 key={link.to}
                                 to={link.to}
@@ -49,43 +49,5 @@ export function AppHeader({ hideLinks }: AppHeaderProps) {
                 )}
             </div>
         </header>
-    );
-}
-
-type TabLinkProps = {
-    to: '/' | '/how-it-works' | '/draft';
-    search?: { assist: '1' };
-    label: string;
-};
-
-function TabLink({ to, search, label }: TabLinkProps) {
-    return (
-        <Link
-            to={to}
-            search={search}
-            className='flex min-h-11 flex-1 items-center justify-center px-2 text-muted-foreground hover:text-foreground'
-            activeProps={{ className: 'font-medium text-foreground' }}
-        >
-            {label}
-        </Link>
-    );
-}
-
-// Phone thumb bar. About stays on Home and Scoring, not a fourth tab.
-export function MobileTabBar() {
-    const { hydrated, profile } = useHydratedProfile();
-    const showBoard = hydrated && profile !== null;
-
-    return (
-        <nav
-            className='fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background pb-[env(safe-area-inset-bottom,0px)] md:hidden'
-            aria-label='Primary'
-        >
-            <div className='flex'>
-                <TabLink to='/' label='Home' />
-                {showBoard && profile ? <TabLink to='/draft' search={boardSearch()} label='Board' /> : null}
-                <TabLink to='/how-it-works' label='Scoring' />
-            </div>
-        </nav>
     );
 }

@@ -20,7 +20,7 @@ import {
 } from '@draft-duck/core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { Hash, Layers, List, Settings, Table2, type LucideIcon } from 'lucide-react';
+import { Layers, List, Settings, Table2, type LucideIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type Ref } from 'react';
 
 const INTENSITY_DEBOUNCE_MS = 200;
@@ -214,7 +214,9 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
 
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
 
-            <div className='flex items-center gap-2'>
+            {/* Stays in flow until it hits the app header, then pins. Headline scrolls away.
+                z-40 matches the chrome so Rank/Name heads (z-30) cannot paint over the buttons. */}
+            <div className='sticky top-[var(--app-header)] z-40 -mx-1 flex items-center gap-2 bg-background px-1 py-2'>
                 {hasSlot ? (
                     <ToolbarButton
                         icon={showSimple ? Table2 : List}
@@ -232,12 +234,25 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                             pressed={assist}
                             onClick={() => onAssistChange(!assist)}
                         />
-                        <ToolbarButton
-                            icon={Hash}
-                            label={plusMinus ? '+/-' : 'Raw stats'}
-                            pressed={plusMinus}
+                        <Button
+                            type='button'
+                            variant={plusMinus ? 'default' : 'outline'}
+                            aria-label={plusMinus ? '+- Z Scores' : '# Raw Stats'}
+                            aria-pressed={plusMinus}
+                            // Phone matches other toolbar squares. Desktop holds the longer label still.
+                            className='size-11 px-0 md:h-11 md:w-auto md:min-w-36 md:px-4'
                             onClick={() => onValueModeChange(plusMinus ? 'raw' : 'plusMinus')}
-                        />
+                        >
+                            {plusMinus ? (
+                                <>
+                                    +-<span className='hidden md:inline'> Z Scores</span>
+                                </>
+                            ) : (
+                                <>
+                                    #<span className='hidden md:inline'> Raw Stats</span>
+                                </>
+                            )}
+                        </Button>
                     </>
                 )}
                 {settingsButton}
