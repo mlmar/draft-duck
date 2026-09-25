@@ -70,6 +70,8 @@ Deploy the API first. Copy the Cloud Run URL into the `PUBLIC_API_URL` repo vari
 
 `WIF_PROVIDER` is the **provider** resource name. No `iam.googleapis.com/` prefix. The pool path alone is not enough. `PUBLIC_API_URL` must pass [assert-public-api-url.mjs](../app/client/scripts/assert-public-api-url.mjs).
 
+`deploy-api` checks the GCP variables first ([assert-gcp-deploy-vars.mjs](../scripts/assert-gcp-deploy-vars.mjs)). An empty `GCP_REGION` makes `configure-docker` see `-docker.pkg.dev` as a flag (`unrecognized arguments: -docker.pkg.dev`). Set **Variables**, not Secrets. The name is `GCP_REGION`, value like `us-central1`.
+
 ## GCP setup (one-time)
 
 You do not create the Cloud Run service in the console. The first API workflow creates it.
