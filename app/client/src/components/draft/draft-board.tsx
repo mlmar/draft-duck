@@ -267,15 +267,20 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                         <p className='mb-0 max-w-xl text-muted-foreground'>
                             If the room drafted this board in order, this is the name at your pick.
                         </p>
-                        <PlayerTable
-                            groups={simpleGroups}
-                            enabledCats={profile.enabledCats}
-                            emptyLabel='Set your pick in Settings to see names at each slot.'
-                            profile={profile}
-                            highlight={highlight}
-                            valueMode={valueMode}
-                            yourOverallPicks={yourPickSet}
-                        />
+                        {rankQuery.isFetching && slotPlayers.length === 0 ? (
+                            <p className='mb-0'>lining them up…</p>
+                        ) : (
+                            <PlayerTable
+                                groups={simpleGroups}
+                                enabledCats={profile.enabledCats}
+                                emptyLabel='No players on this board.'
+                                profile={profile}
+                                highlight={highlight}
+                                // Raw / +/- is unmounted here. Stay on per-game stats.
+                                valueMode='raw'
+                                yourOverallPicks={yourPickSet}
+                            />
+                        )}
                     </>
                 ) : (
                     <>

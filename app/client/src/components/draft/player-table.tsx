@@ -59,8 +59,9 @@ function rowFill(odd: boolean, isYourPick: boolean): string {
     return isYourPick ? yourPickFill : stripeFill(odd);
 }
 
-// One overflow from Table for horizontal scroll. The page scrolls vertically.
-// Rank sticks left. Name joins it from md up. Header sticks at the top of the table scroller from md up.
+// Viewport-bounded scroller so both axes move in one box and thead can stick inside it.
+// Rank sticks left. Name joins it from md up. Header sticks at the top of this scroller from md up.
+// Phone thead still scrolls away. Headline can leave; the toolbar stays pinned under the app header.
 // table-fixed plus pinned col widths: raw vs +/- (and long names) must not move columns.
 // Opaque fills on sticky cells, not inherit, so heat mixes cannot show through on scroll.
 // border-separate so collapse does not break left stickies.
@@ -84,7 +85,7 @@ export function PlayerTable({
     return (
         <Table
             className='table-fixed min-w-[56rem] border-separate border-spacing-0'
-            containerClassName='overflow-x-auto'
+            containerClassName='max-h-[calc(100dvh-var(--app-header)-var(--draft-toolbar))] overflow-auto'
         >
             <colgroup>
                 <col className={colRank} />
