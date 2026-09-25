@@ -30,7 +30,7 @@ export function ReviewStep({ value, onChange, parseError }: QuizStepProps) {
 
     return (
         <div className='grid gap-6'>
-            {previewQuery.isFetching ? <p className='mb-0'>Ranking a preview…</p> : null}
+            {previewQuery.isFetching ? <p className='mb-0'>lining them up…</p> : null}
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
             {parseError ? <p className='mb-0 text-destructive'>{parseError}</p> : null}
 

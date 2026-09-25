@@ -1,5 +1,7 @@
 import {
     CAT_KEYS,
+    LEAGUE_SIZE_MAX,
+    LEAGUE_SIZE_MIN,
     isNamedBuildId,
     isNamedBuildVisible,
     stancesForArchetype,
@@ -11,10 +13,12 @@ import {
 
 // In-progress quiz shape plus conversions to DraftProfile. Skip intensity omits that field from the saved payload.
 
+export const STANDARD_LEAGUE_SIZES = [8, 10, 12, 14] as const;
+
 export type CatPreset = '9cat' | '8cat' | 'custom';
 
 export type QuizDraft = {
-    leagueSize: 8 | 10 | 12 | 14;
+    leagueSize: number;
     draftRounds: number;
     draftType: 'snake' | 'linear';
     preset: CatPreset;
@@ -103,6 +107,19 @@ export function setDraftSlot(draft: QuizDraft, draftSlot: number): QuizDraft {
         return { ...draft, draftSlot: undefined };
     }
     return { ...draft, draftSlot: Math.min(draftSlot, draft.leagueSize) };
+}
+
+// Snap odds down, then clamp 4-20. Slot shrinks with the league.
+export function clampLeagueSize(n: number): number {
+    if (!Number.isFinite(n)) return 12;
+    const even = n % 2 === 0 ? n : n - 1;
+    return Math.min(LEAGUE_SIZE_MAX, Math.max(LEAGUE_SIZE_MIN, even));
+}
+
+export function setLeagueSize(draft: QuizDraft, leagueSize: number): QuizDraft {
+    const size = clampLeagueSize(leagueSize);
+    const draftSlot = draft.draftSlot && draft.draftSlot > size ? size : draft.draftSlot;
+    return { ...draft, leagueSize: size, draftSlot };
 }
 
 // DraftProfile is the persist and API shape. Intensity is omitted unless Fine-tune changed a slider.
