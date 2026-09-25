@@ -19,8 +19,18 @@ jobs:
             REGION: ${{ vars.GCP_REGION }}
             AR_REPO: ${{ vars.GCP_AR_REPOSITORY }}
             SERVICE: ${{ vars.CLOUD_RUN_SERVICE }}
+            GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+            GCP_REGION: ${{ vars.GCP_REGION }}
+            GCP_AR_REPOSITORY: ${{ vars.GCP_AR_REPOSITORY }}
+            CLOUD_RUN_SERVICE: ${{ vars.CLOUD_RUN_SERVICE }}
+            WIF_PROVIDER: ${{ vars.WIF_PROVIDER }}
+            WIF_SERVICE_ACCOUNT: ${{ vars.WIF_SERVICE_ACCOUNT }}
         steps:
             - uses: actions/checkout@v4
+
+            # Empty REGION becomes `-docker.pkg.dev`, which gcloud treats as a flag.
+            - name: Require GCP variables
+              run: node scripts/assert-gcp-deploy-vars.mjs
 
             - uses: google-github-actions/auth@v3
               with:
