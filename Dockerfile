@@ -10,11 +10,13 @@ COPY app/core/package.json app/core/
 COPY app/client/package.json app/client/
 
 # The lockfile also has client Vite. Its esbuild (0.25) fights tsx's (0.28).
-# ignore-scripts skips that postinstall. rebuild esbuild is what tsx needs to boot.
+# ignore-scripts skips postinstall. Drop Vite, then install only tsx's esbuild binary.
+# Do not `npm rebuild esbuild`: that walks Vite's copy and dies (verify 36187397297).
 # HUSKY=0: prepare would call husky, which is omit=dev and not in the image.
 ENV HUSKY=0
 RUN npm ci --omit=dev --workspace=@draft-duck/api --workspace=@draft-duck/core --include-workspace-root --ignore-scripts \
-    && npm rebuild esbuild
+    && rm -rf node_modules/vite \
+    && node node_modules/esbuild/install.js
 
 COPY app/api app/api
 COPY app/core app/core
