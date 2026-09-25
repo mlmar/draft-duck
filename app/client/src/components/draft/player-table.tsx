@@ -43,9 +43,8 @@ const colCat = 'w-16 min-w-16';
 const stickyRank = `sticky left-0 z-10 ${colRank}`;
 // Name only pins from md up. Rank plus Name is 17rem and covers cats on a phone.
 const stickyName = `z-10 ${colName} md:sticky md:left-20`;
-// Vertical stick is md+ only, top-0 so the offset is the table scroller, not the app header.
-const stickyRankHead = `sticky left-0 z-30 ${colRank} bg-background md:top-0`;
-const stickyNameHead = `z-30 ${colName} bg-background md:sticky md:left-20 md:top-0`;
+const stickyRankHead = `sticky left-0 z-30 ${colRank} bg-background`;
+const stickyNameHead = `z-30 ${colName} bg-background md:sticky md:left-20`;
 
 // Mix in srgb so #78A3CF stays pale blue. oklch interpolation landed in pink.
 const yourPickFill =
@@ -59,9 +58,9 @@ function rowFill(odd: boolean, isYourPick: boolean): string {
     return isYourPick ? yourPickFill : stripeFill(odd);
 }
 
-// Viewport-bounded scroller so both axes move in one box and thead can stick inside it.
-// Rank sticks left. Name joins it from md up. Header sticks at the top of this scroller from md up.
-// Phone thead still scrolls away. Headline can leave; the toolbar stays pinned under the app header.
+// Page scrolls vertically. This box is overflow-x only so cats can pan.
+// Rank sticks left. Name joins it from md up. Column labels travel with the page.
+// Toolbar and search pin instead. A nested max-h scroller made two scroll areas on a phone.
 // table-fixed plus pinned col widths: raw vs +/- (and long names) must not move columns.
 // Opaque fills on sticky cells, not inherit, so heat mixes cannot show through on scroll.
 // border-separate so collapse does not break left stickies.
@@ -85,7 +84,7 @@ export function PlayerTable({
     return (
         <Table
             className='table-fixed min-w-[56rem] border-separate border-spacing-0'
-            containerClassName='max-h-[calc(100dvh-var(--app-header)-var(--draft-toolbar))] overflow-auto'
+            containerClassName='overflow-x-auto'
         >
             <colgroup>
                 <col className={colRank} />
@@ -96,7 +95,7 @@ export function PlayerTable({
                     <col key={cat} className={colCat} />
                 ))}
             </colgroup>
-            <TableHeader className='z-20 bg-background md:sticky md:top-0'>
+            <TableHeader className='z-20 bg-background'>
                 <TableRow className='text-muted-foreground hover:bg-transparent'>
                     <TableHead className={stickyRankHead}>Rank</TableHead>
                     <TableHead className={stickyNameHead}>Name</TableHead>

@@ -5,20 +5,18 @@ type PageShellProps = {
     children: ReactNode;
     className?: string;
     wide?: boolean;
-    // Quiz sits under the wordmark with less air than marketing pages.
+    // Quiz uses less vertical air than marketing pages.
     inset?: 'default' | 'quiz';
 };
 
-// Default is the reading column. wide is the board, full viewport. Header is sticky in flow.
+// Default is the reading column. wide unlocks full width from md up. Mobile stays max-w-lg.
 export function PageShell({ children, className, wide = false, inset = 'default' }: PageShellProps) {
     return (
         <main
             className={cn(
-                'mx-auto px-4',
+                'mx-auto w-full flex-1 px-4',
                 inset === 'quiz' ? 'py-4' : 'py-6 md:py-8',
-                // w-full so mx-auto cannot shrink-wrap the board and slide the toolbar.
-                wide ? 'w-full max-w-none' : 'flex max-w-lg flex-col md:max-w-2xl',
-                'min-h-[calc(100dvh-var(--app-header))]',
+                wide ? 'max-w-lg md:max-w-none' : 'flex max-w-lg flex-col md:max-w-2xl',
                 className
             )}
         >
