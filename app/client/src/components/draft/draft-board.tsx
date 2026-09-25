@@ -1,5 +1,4 @@
 import { PlayerTable, type CatValueMode } from '@/components/draft/player-table';
-import { PickCard } from '@/components/draft/pick-card';
 import { SettingsDrawer } from '@/components/draft/settings-drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,7 @@ import { rankPlayers } from '@/lib/api';
 import { readBoardView, writeBoardView } from '@/lib/board-view';
 import { applyDisplayCap } from '@/lib/display-cap';
 import { canPersist, profileToQuizDraft, quizDraftToProfile, type QuizDraft } from '@/lib/quiz';
+import { cn } from '@/lib/utils';
 import { useDraftProfileStore } from '@/stores/draft-profile';
 import {
     catHighlightStrategy,
@@ -40,11 +40,21 @@ type ToolbarButtonProps = {
     expanded?: boolean;
     controls?: string;
     buttonRef?: Ref<HTMLButtonElement>;
+    className?: string;
     onClick: () => void;
 };
 
 // Icon plus label on desktop. Icon only below md. aria-label stays either way.
-function ToolbarButton({ icon: Icon, label, pressed, expanded, controls, buttonRef, onClick }: ToolbarButtonProps) {
+function ToolbarButton({
+    icon: Icon,
+    label,
+    pressed,
+    expanded,
+    controls,
+    buttonRef,
+    className,
+    onClick
+}: ToolbarButtonProps) {
     return (
         <Button
             ref={buttonRef}
@@ -55,7 +65,7 @@ function ToolbarButton({ icon: Icon, label, pressed, expanded, controls, buttonR
             aria-expanded={expanded}
             aria-controls={controls}
             onClick={onClick}
-            className='size-11 px-0 md:h-11 md:w-auto md:px-4'
+            className={cn('size-11 px-0 md:h-11 md:w-auto md:px-4', className)}
         >
             <Icon />
             <span className='hidden md:inline'>{label}</span>
@@ -155,10 +165,11 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
         lift: Boolean(query) || showRest,
         clipLastGroup: assist
     });
-    const slotCards = yourPicks.flatMap((overall, index) => {
+    const slotPlayers = yourPicks.flatMap((overall) => {
         const player = players[overall - 1];
-        return player ? [{ overall, round: index + 1, player }] : [];
+        return player ? [player] : [];
     });
+    const simpleGroups = [{ id: 'picks', players: slotPlayers }];
 
     const headline = profileHeadline(profile);
     const summary = stanceSummary(profile);
@@ -190,11 +201,6 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                 >
                     {summary}
                 </Button>
-                {showSimple ? (
-                    <p className='mb-0 max-w-xl text-muted-foreground'>
-                        If the room drafted this board in order, this is the name at your pick.
-                    </p>
-                ) : null}
             </header>
 
             <SettingsDrawer
@@ -208,83 +214,93 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
 
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
 
-            {showSimple ? (
-                <div className='grid gap-4'>
-                    <div className='flex flex-wrap items-center gap-2'>
-                        <ToolbarButton icon={Table2} label='Full table' onClick={() => handleSimpleViewChange(false)} />
-                        {settingsButton}
-                    </div>
-                    {slotCards.length > 0 ? (
-                        <ol className='grid gap-3'>
-                            {slotCards.map(({ overall, round, player }) => (
-                                <li key={`${round}-${player.playerId}`}>
-                                    <PickCard round={round} overall={overall} player={player} profile={profile} />
-                                </li>
-                            ))}
-                        </ol>
-                    ) : (
-                        <p className='mb-0 text-muted-foreground'>
-                            Set your pick in Settings to see names at each slot.
-                        </p>
-                    )}
-                </div>
-            ) : (
-                <div className='grid gap-4'>
-                    <div className='max-w-sm'>
-                        <Input
-                            type='search'
-                            value={nameQuery}
-                            onChange={(event) => setNameQuery(event.target.value)}
-                            placeholder='Search players'
-                            aria-label='Search players'
-                        />
-                    </div>
-                    <div className='flex flex-wrap items-center gap-2'>
-                        {hasSlot ? (
-                            <ToolbarButton
-                                icon={List}
-                                label='Simple view'
-                                pressed={false}
-                                onClick={() => handleSimpleViewChange(true)}
-                            />
-                        ) : null}
-                        <ToolbarButton
-                            icon={Layers}
-                            label='Draft assistance'
-                            pressed={assist}
-                            onClick={() => onAssistChange(!assist)}
-                        />
-                        <ToolbarButton
-                            icon={plusMinus ? Plus : Hash}
-                            label={plusMinus ? '+/-' : 'Raw stats'}
-                            pressed={plusMinus}
-                            onClick={() => onValueModeChange(plusMinus ? 'raw' : 'plusMinus')}
-                        />
-                        {settingsButton}
-                    </div>
-                    <PlayerTable
-                        groups={capped.groups}
-                        enabledCats={profile.enabledCats}
-                        emptyLabel={query ? 'No players match that name.' : 'No players on this board.'}
-                        profile={profile}
-                        highlight={highlight}
-                        valueMode={valueMode}
-                        yourOverallPicks={yourPickSet}
+            <div className='flex items-center gap-2'>
+                {hasSlot ? (
+                    <ToolbarButton
+                        icon={showSimple ? Table2 : List}
+                        label={showSimple ? 'Full table' : 'Simple view'}
+                        // min-w covers both labels so the first control does not resize on toggle.
+                        className='md:min-w-44'
+                        onClick={() => handleSimpleViewChange(!showSimple)}
                     />
-                    {capped.hiddenCount > 0 ? (
-                        <p className='mb-0'>
-                            <Button
-                                type='button'
-                                variant='ghost'
-                                className='h-auto px-0'
-                                onClick={() => setShowRest(true)}
-                            >
-                                Show rest of board
-                            </Button>
-                        </p>
-                    ) : null}
+                ) : null}
+                {/* Invisible keeps Assist / +/- width so Settings does not slide when simple hides them. */}
+                <div
+                    className={cn('flex items-center gap-2', showSimple && 'invisible')}
+                    inert={showSimple || undefined}
+                    aria-hidden={showSimple}
+                >
+                    <ToolbarButton
+                        icon={Layers}
+                        label='Draft assistance'
+                        pressed={assist}
+                        onClick={() => onAssistChange(!assist)}
+                    />
+                    <ToolbarButton
+                        icon={plusMinus ? Plus : Hash}
+                        label={plusMinus ? '+/-' : 'Raw stats'}
+                        pressed={plusMinus}
+                        onClick={() => onValueModeChange(plusMinus ? 'raw' : 'plusMinus')}
+                    />
                 </div>
-            )}
+                {settingsButton}
+            </div>
+
+            <div
+                key={showSimple ? 'simple' : 'full'}
+                className='grid animate-in fade-in gap-4 duration-200 motion-reduce:animate-none'
+            >
+                {showSimple ? (
+                    <>
+                        <p className='mb-0 max-w-xl text-muted-foreground'>
+                            If the room drafted this board in order, this is the name at your pick.
+                        </p>
+                        <PlayerTable
+                            compact
+                            groups={simpleGroups}
+                            enabledCats={profile.enabledCats}
+                            emptyLabel='Set your pick in Settings to see names at each slot.'
+                            profile={profile}
+                            highlight={highlight}
+                            valueMode={valueMode}
+                            yourOverallPicks={yourPickSet}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <div className='max-w-sm'>
+                            <Input
+                                type='search'
+                                value={nameQuery}
+                                onChange={(event) => setNameQuery(event.target.value)}
+                                placeholder='Search players'
+                                aria-label='Search players'
+                            />
+                        </div>
+                        <PlayerTable
+                            groups={capped.groups}
+                            enabledCats={profile.enabledCats}
+                            emptyLabel={query ? 'No players match that name.' : 'No players on this board.'}
+                            profile={profile}
+                            highlight={highlight}
+                            valueMode={valueMode}
+                            yourOverallPicks={yourPickSet}
+                        />
+                        {capped.hiddenCount > 0 ? (
+                            <p className='mb-0'>
+                                <Button
+                                    type='button'
+                                    variant='ghost'
+                                    className='h-auto px-0'
+                                    onClick={() => setShowRest(true)}
+                                >
+                                    Show rest of board
+                                </Button>
+                            </p>
+                        ) : null}
+                    </>
+                )}
+            </div>
         </div>
     );
 }
