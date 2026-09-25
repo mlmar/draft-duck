@@ -1,4 +1,3 @@
-import { AboutLink } from '@/components/about-link';
 import { BuildCardFace, namedBuildCardClassName } from '@/components/onboard/build-card-face';
 import { PageShell } from '@/components/page-shell';
 import { EntryCtas } from '@/components/entry-ctas';
@@ -9,15 +8,16 @@ import { createFileRoute } from '@tanstack/react-router';
 export const Route = createFileRoute('/')({
     component: HomePage,
     head: () => ({
-        meta: [{ title: 'Draft Duck' }]
+        meta: [{ title: 'draft duck' }]
     })
 });
 
 function HomePage() {
     return (
         <PageShell className='justify-center'>
-            <h1>Draft Duck</h1>
-            <p className='max-w-md'>Tell us how you want to play. We rank the 2025-26 board for that profile.</p>
+            <h1>draft duck</h1>
+            <p className='mb-0 max-w-md'>Pick a stance, we'll rank it.</p>
+            <p className='max-w-md text-muted-foreground'>get your ducks in a row.</p>
             <div className='mt-8 grid gap-4'>
                 <div className='grid gap-2 md:grid-cols-2'>
                     {NAMED_BUILD_IDS.map((id) => (
@@ -42,7 +42,6 @@ function HomePage() {
                 </LinkButton>
             </div>
             <EntryCtas />
-            <AboutLink />
         </PageShell>
     );
 }
