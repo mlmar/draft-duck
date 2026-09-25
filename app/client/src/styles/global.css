@@ -90,15 +90,8 @@
     /* Low-chroma sage/rose for cat heat. Mix toward transparent by |z|. Not neon. */
     --heat-good: oklch(0.88 0.07 145);
     --heat-bad: oklch(0.88 0.07 25);
-    /* Header is in flow. Tabs are fixed, so pages pad with --app-tabs. Quiz zeros tabs. */
+    /* Header is in flow. Pages pad from --app-header. */
     --app-header: calc(3rem + env(safe-area-inset-top, 0px));
-    --app-tabs: 0px;
-}
-
-@media (max-width: 767px) {
-    :root {
-        --app-tabs: calc(2.75rem + env(safe-area-inset-bottom, 0px));
-    }
 }
 
 @layer base {

@@ -84,7 +84,8 @@ export function LeagueStep({ value, onChange, slotControl = 'chips' }: LeagueSte
                     type='number'
                     min={1}
                     step={1}
-                    value={value.draftRounds}
+                    // 0 is invalid. Show empty so clearing does not leave a leading zero.
+                    value={value.draftRounds || ''}
                     onChange={(event) =>
                         onChange({ ...value, draftRounds: Number.parseInt(event.target.value, 10) || 0 })
                     }
