@@ -19,13 +19,9 @@ describe('partitionByRound', () => {
         expect(partitionByRound([1, 2, 3], 12, 1)).toEqual([{ round: 1, players: [1, 2, 3] }]);
     });
 
-    it('emits empty subsections when the universe is shorter than a full draft', () => {
+    it('skips empty rounds when the universe is shorter than a full draft', () => {
         const ranked = [1, 2, 3];
-        const sections = partitionByRound(ranked, 12, 13);
-        expect(sections).toHaveLength(13);
-        expect(sections[0]?.players).toEqual([1, 2, 3]);
-        expect(sections[1]?.players).toEqual([]);
-        expect(sections[12]?.players).toEqual([]);
+        expect(partitionByRound(ranked, 12, 13)).toEqual([{ round: 1, players: [1, 2, 3] }]);
     });
 
     it('returns no sections for empty rounds or size', () => {

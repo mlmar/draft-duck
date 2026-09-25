@@ -40,7 +40,7 @@ export function QuizShell({
     const showFooter = Boolean(onBack || onContinue);
 
     return (
-        <div className='flex min-h-[calc(100dvh-var(--app-header)-2rem)] flex-col'>
+        <div className='flex min-h-[calc(100dvh-2rem)] flex-col'>
             <header className='grid gap-3'>
                 {banner}
                 <div

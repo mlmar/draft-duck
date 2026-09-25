@@ -1,5 +1,6 @@
 import { PickCard } from '@/components/draft/pick-card';
 import { ExpandSection } from '@/components/expand-section';
+import { LoadingCopy } from '@/components/loading-copy';
 import type { QuizStepProps } from '@/components/onboard/step-types';
 import { StancesStep } from '@/components/onboard/steps/stances-step';
 import { rankPlayers } from '@/lib/api';
@@ -30,7 +31,7 @@ export function ReviewStep({ value, onChange, parseError }: QuizStepProps) {
 
     return (
         <div className='grid gap-6'>
-            {previewQuery.isFetching ? <p className='mb-0'>lining them up…</p> : null}
+            {previewQuery.isFetching ? <LoadingCopy /> : null}
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
             {parseError ? <p className='mb-0 text-destructive'>{parseError}</p> : null}
 
