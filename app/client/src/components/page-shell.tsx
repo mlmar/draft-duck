@@ -16,7 +16,8 @@ export function PageShell({ children, className, wide = false, inset = 'default'
             className={cn(
                 'mx-auto px-4',
                 inset === 'quiz' ? 'py-4' : 'py-6 md:py-8',
-                wide ? 'max-w-none' : 'flex max-w-lg flex-col md:max-w-2xl',
+                // w-full so mx-auto cannot shrink-wrap a compact board and slide the toolbar.
+                wide ? 'w-full max-w-none' : 'flex max-w-lg flex-col md:max-w-2xl',
                 'min-h-[calc(100dvh-var(--app-header))] pb-[calc(1.5rem+var(--app-tabs))]',
                 className
             )}
