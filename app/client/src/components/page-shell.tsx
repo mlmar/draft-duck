@@ -9,7 +9,7 @@ type PageShellProps = {
     inset?: 'default' | 'quiz';
 };
 
-// Default is the reading column. wide is the board, full viewport. Header is sticky in flow. Tab bar is fixed, so bottom padding uses --app-tabs.
+// Default is the reading column. wide is the board, full viewport. Header is sticky in flow.
 export function PageShell({ children, className, wide = false, inset = 'default' }: PageShellProps) {
     return (
         <main
@@ -18,7 +18,7 @@ export function PageShell({ children, className, wide = false, inset = 'default'
                 inset === 'quiz' ? 'py-4' : 'py-6 md:py-8',
                 // w-full so mx-auto cannot shrink-wrap the board and slide the toolbar.
                 wide ? 'w-full max-w-none' : 'flex max-w-lg flex-col md:max-w-2xl',
-                'min-h-[calc(100dvh-var(--app-header))] pb-[calc(1.5rem+var(--app-tabs))]',
+                'min-h-[calc(100dvh-var(--app-header))]',
                 className
             )}
         >

@@ -41,10 +41,11 @@ const colPos = 'w-12 min-w-12';
 const colCat = 'w-16 min-w-16';
 
 const stickyRank = `sticky left-0 z-10 ${colRank}`;
-const stickyName = `sticky left-20 z-10 ${colName}`;
-// Vertical stick is md+ only. Phone thead should scroll away with the rows.
-const stickyRankHead = `sticky left-0 z-30 ${colRank} bg-background md:top-[var(--app-header)]`;
-const stickyNameHead = `sticky left-20 z-30 ${colName} bg-background md:top-[var(--app-header)]`;
+// Name only pins from md up. Rank plus Name is 17rem and covers cats on a phone.
+const stickyName = `z-10 ${colName} md:sticky md:left-20`;
+// Vertical stick is md+ only, top-0 so the offset is the table scroller, not the app header.
+const stickyRankHead = `sticky left-0 z-30 ${colRank} bg-background md:top-0`;
+const stickyNameHead = `z-30 ${colName} bg-background md:sticky md:left-20 md:top-0`;
 
 // Mix in srgb so #78A3CF stays pale blue. oklch interpolation landed in pink.
 const yourPickFill =
@@ -59,7 +60,7 @@ function rowFill(odd: boolean, isYourPick: boolean): string {
 }
 
 // One overflow from Table for horizontal scroll. The page scrolls vertically.
-// Rank/name stick left. Header sticks under the app chrome from md up.
+// Rank sticks left. Name joins it from md up. Header sticks at the top of the table scroller from md up.
 // table-fixed plus pinned col widths: raw vs +/- (and long names) must not move columns.
 // Opaque fills on sticky cells, not inherit, so heat mixes cannot show through on scroll.
 // border-separate so collapse does not break left stickies.
@@ -94,7 +95,7 @@ export function PlayerTable({
                     <col key={cat} className={colCat} />
                 ))}
             </colgroup>
-            <TableHeader className='z-20 bg-background md:sticky md:top-[var(--app-header)]'>
+            <TableHeader className='z-20 bg-background md:sticky md:top-0'>
                 <TableRow className='text-muted-foreground hover:bg-transparent'>
                     <TableHead className={stickyRankHead}>Rank</TableHead>
                     <TableHead className={stickyNameHead}>Name</TableHead>
@@ -141,9 +142,6 @@ export function PlayerTable({
                                 </TableCell>
                                 <TableCell className={`${stickyName} ${fill} overflow-hidden`}>
                                     <span className='block truncate font-medium'>{player.name}</span>
-                                    <span className='mt-0.5 block text-sm text-muted-foreground'>
-                                        {player.composite.toFixed(2)}
-                                    </span>
                                 </TableCell>
                                 <TableCell className={`hidden text-sm text-muted-foreground md:table-cell ${colTeam}`}>
                                     {player.team}
