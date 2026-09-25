@@ -20,8 +20,8 @@ export function AppHeader({ hideLinks }: AppHeaderProps) {
     return (
         <header className='sticky top-0 z-40 border-b border-border bg-background/95 pt-[env(safe-area-inset-top,0px)] backdrop-blur-sm'>
             <div className='mx-auto flex h-12 max-w-6xl items-center justify-between gap-4 px-4'>
-                <Link to='/' className='font-semibold text-foreground'>
-                    Draft Duck
+                <Link to='/' className='font-semibold text-foreground' title='get your ducks in a row'>
+                    draft duck
                 </Link>
                 {hideLinks ? null : (
                     <nav className='hidden items-center gap-5 md:flex'>

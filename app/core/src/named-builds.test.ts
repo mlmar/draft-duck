@@ -121,4 +121,15 @@ describe('draftProfileSchema', () => {
             }).success
         ).toBe(false);
     });
+
+    it('accepts even custom sizes and rejects odds', () => {
+        const base = {
+            draftRounds: 13,
+            draftType: 'snake' as const,
+            enabledCats: [...CAT_KEYS]
+        };
+        expect(draftProfileSchema.safeParse({ ...base, leagueSize: 12 }).success).toBe(true);
+        expect(draftProfileSchema.safeParse({ ...base, leagueSize: 16 }).success).toBe(true);
+        expect(draftProfileSchema.safeParse({ ...base, leagueSize: 13 }).success).toBe(false);
+    });
 });
