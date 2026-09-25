@@ -1,12 +1,14 @@
 import { PickCard } from '@/components/draft/pick-card';
+import { ExpandSection } from '@/components/expand-section';
 import type { QuizStepProps } from '@/components/onboard/step-types';
+import { StancesStep } from '@/components/onboard/steps/stances-step';
 import { rankPlayers } from '@/lib/api';
 import { quizDraftToProfile } from '@/lib/quiz';
 import { draftProfileSchema, overallPicksForDraft } from '@draft-duck/core';
 import { useQuery } from '@tanstack/react-query';
 
-// Slot preview, not a recap list. Names at each pick come from the current draft.
-export function ReviewStep({ value, parseError }: QuizStepProps) {
+// Slot preview, not a recap list. Stance edits re-rank the names at each pick.
+export function ReviewStep({ value, onChange, parseError }: QuizStepProps) {
     const parsed = draftProfileSchema.safeParse(quizDraftToProfile(value));
     const profile = parsed.success ? parsed.data : null;
 
@@ -47,6 +49,10 @@ export function ReviewStep({ value, parseError }: QuizStepProps) {
                     ))}
                 </ol>
             ) : null}
+
+            <ExpandSection label='Adjust Need and Punt'>
+                <StancesStep value={value} onChange={onChange} />
+            </ExpandSection>
         </div>
     );
 }
