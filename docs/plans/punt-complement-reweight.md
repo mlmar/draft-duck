@@ -230,17 +230,11 @@ Home: named build | Custom | Not sure
 
 ### 1. Snap to a named build (questions classify)
 
-Each question is a pair: bigs or guards, 3s or dunks, Jokic or Shai. Answers **vote for named builds**, not raw deltas. After a short run, snap the chart to the winning preset. Complements and Need 1.5 come from that card. Chart jumps, it does not drift.
+Each question is a pair: bigs or guards, 3s or dunks, Jokic or Shai. Answers **vote for named builds**, not raw leftover numbers. Chart can show the current leader. End snap is that card’s G presets.
 
 Bank: many tagged pairs. Session picks 4–6. Seed the shuffle so Back does not reshuffle.
 
-**Fits G:** the quiz only writes a named-build stance map, then presets fill tuners. Need at 3 only if they later drag.
-
-**Improves:** lands on a real build, chart matches a card, random questions stay stable, no fight with complement presets.
-
-**Regresses:** “a bit more 3s” needs a Custom edit after. Ties need a rule (more votes, then gallery order).
-
-Default for **Not sure**.
+This is the discrete version of Not sure. [Walk then snap](#3-walk-then-snap-not-sure-engine) is the same landing, with motion in between.
 
 ### 2. Chart is display. Tap opens tuners
 
@@ -256,32 +250,41 @@ Punt still locks its slider at 0. Complement Neutral bars **redraw** at 1.25 whe
 
 Use as chart chrome on **every** path, including named build and Not sure (those two do not need the panel until the user wants to override).
 
-### 3. Delta walk, explained (not the Not sure engine)
+### 3. Walk then snap (Not sure engine)
 
-A delta walk treats each question as a **numeric patch** on the tuner vector, not as a vote for a named build.
+Keep the live wiggle. Do **not** save the wiggle.
 
-Example. Start Balanced, all cats at 1. “Bigs or guards?” → Bigs adds `{ trb: +0.5, blk: +0.5, fgPct: +0.3, ftPct: -1 }` and clamps. FG% is now 1.3 (Custom, not Need). FT% is 0, but the chip may still say Neutral unless we also rewrite stances. “3s or dunks?” → Dunks adds more FG%/REB, subtracts 3PM. After four questions you have a unique 9-number fingerprint. Almost every cat is Custom. Complement logic (punt FT% → Neutral partners 1.25) either overwrites those fingerprints or refuses to run because nothing is Neutral anymore.
+Each answer steps the preview tuners **toward a named-build vector** (lerp, not ad-hoc `trb + 0.5`). “Bigs” steps toward Fortress/Post. “Guards” steps toward Sniper. The chart moves every tap. Chips during the walk can stay quiet; this preview is not the profile yet.
 
-Compare to approach 1 on the same prompts: “Bigs” votes Fortress/Post. After the set, **snap Fortress**. FT% is Punt 0, FG%/REB/BLK/PTS are Need 1.5, leftover Neutrals 1 (or 1.25). The chart is a build the rest of the app already knows. Jokic vs Shai is “are you Post/Balanced or Sniper,” not “nudge AST +0.4.”
+At the last question, pick the named build whose G preset vector is **closest** (Euclidean on the 0–3 tuners, enabled cats only). Snap the chart to that card: Punt 0, Need 1.5, Neutral 1 or 1.25. Persist **that** `archetypeId` and stance map, not the fingerprint. Copy: `Closest build: Fortress`. Then league → review → `/draft`. Fine-tune is the tuner panel on the board (tap chart or Settings). That is how they recover “a bit more 3s” without storing a one-off Custom mix from the quiz.
 
-**Why it feels appealing:** the chart wiggles every tap. It feels like a personality test.
+```text
+Balanced (all 1)
+  → step toward Fortress
+  → step toward Sniper
+  → … preview mix …
+  → nearest named vector
+  → snap Fortress  (saved)
+  → draft tuners if they want to override
+```
 
-**Why it fights G:**
+**Why not persist the walk:** that is the delta-walk failure mode. After four patches you have 1.3 FG% and 0.4 FT% with Neutral chips, complements cannot run, why-copy and the gallery cannot describe the board. Snapping throws that mix away **on purpose**. The walk is only a classifier with animation. The saved board is always a named preset, same as picking Fortress on Home.
 
-- Stance presets and Custom exist so Need is 1.5, Punt is 0, Neutral is 1 or 1.25. Deltas skip those rungs and land on 1.3, 0.7, 2.1. The chip cannot tell the truth without a fourth state on every cat.
-- Complements are a table of partners, not a sum of vibes. A walk can punt FT% without raising REB, or raise REB without punting FT%.
-- Named builds, why-copy, Need-fit, and the gallery all key off Need/Punt chips. A walk produces boards those surfaces were not written for.
-- Random subsets make two “Not sure” runs incomparable unless every delta and the shuffle are frozen. Classify-and-snap only needs a seed plus vote totals.
+**Why step toward a card, not free deltas:** nearest-neighbor is only honest if the path lives in the same space as the six presets. Random `{ ast: +0.4 }` can finish closer to Balanced than to any story the questions told. Left/right in the bank still name builds. The step is lerp toward that build’s tuner vector. One table, no second weight model.
 
-**If we ever used it:** only as a tiny bump **after** snapping a named card (out of scope). Not as questions 2..X.
+**Improves vs votes-only:** mixed answers (two bigs, one guard) resolve by geometry, not plurality. The chart feels like a test. End state is still G-clean.
+
+**Regresses vs votes-only:** the end snap can jump. If the preview looked like a hybrid and we stamp Fortress, it reads as bait-and-switch unless the “Closest build” line is loud. Distance ties: gallery order. Fine-tune after does not restore the discarded fingerprint unless we stash it (do not).
+
+**Not sure default:** this walk-then-snap. Votes-only is the same persist with less motion.
 
 ### Recommended mix
 
-| Path        | What happens                                      | Chart                                     |
-| ----------- | ------------------------------------------------- | ----------------------------------------- |
-| Named build | Snap G presets. Skip questions.                   | Bars at 0 / 1 / 1.5. Tap opens tuners     |
-| Custom      | Tap chart → tuner panel. Then league.             | Read-only bars. Edit in the panel         |
-| Not sure    | Approach 1. 4–6 seeded pairs → snap a named card. | Follow the leader, snap. Tap opens tuners |
+| Path        | What happens                                         | Chart                                      |
+| ----------- | ---------------------------------------------------- | ------------------------------------------ |
+| Named build | Snap G presets. Skip questions.                      | Bars at 0 / 1 / 1.5. Tap opens tuners      |
+| Custom      | Tap chart → tuner panel. Then league.                | Read-only bars. Edit in the panel          |
+| Not sure    | Walk toward named vectors, snap nearest, then draft. | Wiggles, then jumps to the card. Tap later |
 
 League does not write tuners. Review shows the same chart plus pick preview. Board Settings is the tuner panel the chart opens, not a drag overlay on the bars.
 
@@ -291,12 +294,12 @@ League does not write tuners. Review shows the same chart plus pick preview. Boa
 | 3s or dunks    | Sniper vs Fortress / Bricks |
 | Jokic or Shai  | Balanced / Post vs Sniper   |
 
-Keep the bank in data (`id`, `prompt`, `left`, `right`, `votes: Record<NamedBuildId, number>`). Do not hardcode deltas in components.
+Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId` or votes). Steps lerp toward that card’s G tuner vector. Do not store free-form per-cat deltas.
 
 ### Passes
 
 1. **Weights (next PR).** Approach G, tuner 0–3, Settings sliders = weight. No chart yet.
-2. **Chart quiz (follow-up).** Shared `WeightChart` (display only). Tap opens the tuner panel. Home + Not sure classify-and-snap. No bar dragging. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
+2. **Chart quiz (follow-up).** Shared `WeightChart` (display only). Tap opens the tuner panel. Not sure is walk-then-snap. No bar dragging. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
 
 Pass 2 only writes `stances` + tuners. Same ranker.
 
@@ -334,12 +337,12 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. StanceBar + slider on one row, max 3; Fine-tune expand gone.
 4. M2 + Scoring.
 5. `npm run format` and `npm test`. Browser: Custom punt FT% moves FG% to 1.25; drag to 3 is Custom; Neutral click snaps back; Fortress Need thumbs sit at 1.5.
-6. Later PR: WeightChart (tap to tuners), Not sure classify questions. No drag on bars.
+6. Later PR: WeightChart (tap to tuners), Not sure walk-then-snap. No drag on bars.
 
 ## Out of scope
 
 - Correlation-derived or weekly G-score weights.
-- Delta-walk questions as the Not sure engine.
+- Persisting a Not sure fingerprint as Custom cats (the walk is preview only).
 - Signed −3..3 stored weights.
 - Auto-selecting Need when the user punts.
 - Availability floor, ADP, VORP, remaining-pool re-z.
@@ -353,4 +356,4 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. Settings: those thumbs read 1.25. Drag REB to 3, chip Custom, weight 3. Neutral click returns 1.25.
 4. Unpunt FT%: Neutral complements 1.0. A Custom REB stays 3.
 5. Scoring: slider 0–3 is the weight. 3 equals old Need × intensity 2.
-6. (Pass 2) Not sure: four pairs, chart snaps to a named build. Custom: tap chart, tuners open, bars only redraw. Named card: bars match that preset. No dragging bars.
+6. (Pass 2) Not sure: chart wiggles toward named vectors, then snaps to closest build copy. Draft Settings can fine-tune. Custom: tap chart, tuners open. No dragging bars. Do not rank the unsnapped mix.
