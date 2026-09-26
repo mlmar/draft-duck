@@ -1,6 +1,6 @@
 # Punt complement reweight
 
-Plan only. Next pass on this branch should implement **Approach G** with tuner max **0–3** (Need × 2 = 3 is a bar at 3). A later pass adds the [onboarding chart](#onboarding-chart). Stance chips are presets that write the tuner. The slider (and later the chart) is the weight. A drag off the preset makes that cat Custom.
+Plan only. Next pass on this branch should implement **Approach G** with tuner max **0–3** (Need × 2 = 3 is a bar at 3). A later pass adds the [onboarding chart](#onboarding-chart). Stance chips are presets that write the tuner. The slider is the weight. The chart **shows** that vector; tap opens tuners. A drag on the slider off the preset makes that cat Custom.
 
 ## The claim
 
@@ -242,35 +242,48 @@ Bank: many tagged pairs. Session picks 4–6. Seed the shuffle so Back does not 
 
 Default for **Not sure**.
 
-### 2. Live Custom chart (chips and bars are the same)
+### 2. Chart is display. Tap opens tuners
 
-Custom (and later Settings): the chart **is** the tuner. Tap Need / Neutral / Punt under a bar to write a preset. Drag to Custom at 1.4 or 3. Punt locks the bar at 0. Complement Neutral bars rise to 1.25 when a hole is punted.
+The chart is **read-only**. No dragging bars, no drop, no resizing a column to 1.4. Every path shows the same 0–3 bars. Tap the chart (or a bar) **opens the tuner panel**: Need / Neutral / Punt plus the native 0–3 slider for that cat (or all cats, stacked). That panel is the same write path as Settings.
 
-**Fits G:** one-to-one with Settings. Need 1.5 and max 3 are visible. Chart can sit read-only on league.
+Punt still locks its slider at 0. Complement Neutral bars **redraw** at 1.25 when a hole is punted; the user did not drag them. A slider drag in the panel, off the preset, is Custom.
 
-**Improves:** the central chart is the control, not decoration.
+**Fits G:** one value. Chart shows it. Tuners change it. Chart is not a second input device.
 
-**Regresses:** nine bars plus chips on a phone is dense. Prefer native range under each bar for a11y; the chart is the display.
+**Improves:** a11y (native range, not pointer-drag on a canvas). Phone does not fight nine drag handles. League can show the chart without implying you can scribble on it.
 
-Use for **Custom**, and as chart chrome on every path.
+**Regresses:** one extra tap vs dragging the bar itself. Fine. Custom still uses this: chart → tuners → league.
 
-### 3. Delta walk (questions nudge bars)
+Use as chart chrome on **every** path, including named build and Not sure (those two do not need the panel until the user wants to override).
 
-Each answer adds deltas (`trb +0.5`, `ftPct -> 0`). Clamp 0–3. Optional snap to nearest named build at the end.
+### 3. Delta walk, explained (not the Not sure engine)
 
-**Fits G poorly.** After two questions most cats are Custom. Complement presets and Need chips desync. Unseeded random subsets are unreproducible. “Jokic or Shai” as ad-hoc +REB/−FT% is a worse Fortress than snapping to that card.
+A delta walk treats each question as a **numeric patch** on the tuner vector, not as a vote for a named build.
 
-Reject as the Not sure engine. A documented delta on top of a snapped preset can wait.
+Example. Start Balanced, all cats at 1. “Bigs or guards?” → Bigs adds `{ trb: +0.5, blk: +0.5, fgPct: +0.3, ftPct: -1 }` and clamps. FG% is now 1.3 (Custom, not Need). FT% is 0, but the chip may still say Neutral unless we also rewrite stances. “3s or dunks?” → Dunks adds more FG%/REB, subtracts 3PM. After four questions you have a unique 9-number fingerprint. Almost every cat is Custom. Complement logic (punt FT% → Neutral partners 1.25) either overwrites those fingerprints or refuses to run because nothing is Neutral anymore.
+
+Compare to approach 1 on the same prompts: “Bigs” votes Fortress/Post. After the set, **snap Fortress**. FT% is Punt 0, FG%/REB/BLK/PTS are Need 1.5, leftover Neutrals 1 (or 1.25). The chart is a build the rest of the app already knows. Jokic vs Shai is “are you Post/Balanced or Sniper,” not “nudge AST +0.4.”
+
+**Why it feels appealing:** the chart wiggles every tap. It feels like a personality test.
+
+**Why it fights G:**
+
+- Stance presets and Custom exist so Need is 1.5, Punt is 0, Neutral is 1 or 1.25. Deltas skip those rungs and land on 1.3, 0.7, 2.1. The chip cannot tell the truth without a fourth state on every cat.
+- Complements are a table of partners, not a sum of vibes. A walk can punt FT% without raising REB, or raise REB without punting FT%.
+- Named builds, why-copy, Need-fit, and the gallery all key off Need/Punt chips. A walk produces boards those surfaces were not written for.
+- Random subsets make two “Not sure” runs incomparable unless every delta and the shuffle are frozen. Classify-and-snap only needs a seed plus vote totals.
+
+**If we ever used it:** only as a tiny bump **after** snapping a named card (out of scope). Not as questions 2..X.
 
 ### Recommended mix
 
-| Path        | What happens                                      | Chart                   |
-| ----------- | ------------------------------------------------- | ----------------------- |
-| Named build | Snap G presets. Skip questions.                   | Bars at 0 / 1 / 1.5     |
-| Custom      | Approach 2. Chips + bars. Then league.            | Bars are the editor     |
-| Not sure    | Approach 1. 4–6 seeded pairs → snap a named card. | Follow the leader, snap |
+| Path        | What happens                                      | Chart                                     |
+| ----------- | ------------------------------------------------- | ----------------------------------------- |
+| Named build | Snap G presets. Skip questions.                   | Bars at 0 / 1 / 1.5. Tap opens tuners     |
+| Custom      | Tap chart → tuner panel. Then league.             | Read-only bars. Edit in the panel         |
+| Not sure    | Approach 1. 4–6 seeded pairs → snap a named card. | Follow the leader, snap. Tap opens tuners |
 
-League does not write tuners. Review shows the same chart plus pick preview. Board Settings is the Custom editor for everyone.
+League does not write tuners. Review shows the same chart plus pick preview. Board Settings is the tuner panel the chart opens, not a drag overlay on the bars.
 
 | Pair           | Lean                        |
 | -------------- | --------------------------- |
@@ -283,7 +296,7 @@ Keep the bank in data (`id`, `prompt`, `left`, `right`, `votes: Record<NamedBuil
 ### Passes
 
 1. **Weights (next PR).** Approach G, tuner 0–3, Settings sliders = weight. No chart yet.
-2. **Chart quiz (follow-up).** Shared `WeightChart` on tuners. Home + Not sure. Question bank. Custom edits via the chart. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
+2. **Chart quiz (follow-up).** Shared `WeightChart` (display only). Tap opens the tuner panel. Home + Not sure classify-and-snap. No bar dragging. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
 
 Pass 2 only writes `stances` + tuners. Same ranker.
 
@@ -321,7 +334,7 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. StanceBar + slider on one row, max 3; Fine-tune expand gone.
 4. M2 + Scoring.
 5. `npm run format` and `npm test`. Browser: Custom punt FT% moves FG% to 1.25; drag to 3 is Custom; Neutral click snaps back; Fortress Need thumbs sit at 1.5.
-6. Later PR: WeightChart, Not sure classify questions, Custom as chart editor.
+6. Later PR: WeightChart (tap to tuners), Not sure classify questions. No drag on bars.
 
 ## Out of scope
 
@@ -340,4 +353,4 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. Settings: those thumbs read 1.25. Drag REB to 3, chip Custom, weight 3. Neutral click returns 1.25.
 4. Unpunt FT%: Neutral complements 1.0. A Custom REB stays 3.
 5. Scoring: slider 0–3 is the weight. 3 equals old Need × intensity 2.
-6. (Pass 2) Not sure: four pairs, chart snaps to a named build. Custom: bars edit tuners. Named card: bars match that preset.
+6. (Pass 2) Not sure: four pairs, chart snaps to a named build. Custom: tap chart, tuners open, bars only redraw. Named card: bars match that preset. No dragging bars.
