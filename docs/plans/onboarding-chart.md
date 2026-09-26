@@ -127,22 +127,22 @@ Toward ids are the named-build keys: `balanced`, `puntFg` (Bricks), `puntFt` (Fo
 
 ### Static opening
 
-Always this order when eligible. These are the poles the product named.
+Always this order when eligible. Category poles, not player names. Jokic or Shai is a popularity contest and the Balanced mapping is opaque, so it is not an opener.
 
-| Id                | Prompt           | Left   | Toward     | Right  | Toward   |
-| ----------------- | ---------------- | ------ | ---------- | ------ | -------- |
-| `bigs-or-guards`  | Bigs or guards?  | Bigs   | `puntFt`   | Guards | `guards` |
-| `threes-or-dunks` | Threes or dunks? | Threes | `guards`   | Dunks  | `puntFt` |
-| `jokic-or-shai`   | Jokic or Shai?   | Jokic  | `balanced` | Shai   | `guards` |
+| Id                 | Prompt            | Left   | Toward   | Right  | Toward   |
+| ------------------ | ----------------- | ------ | -------- | ------ | -------- |
+| `bigs-or-guards`   | Bigs or guards?   | Bigs   | `puntFt` | Guards | `guards` |
+| `threes-or-dunks`  | Threes or dunks?  | Threes | `guards` | Dunks  | `puntFt` |
+| `points-or-stocks` | Points or stocks? | Points | `guards` | Stocks | `stocks` |
 
 ### Random pool
 
-Ten pairs. Session draws **two**. This is where Bricks, Post, and Stocks live. Dropped Curry / Gobert and Steals / Blocks; those only restated the static Fortress vs Sniper split.
+Ten pairs. Session draws **two**. Bricks, Post, and Balanced live here. Dropped Curry / Gobert and Steals / Blocks; those only restated the static Fortress vs Sniper split.
 
 | Id                        | Prompt                             | Left          | Toward     | Right            | Toward    |
 | ------------------------- | ---------------------------------- | ------------- | ---------- | ---------------- | --------- |
 | `giannis-or-embiid`       | Giannis or Embiid?                 | Giannis       | `puntFt`   | Embiid           | `puntFg`  |
-| `points-or-stocks`        | Points or stocks?                  | Points        | `guards`   | Stocks           | `stocks`  |
+| `jokic-or-shai`           | Jokic or Shai?                     | Jokic         | `balanced` | Shai             | `guards`  |
 | `dimes-or-paint`          | Dimes or paint?                    | Dimes         | `guards`   | Paint            | `puntAst` |
 | `jokic-or-ad`             | Jokic or AD?                       | Jokic         | `balanced` | AD               | `puntAst` |
 | `shooting-or-free-throws` | Ugly shooting or ugly free throws? | Ugly shooting | `puntFg`   | Ugly free throws | `puntFt`  |
@@ -160,7 +160,7 @@ Ten pairs. Session draws **two**. This is where Bricks, Post, and Stocks live. D
 - **Bigs → Fortress, not Post.** Fortress is the default interior card (punt FT%). Post is the assist hole. Pool pairs `dimes-or-paint`, `jokic-or-ad`, and `ad-or-giannis` split the two bigs.
 - **Giannis → Fortress, Embiid → Bricks.** Classic FT% hole vs living at the line with FG% as the tax.
 - **AD → Post.** Scoring and defensive big, not a passer. `ad-or-giannis` is Post vs Fortress (assist hole vs FT hole).
-- **Specialists / Stocks → Stocks.** The “scoring is optional, steal and block” card. Do not point a generic “blocks” answer at Stocks; blocks-as-a-big keep scoring (Fortress).
+- **Points → Sniper, stocks → Stocks.** Same grain as the first two openers: a CAT pole, not two names. Scoring vs steal-and-block specialists. Do not point a generic “blocks” answer at Stocks; blocks-as-a-big keep scoring (Fortress).
 - **To the line → Bricks.** Need FT%, punt FG%. From three → Sniper. `embiid-or-shai` is the same split with names.
 - **Ugly shooting → Bricks, ugly free throws → Fortress.** Same split in plain language if the Embiid pairs missed the draw.
 - **Jokic or Embiid → Balanced vs Bricks.** Do-it-all vs the FG% tax, without walking Jokic toward Post.
@@ -169,18 +169,18 @@ Do not add a seventh named build to make Jokic a “passing big.” Balanced is 
 
 ### Coverage
 
-Static three already hit Fortress, Sniper, and Balanced. The pool is what can still reach the other cards.
+Static three hit Fortress, Sniper, and Stocks. The pool is what can still reach Bricks, Post, and Balanced.
 
-| Build    | Static               | Pool                                                                             |
-| -------- | -------------------- | -------------------------------------------------------------------------------- |
-| Fortress | bigs, dunks          | Giannis, ugly free throws, AD or Giannis                                         |
-| Sniper   | guards, threes, Shai | points, dimes, from three, star scorers, Embiid or Shai                          |
-| Balanced | Jokic or Shai        | Jokic or AD, Jokic or Embiid                                                     |
-| Bricks   | none                 | Embiid (vs Giannis), ugly shooting, to the line, Jokic or Embiid, Embiid or Shai |
-| Stocks   | none                 | points or stocks, star scorers or specialists                                    |
-| Post     | none                 | dimes or paint, Jokic or AD, AD or Giannis                                       |
+| Build    | Static                 | Pool                                                                             |
+| -------- | ---------------------- | -------------------------------------------------------------------------------- |
+| Fortress | bigs, dunks            | Giannis, ugly free throws, AD or Giannis                                         |
+| Sniper   | guards, threes, points | Jokic or Shai, dimes, from three, star scorers, Embiid or Shai                   |
+| Stocks   | stocks                 | star scorers or specialists                                                      |
+| Balanced | none                   | Jokic or Shai, Jokic or AD, Jokic or Embiid                                      |
+| Bricks   | none                   | Embiid (vs Giannis), ugly shooting, to the line, Jokic or Embiid, Embiid or Shai |
+| Post     | none                   | dimes or paint, Jokic or AD, AD or Giannis                                       |
 
-Bricks, Post, and Stocks are not guaranteed. They only show up if one of the two draws hits them.
+Bricks, Post, and Balanced are not guaranteed. They only show up if one of the two draws hits them.
 
 ## Session picker
 
@@ -259,9 +259,9 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 
 - Bank: thirteen unique ids (three static, ten pool), both sides named builds, no `custom`. Static ids are not in the pool.
 - `isNamedBuildVisible` false for Fortress when `ftPct` is off → questions with `toward: puntFt` drop (five: two static, three pool).
-- 9-cat: first three ids are always `bigs-or-guards`, `threes-or-dunks`, `jokic-or-shai`. Last two are from the ten-id pool, no duplicates, no static ids in the tail.
+- 9-cat: first three ids are always `bigs-or-guards`, `threes-or-dunks`, `points-or-stocks`. Last two are from the ten-id pool, no duplicates, no static ids in the tail.
 - Same seed → same five ids and same order. Different seed can change only the last two.
-- `ftPct` off: static `bigs-or-guards` and `threes-or-dunks` drop. Opening is `jokic-or-shai` plus two from the remaining eligible pool.
+- `ftPct` off: static `bigs-or-guards` and `threes-or-dunks` drop. Opening is `points-or-stocks` plus two from the remaining eligible pool.
 - Lerp example matches the table above.
 - `previewFromAnswers` of `[bigs-or-guards: left]` then Back to `[]` returns all 1s.
 - Preview of the Fortress vector is nearest `puntFt`. All 1s is `balanced`. Equal distance: earlier in `NAMED_BUILD_IDS`.
@@ -286,7 +286,7 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 1. Home shows named cards, Custom, and Not sure.
 2. Named: league chart is that card (Fortress FT% at 0, Need cats at 1.5). Tap chart → sliders, no bar drag. Continue still works with sliders open or closed.
 3. Custom: chips first. Punt FT% moves FG% / REB / BLK / PTS bars to 1.25 (once G is in). No slider row until the chart is tapped.
-4. Not sure: first three prompts are always Bigs or guards, Threes or dunks, Jokic or Shai. The next two are from the pool of ten (Giannis or Embiid, Points or stocks, and so on), vary by seed, and are not the three openers. Chart moves each tap. Back restores the previous bars and does not reshuffle the random two. After the fifth, copy names a card and the bars jump to that preset. Refresh still does not keep in-progress answers.
+4. Not sure: first three prompts are always Bigs or guards, Threes or dunks, Points or stocks. The next two are from the pool of ten (Giannis or Embiid, Jokic or Shai, and so on), vary by seed, and are not the three openers. Chart moves each tap. Back restores the previous bars and does not reshuffle the random two. After the fifth, copy names a card and the bars jump to that preset. Refresh still does not keep in-progress answers.
 5. Closest build is one of the six names. `/draft` chrome says that name. Settings chips match the card, not the walk mix.
 6. 8-cat (TOV off in Settings, then retake Not sure): questions still run; vectors omit TOV.
 7. No neon bars, no pills, no drawer on `/onboard`.
