@@ -26,19 +26,20 @@ A first-time user (no account) should be able to:
 
 ## How to read these docs
 
-| Doc                                                        | When to open it                                     |
-| ---------------------------------------------------------- | --------------------------------------------------- |
-| [00-product-and-stack.md](00-product-and-stack.md)         | Stack, repo layout, API sketch, non-goals           |
-| [M1-foundation.md](M1-foundation.md)                       | Workspaces, client home, Fastify health, CSV ingest |
-| [M2-ranking-engine.md](M2-ranking-engine.md)               | Z-score formulas, weights, Vitest goldens           |
-| [M3-onboarding.md](M3-onboarding.md)                       | Quiz and `DraftProfile`                             |
-| [M4-draft-assistant.md](M4-draft-assistant.md)             | Ranked table and optional round sections            |
-| [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md) | M4 implementation plan (current tree)               |
-| [plans/quiz-centered-ux.md](plans/quiz-centered-ux.md)     | Quiz-first onboarding and board UX direction        |
-| [plans/design-system.md](plans/design-system.md)           | Visual system, mobile chrome, draft Settings drawer |
-| [M5-extensibility.md](M5-extensibility.md)                 | NBA adapter, suggestion hook, Yahoo seams           |
-| [deploy.md](deploy.md)                                     | Pages + Cloud Run, WIF, GitHub Actions              |
-| [plans/deploy-review.md](plans/deploy-review.md)           | Review follow-up for the first public deploy        |
+| Doc                                                                    | When to open it                                     |
+| ---------------------------------------------------------------------- | --------------------------------------------------- |
+| [00-product-and-stack.md](00-product-and-stack.md)                     | Stack, repo layout, API sketch, non-goals           |
+| [M1-foundation.md](M1-foundation.md)                                   | Workspaces, client home, Fastify health, CSV ingest |
+| [M2-ranking-engine.md](M2-ranking-engine.md)                           | Z-score formulas, weights, Vitest goldens           |
+| [M3-onboarding.md](M3-onboarding.md)                                   | Quiz and `DraftProfile`                             |
+| [M4-draft-assistant.md](M4-draft-assistant.md)                         | Ranked table and optional round sections            |
+| [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md)             | M4 implementation plan (current tree)               |
+| [plans/quiz-centered-ux.md](plans/quiz-centered-ux.md)                 | Quiz-first onboarding and board UX direction        |
+| [plans/design-system.md](plans/design-system.md)                       | Visual system, mobile chrome, draft Settings drawer |
+| [M5-extensibility.md](M5-extensibility.md)                             | NBA adapter, suggestion hook, Yahoo seams           |
+| [deploy.md](deploy.md)                                                 | Pages + Cloud Run, WIF, GitHub Actions              |
+| [plans/deploy-review.md](plans/deploy-review.md)                       | Review follow-up for the first public deploy        |
+| [plans/punt-complement-reweight.md](plans/punt-complement-reweight.md) | Punt leftover Neutrals vs complement boost          |
 
 Each milestone has **goal, in scope, out of scope, stack/touchpoints, acceptance checks, suggested build order**. M1–M4 are sequential. M5 is “do not paint into a corner” plus later optional work.
 
