@@ -256,6 +256,8 @@ Keep the live wiggle. Do **not** save the wiggle.
 
 Each answer steps the preview tuners **toward a named-build vector** (lerp, not ad-hoc `trb + 0.5`). “Bigs” steps toward Fortress/Post. “Guards” steps toward Sniper. The chart moves every tap. Chips during the walk can stay quiet; this preview is not the profile yet.
 
+**Preview vs saved chart.** Walk bars are a sketch. After snap, the same chart component shows the real G presets (solid, same style as named-build and draft). Differentiating the walk (muted fill, dashed outline, “preview” caption) is a **future PR**, not the first chart pass. First chart pass can use one style; do not block ship on a second look. Never rank or persist the sketch.
+
 At the last question, pick the named build whose G preset vector is **closest** (Euclidean on the 0–3 tuners, enabled cats only). Snap the chart to that card: Punt 0, Need 1.5, Neutral 1 or 1.25. Persist **that** `archetypeId` and stance map, not the fingerprint. Copy: `Closest build: Fortress`. Then league → review → `/draft`. Fine-tune is the tuner panel on the board (tap chart or Settings). That is how they recover “a bit more 3s” without storing a one-off Custom mix from the quiz.
 
 ```text
@@ -299,7 +301,8 @@ Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId` o
 ### Passes
 
 1. **Weights (next PR).** Approach G, tuner 0–3, Settings sliders = weight. No chart yet.
-2. **Chart quiz (follow-up).** Shared `WeightChart` (display only). Tap opens the tuner panel. Not sure is walk-then-snap. No bar dragging. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
+2. **Chart quiz (follow-up).** Shared `WeightChart` (display only). Tap opens the tuner panel. Not sure is walk-then-snap. No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
+3. **Walk preview chrome (later).** Optional second look so the sketch is obviously not the board (muted/dashed/caption). Same tuners, no new ranker.
 
 Pass 2 only writes `stances` + tuners. Same ranker.
 
@@ -338,6 +341,7 @@ Core + Settings wiring. Chart quiz is pass 2.
 4. M2 + Scoring.
 5. `npm run format` and `npm test`. Browser: Custom punt FT% moves FG% to 1.25; drag to 3 is Custom; Neutral click snaps back; Fortress Need thumbs sit at 1.5.
 6. Later PR: WeightChart (tap to tuners), Not sure walk-then-snap. No drag on bars.
+7. Later PR: walk-preview chart style, distinct from the saved board chart.
 
 ## Out of scope
 
@@ -348,6 +352,7 @@ Core + Settings wiring. Chart quiz is pass 2.
 - Availability floor, ADP, VORP, remaining-pool re-z.
 - why-copy / Need-fit / heat teaching Neutral-at-1.25 this pass.
 - Chart quiz UI (pass 2).
+- Walk-preview visual treatment (pass 3). One chart style is enough until then.
 
 ## How to verify later
 
@@ -357,3 +362,4 @@ Core + Settings wiring. Chart quiz is pass 2.
 4. Unpunt FT%: Neutral complements 1.0. A Custom REB stays 3.
 5. Scoring: slider 0–3 is the weight. 3 equals old Need × intensity 2.
 6. (Pass 2) Not sure: chart wiggles toward named vectors, then snaps to closest build copy. Draft Settings can fine-tune. Custom: tap chart, tuners open. No dragging bars. Do not rank the unsnapped mix.
+7. (Pass 3) Walk bars read as preview, snapped bars read as the board.
