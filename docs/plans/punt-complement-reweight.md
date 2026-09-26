@@ -235,7 +235,7 @@ Home: named build | Custom | Not sure
 
 ### 1. Snap to a named build (questions classify)
 
-Each question is a pair: bigs or guards, 3s or dunks, Jokic or Shai. Answers **vote for named builds**, not raw leftover numbers. Chart can show the current leader. End snap is that card’s G presets.
+Each question is a pair: bigs or guards, 3s or dunks, points or stocks. Answers **vote for named builds**, not raw leftover numbers. Chart can show the current leader. End snap is that card’s G presets.
 
 Bank: three static pairs, then a pool of ten. Session asks the three, then two from the pool, seeded so Back does not reshuffle. Details in [onboarding-chart.md](onboarding-chart.md).
 
