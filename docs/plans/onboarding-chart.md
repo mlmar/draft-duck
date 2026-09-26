@@ -9,7 +9,7 @@ Home already picks a named build or Custom. `/onboard` is league then review. Th
 ```text
 Home: named build | Custom | Not sure
          |              |         |
-      snap preset    chips    questions (5)
+      snap preset    chips    3 static + 2 random
          |           (N/N/P)      |
          +------+-------+---------+
                 |
@@ -60,15 +60,15 @@ Complement Neutral bars redraw at 1.25 when a hole is punted from the chip step.
 
 Today `STEPS` is league then review. Home `?build=` writes the named map and lands on league. Custom writes Neutral and also lands on league.
 
-| Path        | First-run steps                         | Chart                                        |
-| ----------- | --------------------------------------- | -------------------------------------------- |
-| Named build | League → review                         | Bars at that card’s G presets. Tap → sliders |
-| Custom      | Chips → league → review                 | Bars follow chips. Tap → sliders             |
-| Not sure    | Five questions → snap → league → review | Wiggles, then jumps. Tap → sliders           |
+| Path        | First-run steps                              | Chart                                        |
+| ----------- | -------------------------------------------- | -------------------------------------------- |
+| Named build | League → review                              | Bars at that card’s G presets. Tap → sliders |
+| Custom      | Chips → league → review                      | Bars follow chips. Tap → sliders             |
+| Not sure    | 3 static + 2 random → snap → league → review | Wiggles, then jumps. Tap → sliders           |
 
 League does not write tuners. Review shows the same chart plus the pick preview.
 
-`STEPS` stays data-driven. Build the list from the entry path so progress counts the screens that path actually has (named is two, Custom is three, Not sure is seven).
+`STEPS` stays data-driven. Build the list from the entry path so progress counts the screens that path actually has (named is two, Custom is three, Not sure is seven: five questions, league, review).
 
 Home: keep the named grid and quiet Custom. Add **Not sure** next to Custom (ghost / outline, not a seventh named tile). No helper essay. Optional one muted line: A few questions.
 
@@ -119,7 +119,7 @@ Repeat Fortress and the preview hugs that card. Mix Fortress and Sniper and geom
 
 ## Question bank
 
-Source of truth for pass 2. Twelve pairs. Session asks **five**. Each side has one `toward: NamedBuildId`. Buttons show the **choice label**, never the build name (that would spoil the snap).
+Source of truth for pass 2. Twelve pairs. Session asks **five**: the first three always the same, then two at random from the rest. Each side has one `toward: NamedBuildId`. Buttons show the **choice label**, never the build name (that would spoil the snap).
 
 Prompts are the quiz title. Two stacked described buttons, tap to answer and advance (same as the Home gallery: no Continue on a walk step). Back undoes the last answer.
 
@@ -144,7 +144,7 @@ Toward ids are the named-build keys: `balanced`, `puntFg` (Bricks), `puntFt` (Fo
 
 ### Why these mappings
 
-The user-facing poles were Bigs / Guards, 3s / Dunks, Jokic / Shai. Those three are in the bank. The rest exist so a five-question session can still reach Bricks, Post, Stocks, and Balanced, not only Fortress vs Sniper.
+The user-facing poles were Bigs / Guards, 3s / Dunks, Jokic / Shai. Those three are the static opening, in that order. The other nine are the random pool: Bricks, Post, and Stocks only show up if a random slot draws them.
 
 - **Jokic → Balanced, not Post.** Post punts AST. Jokic is the assist-heavy big. Walking him toward Post would step toward a hole he does not have.
 - **Shai → Sniper.** Guard scoring, FT%, threes, not a shot blocker.
@@ -154,7 +154,7 @@ The user-facing poles were Bigs / Guards, 3s / Dunks, Jokic / Shai. Those three 
 - **AD → Post.** Scoring and defensive big, not a passer.
 - **Specialists / Stocks → Stocks.** The “scoring is optional, steal and block” card. `steals-or-blocks` does **not** point Blocks at Stocks, because blocks-as-a-big keep scoring (Fortress).
 - **To the line → Bricks.** Need FT%, punt FG%. From three → Sniper.
-- **Ugly shooting → Bricks, ugly free throws → Fortress.** Same split in plain language, so the covering picker can still hit Bricks if the Embiid / line questions missed the cut.
+- **Ugly shooting → Bricks, ugly free throws → Fortress.** Same split in plain language, so a random slot can still hit Bricks if Embiid / to the line missed the draw.
 
 Do not add a seventh named build to make Jokic a “passing big.” Balanced is that card.
 
@@ -169,22 +169,27 @@ Do not add a seventh named build to make Jokic a “passing big.” Balanced is 
 | Stocks   | points or stocks, star scorers or specialists                                |
 | Post     | dimes or paint, Jokic or AD                                                  |
 
-Sniper and Fortress appear often. That is the main personality split. The session picker below is what keeps the rare cards in the five.
+Sniper and Fortress appear often. That is the main personality split. The static three already hit Fortress, Sniper, and Balanced. Bricks, Post, and Stocks are not guaranteed; they live in the random two.
 
 ## Session picker
 
-`SESSION_LENGTH = 5`. Floor 4, cap 6. First run uses 5. If fewer than 4 questions survive the cat filter, ask all that remain. If none survive, skip the walk and snap Balanced (enabled-cat edge case).
+Not a covering shuffle of five. **Three static, then two random.**
 
-Seed once when Not sure starts. Mulberry32 or equivalent from that seed. Store `walkSeed`, `walkQuestionIds`, and `walkAnswers` on the in-memory `QuizDraft` only. **None of that on `DraftProfile`.** Back must not reshuffle. In-progress quiz still dies on refresh (same as today).
+Static opening, always this order when eligible:
+
+1. `bigs-or-guards` (Bigs or guards?)
+2. `threes-or-dunks` (Threes or dunks?)
+3. `jokic-or-shai` (Jokic or Shai?)
+
+Then **two** from the other nine, seeded shuffle. Do not pull a fourth static. Giannis / Embiid is the obvious extra opener if we ever want Bricks guaranteed; leave it in the pool so the first three stay the poles the product named.
+
+`STATIC_IDS` + `RANDOM_COUNT = 2`. First run is five questions. If a static pair fails the cat filter, omit it (do not substitute). Still draw two from the eligible remainder. If the remainder has fewer than two, take all of it. If nothing eligible at all, skip the walk and snap Balanced.
+
+Seed once when Not sure starts. Mulberry32 or equivalent from that seed. Store `walkSeed`, `walkQuestionIds`, and `walkAnswers` on the in-memory `QuizDraft` only. **None of that on `DraftProfile`.** Back must not reshuffle the random two. In-progress quiz still dies on refresh (same as today).
 
 Eligible question: both `toward` builds pass `isNamedBuildVisible(id, enabledCats)`. First run is 9-cat, so all twelve qualify. Retake after custom cats may drop Fortress questions if FT% is off, and so on.
 
-Pick the five:
-
-1. Greedy cover in gallery order (`balanced`, `puntFg`, `puntFt`, `guards`, `stocks`, `puntAst`). For each visible build not yet represented, take one unused eligible question that has that id on either side (seeded choice if several).
-2. If the set is under 5, fill from the remaining eligible with the same seed stream.
-3. If cover wants 6, keep 6 (cap). Prefer dropping a Fortress/Sniper duplicate before dropping a rare-card question.
-4. Shuffle the chosen list with that seed for presentation order so cover order is not the quiz order.
+Presentation order is statics first, then the two random ids. Do not shuffle the whole list; the opening should feel like the same quiz every time.
 
 Tap-to-advance through `walkQuestionIds`. `search.q` is the 0-based index while `step=walk`. Back decrements `q`, then Home. After the last answer, snap, then league.
 
@@ -213,7 +218,7 @@ Helpers (pure, tested in `app/core`):
 - `lerpTuners(a, b, t)` → `a + (b - a) * t`.
 - `previewFromAnswers(questionIds, answers, enabledCats)` → fold from Balanced with `alpha = 0.4`.
 - `nearestNamedBuild(preview, enabledCats)` → min Euclidean, gallery-order ties. Skip builds that are not visible.
-- `pickWalkQuestions(enabledCats, seed, length = 5)` → ids.
+- `pickWalkQuestions(enabledCats, seed)` → ids (three static that survive, then two from the pool).
 
 Quiz walk fields never reach `quizDraftToProfile`. Snap calls `applyArchetype` and drops the walk fields. Opening sliders after snap is the normal Custom-tuner path from G.
 
@@ -251,8 +256,9 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 
 - Bank: twelve unique ids, both sides named builds, no `custom`.
 - `isNamedBuildVisible` false for Fortress when `ftPct` is off → those six Fortress questions drop.
-- Same seed → same five ids and same order. Different seed can differ.
-- 9-cat greedy cover includes at least one question toward `balanced`, `puntFg`, `stocks`, and `puntAst` (the rare cards). Fortress and Sniper come for free.
+- 9-cat: first three ids are always `bigs-or-guards`, `threes-or-dunks`, `jokic-or-shai`. Last two are from the other nine, no duplicates, no static ids in the tail.
+- Same seed → same five ids and same order. Different seed can change only the last two.
+- `ftPct` off: static `bigs-or-guards` and `threes-or-dunks` drop (Fortress hidden). Opening is `jokic-or-shai` plus two from the remaining eligible pool.
 - Lerp example matches the table above.
 - `previewFromAnswers` of `[bigs-or-guards: left]` then Back to `[]` returns all 1s.
 - Preview of the Fortress vector is nearest `puntFt`. All 1s is `balanced`. Equal distance: earlier in `NAMED_BUILD_IDS`.
@@ -277,7 +283,7 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 1. Home shows named cards, Custom, and Not sure.
 2. Named: league chart is that card (Fortress FT% at 0, Need cats at 1.5). Tap chart → sliders, no bar drag. Continue still works with sliders open or closed.
 3. Custom: chips first. Punt FT% moves FG% / REB / BLK / PTS bars to 1.25 (once G is in). No slider row until the chart is tapped.
-4. Not sure: five questions from the bank, prompts match the table. Chart moves each tap. Back restores the previous bars and does not reshuffle. After the fifth, copy names a card and the bars jump to that preset. Refresh still does not keep in-progress answers.
+4. Not sure: first three prompts are always Bigs or guards, Threes or dunks, Jokic or Shai. The next two vary by seed and are not those three. Chart moves each tap. Back restores the previous bars and does not reshuffle the random two. After the fifth, copy names a card and the bars jump to that preset. Refresh still does not keep in-progress answers.
 5. Closest build is one of the six names. `/draft` chrome says that name. Settings chips match the card, not the walk mix.
 6. 8-cat (TOV off in Settings, then retake Not sure): questions still run; vectors omit TOV.
 7. No neon bars, no pills, no drawer on `/onboard`.
