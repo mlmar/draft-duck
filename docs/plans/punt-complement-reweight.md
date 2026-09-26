@@ -237,7 +237,7 @@ Home: named build | Custom | Not sure
 
 Each question is a pair: bigs or guards, 3s or dunks, Jokic or Shai. Answers **vote for named builds**, not raw leftover numbers. Chart can show the current leader. End snap is that card’s G presets.
 
-Bank: twelve tagged pairs. First three are always Bigs / Guards, Threes / Dunks, Jokic / Shai. Then two from the rest, seeded so Back does not reshuffle. Details in [onboarding-chart.md](onboarding-chart.md).
+Bank: three static pairs, then a pool of ten. Session asks the three, then two from the pool, seeded so Back does not reshuffle. Details in [onboarding-chart.md](onboarding-chart.md).
 
 This is the discrete version of Not sure. [Walk then snap](#3-walk-then-snap-not-sure-engine) is the same landing, with motion in between.
 
@@ -298,7 +298,7 @@ Balanced (all 1)
 
 League does not write tuners. Review shows the same chart plus pick preview. Board: chips stay a stance editor (Custom / Settings). Chart tap is sliders only.
 
-Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId`). Steps lerp toward that card’s G tuner vector. Do not store free-form per-cat deltas. The locked twelve pairs, session picker, and chart chrome live in [onboarding-chart.md](onboarding-chart.md).
+Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId`). Steps lerp toward that card’s G tuner vector. Do not store free-form per-cat deltas. The locked pairs (3 static + pool of 10), session picker, and chart chrome live in [onboarding-chart.md](onboarding-chart.md).
 
 ### Passes
 
