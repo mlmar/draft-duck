@@ -1,6 +1,6 @@
 # Punt complement reweight
 
-Plan only. Ranker math, `POST /rank`, and named-build maps stay as they are on this branch. The next PR on this same branch should implement **Approach B**, including the StanceBar / Fine-tune gates in [UI controls](#ui-controls).
+Plan only. Ranker math, `POST /rank`, and named-build maps stay as they are on this branch. The next PR on this same branch should implement **Approach G**: stance chips are presets that write the tuner. The slider is the weight. A drag off the preset makes that cat Custom.
 
 ## The claim
 
@@ -28,7 +28,7 @@ profile_w[c] = stanceWeight * (intensity[c] ?? 1)
 | `neutral` | `1`    |
 | `punt`    | `0`    |
 
-Punt keeps the cat in `z` and zeroes it in the sum. Disabled cats are omitted from `z` entirely. Need is the only lever that makes a remaining cat worth more than Neutral. Operator JSON is still all `1`.
+Punt keeps the cat in `z` and zeroes it in the sum. Disabled cats are omitted from `z` entirely. Need is the only lever that makes a remaining cat worth more than Neutral. Operator JSON is still all `1`. Fine-tune is a second multiplier, not the weight itself. Need + slider 2 = 3.
 
 Named builds already write the classic clusters as Need, not as extra ranker math:
 
@@ -74,83 +74,25 @@ The anti-correlations are in the data. They already move punt-only boards. Extra
 
 The ranker **does** reflect “punt makes that cat not count.” It **does not** automatically make complements worth more than other remaining cats. Named builds paper over that with Need 1.5. Custom punt-only does not.
 
-Do not ship a uniform reweight. Do not hide a third weight layer inside `SuggestionHook`. Keep z-scores, operator JSON, and stance weights.
+Do not ship a uniform reweight. Do not hide a third weight layer inside `SuggestionHook`. Do not keep stance and the slider as two different numbers. Z-scores and operator JSON stay.
 
 ## Approaches
 
 ### A. Docs and quiz only
 
-Need stays the complement lever. Scoring copy already says Need 1.5 / Punt 0. Custom that punts without Need gets an honest 8-way Neutral board.
+Need stays the complement lever. Custom that punts without Need gets an honest 8-way Neutral board.
 
-Pros: no rank-order surprise, existing goldens untouched, matches “the quiz sets the weights.” StanceBar and Fine-tune stay exact: Neutral is 1, the slider number is the weight.
+Fallback if we refuse any formula or StanceBar change.
 
-Cons: a Custom FT% punt still ranks Maxey like a punt-FT% cornerstone. Users who mean “Fortress” and only flip Punt do not get the cluster.
+### B. Silent 1.25 in the ranker (rejected)
 
-Ship this only if we decide Custom punt-only is a feature.
+Ranker fill-in of 1.25 on Neutral complements, slider still 1.0, gates so Need chips and Fine-tune stay “true.” Two values, omit-intensity gate, zero-Need gate, Settings one-liner because the controls cannot show the bump.
 
-### B. Static complement boost on leftover Neutrals (recommended)
-
-When the profile is **punt-only** (at least one Punt, zero Need) and Fine-tune was never persisted, look up complements from a static map (the named-build Need lists, inverted). Remaining Neutral complements get **1.25**. Need stays 1.5. Punt stays 0. Any Need chip or any Fine-tune map turns the bump off so the controls stay the source of truth. See [UI controls](#ui-controls).
-
-```text
-if punt: 0
-else if need: 1.5 * (intensity ?? 1)
-else if boostEligible and cat is a complement of a punted cat:
-    1.25
-else: 1 * (intensity ?? 1)
-
-boostEligible =
-  puntComplementBoost
-  and profile has at least one punt
-  and profile has no Need cats
-  and profile.intensity is omitted
-```
-
-```mermaid
-flowchart TD
-  z["One z-score pass, unchanged"]
-  w["profile_w from stance, intensity, and punt complements"]
-  fit["fitComposite = Σ operator_w * profile_w * z"]
-  cons["consensusComposite = all-neutral, no complement boost"]
-  z --> w --> fit
-  z --> cons
-```
-
-Source of the map: invert [`NAMED_BUILDS`](app/core/src/named-builds.ts) so we do not maintain two cluster lists. Multi-punt unions the Need lists and drops cats that are themselves punted.
-
-| Punt | Complements             |
-| ---- | ----------------------- |
-| FT%  | FG%, REB, BLK, PTS      |
-| FG%  | REB, BLK, FT%           |
-| AST  | PTS, REB, BLK, FG%      |
-| BLK  | PTS, 3PM, FT%, AST, STL |
-| PTS  | STL, BLK                |
-
-No named build punts TOV, STL, 3PM, or REB. Those punts get no auto-boost until we add a row on purpose.
-
-Flag in [`ranker.json`](app/core/config/ranker.json), same pattern as `availabilityFloor`: `puntComplementBoost` default **true** in the implementation PR after goldens. `RankOptions.puntComplementBoost` overrides in tests. Consensus composite stays all-neutral with no boost so `consensusRank` remains “balanced 9-cat.”
-
-Named builds stay bit-identical for two reasons: complements are already Need 1.5, and the zero-Need gate would skip them anyway. Custom punt-FT% with no Fine-tune is the board that changes.
-
-Pros: Custom punt-FT% tilts toward the big-man cluster without rewriting chips or sliders. Named builds, mixed Need+Punt, and Fine-tune keep today’s weights. Inspectable named-build source. No weekly data.
-
-Cons: a Custom user who only flips Punt, never Need, never Fine-tune, still gets a Neutral chip that ranks as 1.25. Mitigate with Scoring plus a Settings one-liner, and keep the flag.
-
-This is the one to implement.
+Overcomplicated. The bump and the tuner disagree. Reject.
 
 ### C. Correlation-derived weights
 
-Recompute Pearson of z-scores (full universe or top-N) and scale remaining cats by how negatively they correlate with the punted cat.
-
-A probe on this CSV, punt FT%, `intensity = 1.1 - 0.4 * r`:
-
-- Boosted REB / BLK / FG% / inverted TOV (~1.23)
-- Cut PTS / 3PM (~0.88)
-- Gobert 13 -> 7, Curry 27 -> 52, Harden 52 -> 93
-
-Stronger and noisier than Fortress. TOV sign is easy to get wrong because z is inverted. Weights change when the CSV or min-games filter changes. Hard to explain next to Need 1.5.
-
-Reject for v1. Maybe a later operator experiment, not profile math.
+Pearson of z-scores, leftover cats scaled by anti-correlation with the punt. Noisy, TOV sign, season-dependent. Sliders cannot show it. Reject.
 
 ### D. Uniform renormalize
 
@@ -158,168 +100,138 @@ Scale leftover weights so they still sum to nine. Ranking order is identical to 
 
 ### E. Weekly G-score / H2H leverage
 
-Downweight volatile cats (steals) by week-to-week variance, or weight by category-win probability after a punt. Needs game logs we do not have. Out of scope. Same bucket as VORP / remaining-pool re-z.
+Needs game logs we do not have. Out of scope.
 
 ### F. Amplify Need when any punt exists
 
-Leave Neutral at 1. If the profile has a punt, raise Need from 1.5 to ~1.8.
+Need ~1.8, Neutral stays 1. Custom punt-only still equal leftovers. Need chip would lie. Reject.
 
-Only helps named builds and Custom users who already marked Need. Custom punt-only still treats leftovers equally. Weaker than B for the reported case. Do not do this instead of B.
+### G. Stance presets write the tuner (recommended)
 
-## UI controls
-
-The ranker must not make Need / Neutral / Punt or Fine-tune mean something other than what the chrome shows. Those controls are the product.
-
-### Where they live
-
-| Surface        | Control                                                                                                                                                   | Who sees it     |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| Home gallery   | Named build writes a full stance map. Custom writes all Neutral. No sliders.                                                                              | First run       |
-| Quiz review    | Expand **Adjust Need and Punt**: [`StanceBar`](app/client/src/components/onboard/steps/stances-step.tsx). Fine-tune only when `archetypeId === 'custom'`. | Review          |
-| Draft Settings | Same StanceBar for every profile. **Fine-tune weights** expand for named builds too.                                                                      | `/draft` drawer |
-| Scoring        | Copy: Need 1.5, Neutral 1, Punt 0; intensity 0–2 scales a non-punt cat.                                                                                   | `/how-it-works` |
-
-[`StanceBar`](app/client/src/components/onboard/steps/stances-step.tsx) is three segments per enabled cat. Punt is muted, not red. Changing a segment only writes `stances[cat]`. It does not move other cats’ segments and does not clear intensity.
-
-[`IntensitySlider`](app/client/src/components/onboard/intensity-slider.tsx) is 0–2, step 0.1, label **Less / More**, number shown is `intensity[cat] ?? 1`. Punt disables that slider so intensity is not written for the hole. Hint: “How hard to lean into each remaining cat. 1 is the default.”
-
-First slider input sets `includeIntensity: true`. [`quizDraftToProfile`](app/client/src/lib/quiz.ts) then writes **every** non-punt cat as `intensity[cat] ?? 1`. Opening Fine-tune without moving a thumb does not persist intensity. Expanding Fine-tune on a named board and nudging one cat persists 1.0 on the rest.
-
-Board chrome [`stanceSummary`](app/core/src/named-builds.ts) only lists Need and Punt. Neutrals are silent. [`whyCopy`](app/core/src/need-fit.ts) / `fitMarks` / Need-fit read chips, not effective weights. Heat uncolors Punt only.
-
-### What the controls mean today
+One number. The slider **is** `profile_w`. Need / Neutral / Punt are presets that set or disable that number. Complement bump is the same path: it writes 1.25 onto the tuner. Dragging off the preset makes that cat **Custom**.
 
 ```text
-profile_w[c] = stanceWeight * (intensity[c] ?? 1)
+profile_w[c] = tuner[c]
+
+preset(cat) =
+  punt     -> 0, slider disabled
+  need     -> 1.5
+  neutral  -> 1.25 if cat is a complement of an enabled punt, else 1.0
+  custom   -> whatever the user dragged (slider enabled)
+
+Click Need / Neutral / Punt -> write preset, chip = that stance
+Drag tuner off preset       -> chip = custom
+Click a stance again        -> reset to that preset
+Punt / unpunt another cat   -> rewrite tuners still on Need / Neutral / Punt
+                             leave Custom cats alone
 ```
 
-| User action              | Chip / slider         | Weight now                             |
-| ------------------------ | --------------------- | -------------------------------------- |
-| Need                     | Need, slider 1        | 1.5                                    |
-| Neutral                  | Neutral, slider 1     | 1                                      |
-| Punt                     | Punt, slider disabled | 0                                      |
-| Need + More              | Need, slider 2        | 3                                      |
-| Need + Less              | Need, slider 0.5      | 0.75 (below Neutral)                   |
-| Fine-tune 0 on a Neutral | Neutral, slider 0     | 0 (same composite as punting that cat) |
+```mermaid
+flowchart TD
+  chip["Need / Neutral / Punt click"]
+  drag["Slider drag"]
+  preset["Write preset onto tuner"]
+  custom["Chip becomes Custom, tuner stays"]
+  rank["profile_w = tuner"]
+  chip --> preset --> rank
+  drag --> custom --> rank
+```
 
-Need 1.5 × intensity 2 = 3 is already on Scoring. The chips and the number on the slider are supposed to be the whole story.
+Complement map: invert [`NAMED_BUILDS`](app/core/src/named-builds.ts), same table as before (FT% -> FG%, REB, BLK, PTS, and so on). Multi-punt unions those lists and drops cats that are themselves punted.
 
-### Naive B vs those controls
+Need still wins over the 1.25 Neutral default: Fortress FG% is Need at 1.5, not Neutral at 1.25. Custom punt-only leaves complements Neutral, so their thumbs move to 1.25.
 
-If we applied 1.25 to every Neutral complement whenever something is punted, the chrome would lie.
+Per-cat Custom is not the gallery `archetypeId`. Store `stances[cat] = 'custom'`. If any cat is Custom, or the map no longer matches a named card, set `archetypeId` to `custom` so chrome does not keep saying Fortress.
 
-**Stance chips**
+UI: keep the three-segment bar. When the cat is Custom, none of the three is selected; a muted “Custom” label sits by the printed tuner. Do not add a fourth radio. Punt still mutes and disables. Put the slider on the same row as the bar (Settings and Adjust Need and Punt), not a second Fine-tune expand. Named builds show the same row so Need 1.5 and Punt 0 are visible.
 
-- Neutral on FG% after a Custom FT% punt would rank as 1.25. The selected segment still says Neutral. Scoring still says Neutral is 1.
-- Flipping Punt on FT% would change FG% / REB / BLK / PTS weights while those four bars stay Neutral. The user did not touch them.
-- Demoting Fortress FG% from Need to Neutral is “I do not need the extra lean.” Naive B would land on 1.25, not 1. The chip change would not do what it looks like.
-- Auto-moving complement chips to Need would fight the gallery and Custom. Do not do that. Named Fortress already wrote Need. Custom chose Neutral on purpose.
+Always persist `intensity` as the tuner for enabled cats. Drop `includeIntensity`. Ranker reads the tuner. Stance is preset metadata (heat uncolor, Need-fit, why-copy, which cats get rewritten when another punt flips).
 
-**Fine-tune sliders**
+Old profiles with no intensity: `tuner = today’s stanceWeight` (Need 1.5, Neutral 1, Punt 0), then apply the Neutral complement default. Old Need × intensity 2 = 3 clamps to slider max 2. See [Regressions](#what-this-regresses).
 
-- Boosting only when `intensity ?? 1 === 1` creates a discontinuity: slider 1.0 ranks 1.25, slider 1.1 ranks 1.1. Dragging **More** a tick would drop the cat.
-- Treating “default” as omitted-per-cat fails the persist shape: one thumb move writes 1.0 on every remaining cat. Complements would lose the bump even though their sliders still show 1.0.
-- Showing 1.0 on the thumb while ranking 1.25 makes the printed number a lie. Multiplying `1.25 * intensity` keeps More/Less monotonic but the default thumb still would not match the weight.
-- Punt already disables its own slider. That stays. The conflict is the other sliders, whose labels would not mention a hidden bump.
+Consensus rank stays all tuners at 1 on the same enabled cats.
 
-**Downstream chrome that reads chips**
+#### What this improves
 
-- `stanceSummary` would still omit the boosted Neutrals, so the board headline would not mention the lean.
-- whyCopy / fitMarks / Need-fit ignore Neutral cats. On a mixed Need+Punt board they would talk about Need chips while rank also leaned on silent complements.
-- On punt-only Custom, Need-fit is already hidden and fitMarks are just “FT% ignored.” That pass is the one B should hit.
+- **One value.** Complement 1.25 and Fine-tune are the same control. Expand Fine-tune on a Custom FT% punt and FG% reads 1.25, which is the weight.
+- **The bump is visible** without a Scoring footnote as the only tell. The thumb moved.
+- **No gates.** Mixed Need + punt can still bump leftover Neutrals (slider 1.25) while Need cats sit at 1.5. The zero-Need and omit-intensity rules go away.
+- **Override is honest.** Drag FG% to 1.4 and the chip becomes Custom. Click Neutral to snap back to the current preset (1.25 if FT% is still punted, else 1.0).
+- **Punt already disables the tuner.** That behavior stays and now matches the model: preset 0, locked.
+- **Scoring is one sentence.** The number on the slider is the weight. Need is a 1.5 preset, Neutral is 1 or 1.25 after a related punt, Punt is 0.
+- **Ranker math shrinks.** `profile_w[c] = tuner[c]`. Operator JSON still multiplies. No silent third clause.
+- **`includeIntensity` can die.** Today the first thumb move writes 1.0 on every remaining cat. That was the footgun that made B’s “default intensity” fake.
 
-**Other approaches**
+#### What this regresses
 
-- A (docs only): no conflict. Chips and sliders stay exact.
-- C (correlation): worse than naive B. Every leftover Neutral gets a private weight. Sliders cannot show it.
-- D (uniform scale): no order change, so no control conflict. Still a no-op.
-- F (amplify Need): Need would rank ~1.8 while the chip and Scoring still say 1.5. Neutral stays honest. Intensity 2 would become 3.6, not the documented 3. Named builds would move. Do not do this.
+- **Need × Fine-tune 2 = 3 is gone.** Today Need is a 1.5 multiplier on a 0–2 slider. New Need is the slider sitting at 1.5; More only goes to 2. Fortress intensity-2 boards get milder (Harden 18 -> 97 today at Need×2; that path cannot reach 3). Keep max 2. Do not raise the cap this pass. Old saved 3× profiles clamp to 2.
+- **Schema and goldens move.** `CatStance` gains `custom`. Intensity is always the weight, 0–2. `profileWeight` tests, M2, Scoring, operator-doubling snapshots, and Need×intensity copy all change. This is not a flag-off restore of current composites once named-build users Fine-tuned.
+- **Named Fortress default can stay bit-identical; Fine-tuned ones cannot.** Gallery Fortress with no sliders: Need 1.5, punt 0, leftover Neutrals 1. Same as today. A Fortress user who already set intensity 1.2 on Need cats today ranks at 1.8. After migrate-and-clamp they are Custom at min(1.8, 2) or we re-preset to 1.5 and drop the old extra. Prefer migrate `tuner = clamp(stanceWeight * oldIntensity, 0, 2)` and mark Custom if that is not the preset. Their board will not match `main`.
+- **Neutral is no longer a constant 1.** After a punt, Neutral complements preset to 1.25. Demoting Fortress FG% Need -> Neutral lands on **1.25**, not 1.0. That is the preset for “I am not Need, but this hole still leans here.” To get 1.0 they drag down and become Custom. Different from today, and different from gated B (which kept 1.0 once any Need existed).
+- **Clicking a stance wipes a custom tuner.** Need or Neutral is a reset, not a label on top of a leftover slider. Today changing Need -> Neutral keeps intensity 2, so weight goes 3 -> 2. New: Neutral writes 1 or 1.25. More predictable, but it is a loss of “leave my Fine-tune, only change the multiplier.”
+- **Punt of FT% moves other thumbs.** FG% / REB / BLK / PTS jump to 1.25 if they were still Neutral. Honest, and a bigger visual jump than today’s chip-only edit. Custom cats do not move.
+- **Gallery chrome.** One Custom cat flips `archetypeId` to `custom`. Headline drops “Fortress.” Correct, but retake will not preselect the Fortress card.
+- **Quiz Fine-tune was Custom-only.** Tuners now belong next to every stance row, including named builds. Review gets denser. That is the cost of showing 1.5 / 0 / 1.25. Do not hide the slider on named cards or the bump is invisible again.
+- **Need-fit / why-copy / heat stay chip-based.** Custom 1.4 does not count as Need. Neutral 1.25 does not either. Pick-card copy can still miss the complement lean unless we later teach why-copy to mention Neutral-at-1.25. Out of scope for the first pass except Scoring.
+- **Phone layout.** Stance bar plus slider per cat is a lot in the Settings sheet. Stack: label, 3-segment bar, slider. Same pattern as today’s IntensityStep, just not nested in Fine-tune.
 
-### Rules so B does not fight the controls
+#### Not regressions (keep)
 
-Keep the three segments and the 0–2 sliders as they are. Do not add a fourth stance. Do not auto-select Need. Do not rewrite slider values to 1.25.
-
-1. **Punt chip always 0.** Slider stays disabled. Same as today.
-2. **Need chip always `1.5 * (intensity ?? 1)`.** Never multiply by 1.25. Fine-tune on Need still reaches 3 at slider 2.
-3. **Fine-tune map present: no bump.** If `profile.intensity` exists, every Neutral cat is `1 * (intensity[c] ?? 1)`. The number on the slider is the weight. First thumb move is an explicit takeover of remaining-cat weights.
-4. **Any Need chip: no bump.** Mixed Custom (punt FT% + Need 3PM) and every named build trust the bars. Demoting Fortress FG% Need -> Neutral lands on 1, not 1.25.
-5. **Bump only for punt-only + no Fine-tune + Neutral complements.** That is Custom (or a board that stripped every Need) with unused sliders. It is the measured Maxey vs Gobert gap.
-6. **Do not flip chips to match the bump.** Neutral stays Neutral on screen. Disclose on Scoring and, when the bump is actually on, a Settings line under the bars: `Punt FT% leans on FG%, REB, BLK, PTS while those stay Neutral.` Drop the line once a Need chip or Fine-tune map exists.
-7. **whyCopy / heat / Need-fit stay chip-based this pass.** When the bump is on there are no Need cats, so Need-fit is already hidden. Do not invent a second “effective stance” for display.
-
-Weight ladder the user can still recite: Punt 0, Neutral 1 (or 1.25 only in the punt-only / no-slider case), Need 1.5, then × Fine-tune.
-
-### Sliders and the complement bump are not the same value
-
-They are two layers. The slider does **not** show the punt complement.
-
-| Layer            | What it is                                           | What the user sees                                                                                | When it applies                    |
-| ---------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| Complement bump  | Ranker fill-in of 1.25 on Neutral partners of a punt | Chip still Neutral. Slider still `1.0` if they open Fine-tune. Settings one-liner names the cats. | Punt-only, no `intensity` map      |
-| Fine-tune slider | User intensity 0–2, multiplied after stance          | The printed number is the intensity. For Neutral that **is** the weight.                          | As soon as any slider is persisted |
-
-Example: Custom punt FT%, never touched Fine-tune. FG% ranks at **1.25**. Expand Fine-tune and the FG% thumb still reads **1.0**. Those numbers are not equal.
-
-Do not write 1.25 into `intensity` to make the thumb match. That would turn the bump into a saved Fine-tune map, fire `includeIntensity`, and then the bump gate would turn itself off (or stick 1.25 on cats the user never moved). Do not move the thumb to 1.25 either. The slider stays “your Fine-tune,” default 1.
-
-The two behaviors are mutually exclusive under the gates: bump on ⇒ sliders unused; sliders used ⇒ bump off. They never stack (`1.25 * intensity` is out). First thumb move is a takeover, not a display of the bump.
-
-If we later want one value, that is a different design: persist intensity 1.25 on those cats and drop the silent bump. Not this pass.
+- Z-score formulas, volume-adjusted %, inverted TOV.
+- Punt still in `z`, omitted cats still dropped.
+- Operator JSON.
+- Availability floor still off. Complement presets are not ADP.
+- `SuggestionHook` still must not rank.
+- Punt TOV vs omit TOV: TOV has no complement row, so Neutral leftovers stay 1. Existing golden can keep matching if tuners for the other eight stay 1.
 
 ## What stays
 
-- Z-score formulas, volume-adjusted %, inverted TOV.
-- Operator JSON as its own layer.
-- Punt = 0, Need = 1.5, intensity 0–2. Chips and sliders keep those meanings except the punt-only Neutral bump in [UI controls](#ui-controls).
-- StanceBar, Fine-tune, named-build gallery, and `archetypeId` maps. Do not auto-select Need.
-- Availability floor off by default. Complement boost is not a substitute for ADP.
-- `SuggestionHook` still must not rank.
-- Punt vs **omit** may diverge for cats that have a complement row. That is intended: omit means the league does not score it, punt means you are building around the hole. Keep the existing “punt TOV matches omit TOV” golden; TOV has no complement row.
+- Named-build Need / Punt lists as the complement source.
+- Slider range 0–2, step 0.1.
+- Three-segment bar (Need / Neutral / Punt). Custom is empty selection plus a label, not a fourth radio.
+- Heat uncolors Punt only.
 
 ## Implementation (next PR)
 
-Touch core, tests, M2, Scoring copy, and a Settings one-liner. No quiz redesign. Do not auto-flip Need / Neutral / Punt. Do not change slider thumbs.
+Core + quiz/Settings wiring. This is a control model change, not a ranker-only flag.
 
-1. **Flag.** `puntComplementBoost` in `ranker.json` plus `RankOptions`. Read it next to `availabilityFloor`.
-2. **Map.** One helper: punted enabled cats -> complement set from `NAMED_BUILDS`. Unit-test the invert (FT% -> Fortress Need, BLK -> Sniper Need, FT%+AST union minus those two punts).
-3. **`profileWeight`.** Keep the three stance multipliers. Apply 1.25 only when [boostEligible](#b-static-complement-boost-on-leftover-neutrals-recommended): flag on, at least one punt, **no Need cats**, **`intensity` omitted**, cat Neutral and in the complement set. Do not stack on Need. Do not key off `intensity[c] === 1`.
-4. **`rank()`.** Fit uses the new weight. Consensus profile stays `stances: {}` and `intensity: undefined`, so it cannot take the bump.
-5. **Tests.**
-    - All-neutral: ranks unchanged vs today.
-    - Named Fortress / Bricks / Sniper / Stocks / Post: composites bit-identical to flag false (Need chips plus the zero-Need gate).
-    - Custom punt FT% only, no intensity: Gobert-style names rank better than flag false; Maxey / Murphy-style leftover Neutrals rank worse.
-    - Custom punt FT% + Need 3PM: no bump (same composites as flag false).
-    - Fortress with FG% flipped to Neutral: FG% weight is 1, not 1.25 (other Need chips remain).
-    - Any `intensity` map, even `{ pts: 1 }`: no bump. Slider 1.0 is 1.0, slider 1.1 is 1.1. No discontinuity.
+1. **Preset helper.** `presetTuner(cat, stances, enabledCats)` from named-build invert. Tests: FT% punt -> FG% 1.25; Fortress Need FG% 1.5; Need wins over complement; Custom stance ignored (caller does not reset those).
+2. **`CatStance` includes `custom`.** Zod, StanceBar (no segment selected), `quizDraftToProfile` always writes tuners for enabled cats. Punt tuner 0. Drop `includeIntensity`.
+3. **`profileWeight`.** `tuner[c]`, default preset if a cat is missing (old payloads). Consensus uses tuner 1.
+4. **UI write path.** Stance click writes preset + chip. Slider `onChange` compares to preset; mismatch -> `custom`. Punt/unpunt re-runs presets on non-custom cats. Any custom cat or off-map named build sets `archetypeId: 'custom'`.
+5. **Layout.** Slider on the stance row in Settings and in Adjust Need and Punt. Remove the Fine-tune expand. Named builds included.
+6. **Migrate.** `tuner = clamp((oldStanceWeight) * (oldIntensity ?? 1), 0, 2)`. If that is not the new preset, stance becomes custom.
+7. **Tests.**
+    - All-neutral, no custom: same order as today.
+    - Gallery Fortress, no old intensity: same Need 1.5 / punt 0 / leftover 1 as today.
+    - Custom punt FT% only: complement thumbs 1.25; Gobert-style names rise vs today’s punt-only; Maxey-style leftover Neutrals fall.
+    - Drag FG% to 1.4: chip Custom, weight 1.4, other Neutral complements stay 1.25.
+    - Click Neutral on that FG%: back to 1.25 while FT% is punted.
+    - Unpunt FT%: Neutral complements return to 1.0; Custom cats stay put.
+    - Old Need × intensity 2 migrates to tuner 2, stance custom.
     - Punt TOV vs omit TOV still matches.
-    - Flag false restores today’s composites.
-6. **Scoring.** Neutral is 1 unless you punt and leave everything else Neutral with no Fine-tune, in which case the usual partners of that hole sit at 1.25. Need is still 1.5. Fine-tune is still the number on the slider.
-7. **Settings.** When the bump is on, one muted line under the StanceBar listing the leaned-on cats. Hide it if any Need chip or Fine-tune map exists. Do not change `stanceSummary`.
-8. **M2.** Document the third clause of `profile_w`, the flag, the two gates, and that uniform scale is a no-op. Point at this plan from Remaining ranking gaps.
-
-Constant: put `COMPLEMENT_BOOST = 1.25` next to `STANCE_WEIGHT` in [`profile.ts`](app/core/src/profile.ts). Do not invent a second JSON of weights unless we later want to tune per cat. Named-build invert is enough.
+8. **Scoring.** The slider is the weight. Need / Neutral / Punt are presets (0, 1 or 1.25, 1.5). Dragging off a preset is Custom.
 
 ## Suggested order
 
-1. Helper + invert tests (no ranker change).
-2. `profileWeight` + flag + gates. Goldens that flag-false equals current `main`.
-3. Custom punt-FT% vs flag-false golden (Gobert up, Maxey down). Need-chip and intensity-map goldens that kill the bump.
-4. Fortress / punt-TOV / all-neutral regression, including Need -> Neutral on one Fortress cat.
-5. M2 + Scoring sentence + Settings one-liner.
-6. `npm run format` and core vitest. Browser: Custom punt-only shows the Settings line; Fortress does not; moving a Fine-tune slider drops the line and does not reorder like a 1.0 -> 1.1 discontinuity.
+1. Preset helper + invert tests.
+2. Schema `custom`, `profileWeight` = tuner, migrate helper, core goldens.
+3. StanceBar + slider on one row; Fine-tune expand gone; write-path tests in quiz if they exist, else core-only plus a thin client test.
+4. M2 + Scoring.
+5. `npm run format` and `npm test`. Browser: Custom punt FT% moves FG% thumb to 1.25; drag makes Custom; Neutral click snaps back; Fortress Need thumbs sit at 1.5.
 
 ## Out of scope
 
 - Correlation-derived or weekly G-score weights.
-- Changing Need 1.5 or named-build chips. Auto-selecting Need when the user punts.
-- Rewriting slider thumbs to 1.25, or stacking 1.25 on Fine-tune.
+- Raising slider max above 2 to preserve Need×2=3.
+- Auto-selecting Need when the user punts (Need stays a 1.5 preset they opt into).
 - Availability floor, ADP, VORP, remaining-pool re-z.
-- Heat, Need-fit, or why-copy changes beyond Scoring and the Settings one-liner.
+- why-copy / Need-fit / heat teaching Neutral-at-1.25 this pass.
 
 ## How to verify later
 
-1. Core vitest green. Flag false matches current composites on all-neutral and Fortress fixtures.
-2. `POST /rank` Custom `{ ftPct: 'punt' }` with the flag on and no intensity: Giannis / Gobert ahead of today’s punt-only board; Maxey behind it.
-3. Same request with Fortress, or Custom punt + one Need chip, or any intensity map: composites match flag false.
-4. 8-cat omit TOV: no complement bump, `z.tov` omitted.
-5. Open Scoring and confirm the Neutral-bump sentence. Custom punt-only Settings shows the lean line. Fortress Settings does not. Drag a Fine-tune slider: line goes away, remaining Neutral cats stay at the printed number.
+1. Core vitest green. Gallery Fortress without old intensity matches today’s Fortress order.
+2. Custom `{ ftPct: 'punt' }`: FG%/REB/BLK/PTS tuners 1.25. Giannis / Gobert ahead of today’s punt-only; Maxey behind it.
+3. Settings: those thumbs read 1.25. Drag REB to 1.4, chip Custom, weight 1.4. Neutral click returns 1.25.
+4. Unpunt FT%: Neutral complements 1.0. A Custom REB stays 1.4.
+5. Scoring says the slider is the weight. No mute line that exists because the slider is lying.
