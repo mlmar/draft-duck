@@ -1,0 +1,1 @@
+import{T as s,j as r,L as e,U as n}from"./index-B-9EE6qO.js";function i(){const{hydrated:t,profile:a}=s();return!t||!a?null:r.jsxs("p",{className:"mt-8 mb-0 flex flex-wrap gap-3",children:[r.jsx(e,{to:"/draft",search:n(),children:"open board"}),r.jsx(e,{to:"/",variant:"outline",children:"retake"})]})}export{i as E};
