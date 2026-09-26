@@ -237,7 +237,7 @@ Home: named build | Custom | Not sure
 
 Each question is a pair: bigs or guards, 3s or dunks, Jokic or Shai. Answers **vote for named builds**, not raw leftover numbers. Chart can show the current leader. End snap is that card’s G presets.
 
-Bank: many tagged pairs. Session picks 4–6. Seed the shuffle so Back does not reshuffle.
+Bank: twelve tagged pairs. First three are always Bigs / Guards, Threes / Dunks, Jokic / Shai. Then two from the rest, seeded so Back does not reshuffle. Details in [onboarding-chart.md](onboarding-chart.md).
 
 This is the discrete version of Not sure. [Walk then snap](#3-walk-then-snap-not-sure-engine) is the same landing, with motion in between.
 
@@ -303,7 +303,7 @@ Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId`).
 ### Passes
 
 1. **Weights (this PR).** Approach G, tuner 0–3, Settings sliders = weight. No chart yet.
-2. **Chart quiz (follow-up).** [onboarding-chart.md](onboarding-chart.md). Shared `WeightChart` (display only). Tap chart → in-page sliders. Custom home card → Need / Neutral / Punt. Not sure is walk-then-snap with the locked bank. No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
+2. **Chart quiz (follow-up).** [onboarding-chart.md](onboarding-chart.md). Shared `WeightChart` (display only). Tap chart → in-page sliders. Custom home card → Need / Neutral / Punt. Not sure is walk-then-snap: three static questions, then two random. No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
 3. **Walk preview chrome (later).** Optional second look so the sketch is obviously not the board (muted/dashed/caption). Same tuners, no new ranker.
 
 Pass 2 only writes `stances` + tuners. Same ranker.
@@ -342,7 +342,7 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. Custom home card opens chips, not sliders. Chart tap opens sliders, max 3; Fine-tune expand gone.
 4. M2 + Scoring.
 5. `npm run format` and `npm test`. Browser: Custom punt FT% moves FG% to 1.25; drag to 3 is Custom; Neutral click snaps back; Fortress Need thumbs sit at 1.5.
-6. Later PR: [onboarding-chart.md](onboarding-chart.md). WeightChart (tap → in-page sliders), Custom → chips, Not sure walk-then-snap with the locked bank. No drag on bars.
+6. Later PR: [onboarding-chart.md](onboarding-chart.md). WeightChart (tap → in-page sliders), Custom → chips, Not sure walk-then-snap (3 static + 2 random). No drag on bars.
 7. Later PR: walk-preview chart style, distinct from the saved board chart.
 
 ## Out of scope
@@ -363,5 +363,5 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. Settings: those thumbs read 1.25. Drag REB to 3, chip Custom, weight 3. Neutral click returns 1.25.
 4. Unpunt FT%: Neutral complements 1.0. A Custom REB stays 3.
 5. Scoring: slider 0–3 is the weight. 3 equals old Need × intensity 2.
-6. (Pass 2) Custom: chips. Chart tap: in-page sliders. Not sure: locked bank, wiggle then snap. No dragging bars. Do not rank the unsnapped mix. See [onboarding-chart.md](onboarding-chart.md).
+6. (Pass 2) Custom: chips. Chart tap: in-page sliders. Not sure: 3 static + 2 random, wiggle then snap. No dragging bars. Do not rank the unsnapped mix. See [onboarding-chart.md](onboarding-chart.md).
 7. (Pass 3) Walk bars read as preview, snapped bars read as the board.
