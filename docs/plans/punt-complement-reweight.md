@@ -249,6 +249,23 @@ Keep the three segments and the 0–2 sliders as they are. Do not add a fourth s
 
 Weight ladder the user can still recite: Punt 0, Neutral 1 (or 1.25 only in the punt-only / no-slider case), Need 1.5, then × Fine-tune.
 
+### Sliders and the complement bump are not the same value
+
+They are two layers. The slider does **not** show the punt complement.
+
+| Layer            | What it is                                           | What the user sees                                                                                | When it applies                    |
+| ---------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| Complement bump  | Ranker fill-in of 1.25 on Neutral partners of a punt | Chip still Neutral. Slider still `1.0` if they open Fine-tune. Settings one-liner names the cats. | Punt-only, no `intensity` map      |
+| Fine-tune slider | User intensity 0–2, multiplied after stance          | The printed number is the intensity. For Neutral that **is** the weight.                          | As soon as any slider is persisted |
+
+Example: Custom punt FT%, never touched Fine-tune. FG% ranks at **1.25**. Expand Fine-tune and the FG% thumb still reads **1.0**. Those numbers are not equal.
+
+Do not write 1.25 into `intensity` to make the thumb match. That would turn the bump into a saved Fine-tune map, fire `includeIntensity`, and then the bump gate would turn itself off (or stick 1.25 on cats the user never moved). Do not move the thumb to 1.25 either. The slider stays “your Fine-tune,” default 1.
+
+The two behaviors are mutually exclusive under the gates: bump on ⇒ sliders unused; sliders used ⇒ bump off. They never stack (`1.25 * intensity` is out). First thumb move is a takeover, not a display of the bump.
+
+If we later want one value, that is a different design: persist intensity 1.25 on those cats and drop the silent bump. Not this pass.
+
 ## What stays
 
 - Z-score formulas, volume-adjusted %, inverted TOV.
