@@ -39,7 +39,7 @@ A first-time user (no account) should be able to:
 | [M5-extensibility.md](M5-extensibility.md)                             | NBA adapter, suggestion hook, Yahoo seams           |
 | [deploy.md](deploy.md)                                                 | Pages + Cloud Run, WIF, GitHub Actions              |
 | [plans/deploy-review.md](plans/deploy-review.md)                       | Review follow-up for the first public deploy        |
-| [plans/punt-complement-reweight.md](plans/punt-complement-reweight.md) | Stance presets write tuners; slider is the weight   |
+| [plans/punt-complement-reweight.md](plans/punt-complement-reweight.md) | Tuner 0–3, stance presets, onboarding chart mix     |
 
 Each milestone has **goal, in scope, out of scope, stack/touchpoints, acceptance checks, suggested build order**. M1–M4 are sequential. M5 is “do not paint into a corner” plus later optional work.
 
