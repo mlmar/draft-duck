@@ -250,7 +250,7 @@ Two different opens:
 | **Custom** on Home       | Need / Neutral / Punt per enabled cat    |
 | **The chart** (any path) | Sliders only, 0–3. Punt cats locked at 0 |
 
-The chart is **read-only**. No dragging bars. Sliders are native range inputs in a panel or sheet. A slider moved off the preset marks that cat Custom. Complement Neutral bars **redraw** at 1.25 when a hole is punted from the chip step.
+The chart is **read-only**. No dragging bars. Sliders are native range inputs in an in-page expand (no quiz drawer). A slider moved off the preset marks that cat Custom. Complement Neutral bars **redraw** at 1.25 when a hole is punted from the chip step.
 
 **Fits G:** chips write presets. Sliders are the same numbers. Chart displays them.
 
@@ -298,18 +298,12 @@ Balanced (all 1)
 
 League does not write tuners. Review shows the same chart plus pick preview. Board: chips stay a stance editor (Custom / Settings). Chart tap is sliders only.
 
-| Pair           | Lean                        |
-| -------------- | --------------------------- |
-| Bigs or guards | Fortress / Post vs Sniper   |
-| 3s or dunks    | Sniper vs Fortress / Bricks |
-| Jokic or Shai  | Balanced / Post vs Sniper   |
-
-Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId` or votes). Steps lerp toward that card’s G tuner vector. Do not store free-form per-cat deltas.
+Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId`). Steps lerp toward that card’s G tuner vector. Do not store free-form per-cat deltas. The locked twelve pairs, session picker, and chart chrome live in [onboarding-chart.md](onboarding-chart.md).
 
 ### Passes
 
-1. **Weights (next PR).** Approach G, tuner 0–3, Settings sliders = weight. No chart yet.
-2. **Chart quiz (follow-up).** Shared `WeightChart` (display only). Tap chart → sliders. Custom home card → Need / Neutral / Punt. Not sure is walk-then-snap. No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
+1. **Weights (this PR).** Approach G, tuner 0–3, Settings sliders = weight. No chart yet.
+2. **Chart quiz (follow-up).** [onboarding-chart.md](onboarding-chart.md). Shared `WeightChart` (display only). Tap chart → in-page sliders. Custom home card → Need / Neutral / Punt. Not sure is walk-then-snap with the locked bank. No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
 3. **Walk preview chrome (later).** Optional second look so the sketch is obviously not the board (muted/dashed/caption). Same tuners, no new ranker.
 
 Pass 2 only writes `stances` + tuners. Same ranker.
@@ -348,7 +342,7 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. Custom home card opens chips, not sliders. Chart tap opens sliders, max 3; Fine-tune expand gone.
 4. M2 + Scoring.
 5. `npm run format` and `npm test`. Browser: Custom punt FT% moves FG% to 1.25; drag to 3 is Custom; Neutral click snaps back; Fortress Need thumbs sit at 1.5.
-6. Later PR: WeightChart (tap → sliders), Custom → chips, Not sure walk-then-snap. No drag on bars.
+6. Later PR: [onboarding-chart.md](onboarding-chart.md). WeightChart (tap → in-page sliders), Custom → chips, Not sure walk-then-snap with the locked bank. No drag on bars.
 7. Later PR: walk-preview chart style, distinct from the saved board chart.
 
 ## Out of scope
@@ -359,7 +353,7 @@ Core + Settings wiring. Chart quiz is pass 2.
 - Auto-selecting Need when the user punts.
 - Availability floor, ADP, VORP, remaining-pool re-z.
 - why-copy / Need-fit / heat teaching Neutral-at-1.25 this pass.
-- Chart quiz UI (pass 2).
+- Chart quiz UI (pass 2). See [onboarding-chart.md](onboarding-chart.md).
 - Walk-preview visual treatment (pass 3). One chart style is enough until then.
 
 ## How to verify later
@@ -369,5 +363,5 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. Settings: those thumbs read 1.25. Drag REB to 3, chip Custom, weight 3. Neutral click returns 1.25.
 4. Unpunt FT%: Neutral complements 1.0. A Custom REB stays 3.
 5. Scoring: slider 0–3 is the weight. 3 equals old Need × intensity 2.
-6. (Pass 2) Custom: chips. Chart tap: sliders. Not sure: wiggle then snap. No dragging bars. Do not rank the unsnapped mix.
+6. (Pass 2) Custom: chips. Chart tap: in-page sliders. Not sure: locked bank, wiggle then snap. No dragging bars. Do not rank the unsnapped mix. See [onboarding-chart.md](onboarding-chart.md).
 7. (Pass 3) Walk bars read as preview, snapped bars read as the board.
