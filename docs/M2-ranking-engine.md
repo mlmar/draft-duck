@@ -187,6 +187,7 @@ What would change, and what would not:
 - Null FG%/FT% treated as impact 0 (neutral, not missing).
 - Need 1.5 × intensity 2 = 3× weight. Stance weights stay. The floor does not cover star-sink while it is off.
 - Taken list / remaining-pool re-z.
+- Custom punt-only does not tilt leftover Neutrals toward the hole’s usual partners. Named builds already do that with Need 1.5. Plan: [punt-complement-reweight.md](plans/punt-complement-reweight.md).
 
 ## Acceptance checks
 
