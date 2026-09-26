@@ -1,6 +1,6 @@
 # Punt complement reweight
 
-Plan only. Next pass on this branch should implement **Approach G** with tuner max **0–3** (Need × 2 = 3 is a bar at 3). A later pass adds the [onboarding chart](#onboarding-chart). Stance chips are presets that write the tuner. The slider is the weight. The chart **shows** that vector; tap opens tuners. A drag on the slider off the preset makes that cat Custom.
+Plan only. Next pass on this branch should implement **Approach G** with tuner max **0–3** (Need × 2 = 3 is a bar at 3). A later pass adds the [onboarding chart](#onboarding-chart). Stance chips are presets that write the tuner. The slider is the weight. The chart **shows** that vector; **tap the chart for sliders**. **Custom** (home card) opens Need / Neutral / Punt. A drag on a slider off the preset makes that cat’s chip Custom.
 
 ## The claim
 
@@ -143,7 +143,12 @@ Need still wins over the 1.25 Neutral default: Fortress FG% is Need at 1.5, not 
 
 Per-cat Custom is not the gallery `archetypeId`. Store `stances[cat] = 'custom'`. If any cat is Custom, or the map no longer matches a named card, set `archetypeId` to `custom` so chrome does not keep saying Fortress.
 
-UI: keep the three-segment bar. When the cat is Custom, none of the three is selected; a muted “Custom” label sits by the printed tuner. Do not add a fourth radio. Punt still mutes and disables. Put the slider on the same row as the bar (Settings and Adjust Need and Punt), not a second Fine-tune expand. Named builds show the same row so Need 1.5 and Punt 0 are visible. The [onboarding chart](#onboarding-chart) is this same tuner vector.
+UI: two opens, not one panel.
+
+- **Custom** on Home: Need / Neutral / Punt per cat. Presets write tuners. No sliders on that step.
+- **Tap the chart:** sliders only (0–3, Punt locked). Chart never drags. A slider off the current preset marks that cat Custom.
+
+Do not put chips and sliders behind the same tap. Settings on `/draft` can still show both, stacked: chips then sliders, or the same two opens. The [onboarding chart](#onboarding-chart) is the tuner vector.
 
 Always persist `intensity` as the tuner for enabled cats. Drop `includeIntensity`. Ranker reads the tuner. Stance is preset metadata (heat uncolor, Need-fit, why-copy, which cats get rewritten when another punt flips).
 
@@ -220,10 +225,10 @@ Today Home is the stance picker; `/onboard` is league then review. Custom skips 
 Home: named build | Custom | Not sure
          |              |         |
       snap preset    chips    questions (2..X)
-         |              |         |
+         |           (N/N/P)      |
          +------+-------+---------+
                 |
-         live chart (tuners 0–3)
+         live chart (tap → sliders)
                 |
             League → Review → /draft
 ```
@@ -236,19 +241,22 @@ Bank: many tagged pairs. Session picks 4–6. Seed the shuffle so Back does not 
 
 This is the discrete version of Not sure. [Walk then snap](#3-walk-then-snap-not-sure-engine) is the same landing, with motion in between.
 
-### 2. Chart is display. Tap opens tuners
+### 2. Chart tap = sliders. Custom = chips
 
-The chart is **read-only**. No dragging bars, no drop, no resizing a column to 1.4. Every path shows the same 0–3 bars. Tap the chart (or a bar) **opens the tuner panel**: Need / Neutral / Punt plus the native 0–3 slider for that cat (or all cats, stacked). That panel is the same write path as Settings.
+Two different opens:
 
-Punt still locks its slider at 0. Complement Neutral bars **redraw** at 1.25 when a hole is punted; the user did not drag them. A slider drag in the panel, off the preset, is Custom.
+| Press                    | What opens                               |
+| ------------------------ | ---------------------------------------- |
+| **Custom** on Home       | Need / Neutral / Punt per enabled cat    |
+| **The chart** (any path) | Sliders only, 0–3. Punt cats locked at 0 |
 
-**Fits G:** one value. Chart shows it. Tuners change it. Chart is not a second input device.
+The chart is **read-only**. No dragging bars. Sliders are native range inputs in a panel or sheet. A slider moved off the preset marks that cat Custom. Complement Neutral bars **redraw** at 1.25 when a hole is punted from the chip step.
 
-**Improves:** a11y (native range, not pointer-drag on a canvas). Phone does not fight nine drag handles. League can show the chart without implying you can scribble on it.
+**Fits G:** chips write presets. Sliders are the same numbers. Chart displays them.
 
-**Regresses:** one extra tap vs dragging the bar itself. Fine. Custom still uses this: chart → tuners → league.
+**Improves:** Custom stays the stance editor. Fine-tune stays “I want 1.4 or 3.” Neither control is buried in the other.
 
-Use as chart chrome on **every** path, including named build and Not sure (those two do not need the panel until the user wants to override).
+Use the chart on every path. Named build and Not sure do not need the slider sheet until they tap the chart. Custom does chips first, then league; they can tap the chart if they want sliders before league.
 
 ### 3. Walk then snap (Not sure engine)
 
@@ -258,7 +266,7 @@ Each answer steps the preview tuners **toward a named-build vector** (lerp, not 
 
 **Preview vs saved chart.** Walk bars are a sketch. After snap, the same chart component shows the real G presets (solid, same style as named-build and draft). Differentiating the walk (muted fill, dashed outline, “preview” caption) is a **future PR**, not the first chart pass. First chart pass can use one style; do not block ship on a second look. Never rank or persist the sketch.
 
-At the last question, pick the named build whose G preset vector is **closest** (Euclidean on the 0–3 tuners, enabled cats only). Snap the chart to that card: Punt 0, Need 1.5, Neutral 1 or 1.25. Persist **that** `archetypeId` and stance map, not the fingerprint. Copy: `Closest build: Fortress`. Then league → review → `/draft`. Fine-tune is the tuner panel on the board (tap chart or Settings). That is how they recover “a bit more 3s” without storing a one-off Custom mix from the quiz.
+At the last question, pick the named build whose G preset vector is **closest** (Euclidean on the 0–3 tuners, enabled cats only). Snap the chart to that card: Punt 0, Need 1.5, Neutral 1 or 1.25. Persist **that** `archetypeId` and stance map, not the fingerprint. Copy: `Closest build: Fortress`. Then league → review → `/draft`. Fine-tune is **tap the chart for sliders**. Stance edits are Custom (or Settings chips). That is how they recover “a bit more 3s” without storing a one-off mix from the quiz.
 
 ```text
 Balanced (all 1)
@@ -282,13 +290,13 @@ Balanced (all 1)
 
 ### Recommended mix
 
-| Path        | What happens                                         | Chart                                      |
-| ----------- | ---------------------------------------------------- | ------------------------------------------ |
-| Named build | Snap G presets. Skip questions.                      | Bars at 0 / 1 / 1.5. Tap opens tuners      |
-| Custom      | Tap chart → tuner panel. Then league.                | Read-only bars. Edit in the panel          |
-| Not sure    | Walk toward named vectors, snap nearest, then draft. | Wiggles, then jumps to the card. Tap later |
+| Path        | What happens                                         | Chart                              |
+| ----------- | ---------------------------------------------------- | ---------------------------------- |
+| Named build | Snap G presets. Skip questions.                      | Bars at 0 / 1 / 1.5. Tap → sliders |
+| Custom      | Need / Neutral / Punt, then league.                  | Bars follow chips. Tap → sliders   |
+| Not sure    | Walk toward named vectors, snap nearest, then draft. | Wiggles, then jumps. Tap → sliders |
 
-League does not write tuners. Review shows the same chart plus pick preview. Board Settings is the tuner panel the chart opens, not a drag overlay on the bars.
+League does not write tuners. Review shows the same chart plus pick preview. Board: chips stay a stance editor (Custom / Settings). Chart tap is sliders only.
 
 | Pair           | Lean                        |
 | -------------- | --------------------------- |
@@ -301,7 +309,7 @@ Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId` o
 ### Passes
 
 1. **Weights (next PR).** Approach G, tuner 0–3, Settings sliders = weight. No chart yet.
-2. **Chart quiz (follow-up).** Shared `WeightChart` (display only). Tap opens the tuner panel. Not sure is walk-then-snap. No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
+2. **Chart quiz (follow-up).** Shared `WeightChart` (display only). Tap chart → sliders. Custom home card → Need / Neutral / Punt. Not sure is walk-then-snap. No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
 3. **Walk preview chrome (later).** Optional second look so the sketch is obviously not the board (muted/dashed/caption). Same tuners, no new ranker.
 
 Pass 2 only writes `stances` + tuners. Same ranker.
@@ -320,7 +328,7 @@ Core + Settings wiring. Chart quiz is pass 2.
 2. **`CatStance` includes `custom`.** Zod intensity 0–3. StanceBar (no segment selected when custom). `quizDraftToProfile` always writes tuners. Punt tuner 0. Drop `includeIntensity`.
 3. **`profileWeight`.** `tuner[c]`, default preset if a cat is missing. Consensus uses tuner 1.
 4. **UI write path.** Stance click writes preset + chip. Slider `onChange` compares to preset; mismatch -> `custom`. Punt/unpunt re-runs presets on non-custom cats. Any custom cat sets `archetypeId: 'custom'`.
-5. **Layout.** Slider on the stance row in Settings and in Adjust Need and Punt. Remove the Fine-tune expand. `max={3}`.
+5. **Layout.** Quiz: Custom opens chips. Chart tap opens sliders. Settings may stack both. Remove the Fine-tune expand. Slider `max={3}`.
 6. **Migrate.** `tuner = clamp((oldStanceWeight) * (oldIntensity ?? 1), 0, 3)`. If that is not the new preset, stance becomes custom. Old Need × 2 -> tuner 3.
 7. **Tests.**
     - All-neutral, no custom: same order as today.
@@ -337,10 +345,10 @@ Core + Settings wiring. Chart quiz is pass 2.
 
 1. Preset helper + invert tests.
 2. Schema `custom`, intensity 0–3, `profileWeight` = tuner, migrate helper, core goldens.
-3. StanceBar + slider on one row, max 3; Fine-tune expand gone.
+3. Custom home card opens chips, not sliders. Chart tap opens sliders, max 3; Fine-tune expand gone.
 4. M2 + Scoring.
 5. `npm run format` and `npm test`. Browser: Custom punt FT% moves FG% to 1.25; drag to 3 is Custom; Neutral click snaps back; Fortress Need thumbs sit at 1.5.
-6. Later PR: WeightChart (tap to tuners), Not sure walk-then-snap. No drag on bars.
+6. Later PR: WeightChart (tap → sliders), Custom → chips, Not sure walk-then-snap. No drag on bars.
 7. Later PR: walk-preview chart style, distinct from the saved board chart.
 
 ## Out of scope
@@ -361,5 +369,5 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. Settings: those thumbs read 1.25. Drag REB to 3, chip Custom, weight 3. Neutral click returns 1.25.
 4. Unpunt FT%: Neutral complements 1.0. A Custom REB stays 3.
 5. Scoring: slider 0–3 is the weight. 3 equals old Need × intensity 2.
-6. (Pass 2) Not sure: chart wiggles toward named vectors, then snaps to closest build copy. Draft Settings can fine-tune. Custom: tap chart, tuners open. No dragging bars. Do not rank the unsnapped mix.
+6. (Pass 2) Custom: chips. Chart tap: sliders. Not sure: wiggle then snap. No dragging bars. Do not rank the unsnapped mix.
 7. (Pass 3) Walk bars read as preview, snapped bars read as the board.
