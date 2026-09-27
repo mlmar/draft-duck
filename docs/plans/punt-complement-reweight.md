@@ -235,7 +235,7 @@ Home: named build | Custom | Not sure
 
 ### 1. Snap to a named build (questions classify)
 
-Each question is a pair: bigs or guards, points or stocks, dunks or free throws, and-ones or post-ups, inside or everywhere, lock down or stay even, then one player vs player. Answers **vote for named builds**, not raw leftover numbers. Chart can show the current leader. End snap is that card’s G presets.
+Each question is a pair: bigs or guards, points or stocks, dunks or free throws, and-ones or post-ups, inside or perimeter, lock down or all-around, then one player vs player. Answers **vote for named builds**, not raw leftover numbers. Chart can show the current leader. End snap is that card’s G presets.
 
 Bank: six static category pairs, then one draw from a six-pair player pool, seeded so Back does not reshuffle. Details in [onboarding-chart.md](onboarding-chart.md).
 
