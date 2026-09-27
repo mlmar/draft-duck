@@ -9,7 +9,7 @@ Home already picks a named build or Custom. `/onboard` is league then review. Th
 ```text
 Home: named build | Custom | Not sure
          |              |         |
-      snap preset    chips    5 static + 1 player
+      snap preset    chips    6 static + 1 player
          |           (N/N/P)      |
          +------+-------+---------+
                 |
@@ -64,11 +64,11 @@ Today `STEPS` is league then review. Home `?build=` writes the named map and lan
 | ----------- | -------------------------------------------- | -------------------------------------------- |
 | Named build | League → review                              | Bars at that card’s G presets. Tap → sliders |
 | Custom      | Chips → league → review                      | Bars follow chips. Tap → sliders             |
-| Not sure    | 5 static + 1 player → snap → league → review | Wiggles, then jumps. Tap → sliders           |
+| Not sure    | 6 static + 1 player → snap → league → review | Wiggles, then jumps. Tap → sliders           |
 
 League does not write tuners. Review shows the same chart plus the pick preview.
 
-`STEPS` stays data-driven. Build the list from the entry path so progress counts the screens that path actually has (named is two, Custom is three, Not sure is eight: six questions, league, review).
+`STEPS` stays data-driven. Build the list from the entry path so progress counts the screens that path actually has (named is two, Custom is three, Not sure is nine: seven questions, league, review).
 
 Home: keep the named grid and quiet Custom. Add **Not sure** next to Custom (ghost / outline, not a seventh named tile). No helper essay. Optional one muted line: A few questions.
 
@@ -119,11 +119,9 @@ Repeat Fortress and the preview hugs that card. Mix Fortress and Sniper and geom
 
 ## Question bank
 
-Source of truth for pass 2. **Five static category pairs**, then **one random player vs player**. Session asks **six**. Each side has one `toward: NamedBuildId`. Buttons show the **choice label**, never the build name on category questions. Player questions _are_ the two names.
+Source of truth for pass 2. **Six static category pairs**, then **one random player vs player**. Session asks **seven**. Each side has one `toward: NamedBuildId`. Buttons show the **choice label**, never the build name on category questions. Player questions _are_ the two names.
 
-Five questions have ten sides and six builds, so a perfect 2-each is impossible. The closest graph is a path across all six cards: four builds offered twice, Stocks and Balanced once. A sixth category pair (`All-around or stocks?`) would make static perfectly even, and would make the session seven once the player extra is added. Keep five plus the player extra so the walk stays six.
-
-Do not keep **Threes or dunks?** next to **Bigs or guards?** They are the same Fortress vs Sniper pair. That was the old Sniper pile-up.
+Six questions have twelve sides. That is exactly two offers per named build. Do not keep **Threes or dunks?** next to **Bigs or guards?** They are the same Fortress vs Sniper pair. That was the old Sniper pile-up.
 
 Prompts are the quiz title. Two stacked buttons, tap to answer and advance. Back undoes the last answer.
 
@@ -140,12 +138,13 @@ Always this order when eligible. Same grain as Bigs or guards: two valid identit
 | `dunks-or-free-throws` | Dunks or free throws? | Dunks      | `puntFt`   | Free throws | `puntFg`  |
 | `line-or-post`         | The line or the post? | The line   | `puntFg`   | The post    | `puntAst` |
 | `all-around-or-paint`  | All-around or paint?  | All-around | `balanced` | Paint       | `puntAst` |
+| `all-around-or-stocks` | All-around or stocks? | All-around | `balanced` | Stocks      | `stocks`  |
 
-Static sides: Fortress 2, Sniper 2, Bricks 2, Post 2, Stocks 1, Balanced 1.
+Static sides: every named build twice.
 
 ### Player pool
 
-Six pairs. Session draws **one**, after the five, seeded. Each named build appears twice in this pool, so the extra question is even in expectation. This is how Stocks and Balanced pick up a second offer some of the time.
+Six pairs. Session draws **one**, after the six, seeded. Each named build appears twice in this pool, so the extra question is even in expectation. Flavor on an already even walk, not a patch for a missing card.
 
 | Id                    | Prompt               | Left    | Toward     | Right    | Toward    |
 | --------------------- | -------------------- | ------- | ---------- | -------- | --------- |
@@ -163,6 +162,7 @@ Six pairs. Session draws **one**, after the five, seeded. Each named build appea
 - **Dunks → Fortress, free throws → Bricks.** Dunks are high FG%. Bricks punts FG% and lives at the line.
 - **The line → Bricks, the post → Post.** FT% cluster vs a scoring-and-defense big who does not pass.
 - **All-around → Balanced, paint → Post.** Balanced has to be a pole, not a leftover. “All-around” is the honest name for no hole. Post is the paint identity that is not Fortress (Fortress already used dunks/bigs).
+- **All-around → Balanced, stocks → Stocks.** Closes the cycle. Without this sixth pair, Stocks and Balanced only appear once.
 - **Jokic → Balanced, not Post.** Post punts AST. Jokic is the assist-heavy big.
 - **Shai → Sniper.** Guard scoring, FT%, threes, not a shot blocker.
 - **Giannis → Fortress, Embiid → Bricks.** FT% hole vs living at the line with FG% as the tax.
@@ -173,39 +173,30 @@ Do not add a seventh named build to make Jokic a “passing big.” Balanced is 
 
 ### Coverage
 
-| Build    | Static                | Player pool (draw one)           |
-| -------- | --------------------- | -------------------------------- |
-| Fortress | bigs, dunks           | Giannis (vs Embiid, vs Draymond) |
-| Sniper   | guards, points        | Shai (vs Jokic, vs Embiid)       |
-| Bricks   | free throws, the line | Embiid (vs Giannis, vs Shai)     |
-| Post     | the post, paint       | AD (vs Draymond, vs Jokic)       |
-| Stocks   | stocks                | Draymond (vs AD, vs Giannis)     |
-| Balanced | all-around            | Jokic (vs Shai, vs AD)           |
+| Build    | Static                                  | Player pool (draw one)           |
+| -------- | --------------------------------------- | -------------------------------- |
+| Fortress | bigs, dunks                             | Giannis (vs Embiid, vs Draymond) |
+| Sniper   | guards, points                          | Shai (vs Jokic, vs Embiid)       |
+| Bricks   | free throws, the line                   | Embiid (vs Giannis, vs Shai)     |
+| Post     | the post, paint                         | AD (vs Draymond, vs Jokic)       |
+| Stocks   | stocks, all-around or stocks            | Draymond (vs AD, vs Giannis)     |
+| Balanced | all-around (paint), all-around (stocks) | Jokic (vs Shai, vs AD)           |
 
-Every run offers Fortress, Sniper, Bricks, and Post twice, Stocks and Balanced once, plus one player pair. Chance the extra question names Stocks: 2/6. Same for Balanced. Expected offers in a 9-cat run:
+Every run offers each build twice, then one player pair. Chance the extra names any given build: 2/6. Expected offers in a 9-cat run: **2.33** each.
 
-| Build    | Static | Expected from player | Expected total |
-| -------- | -----: | -------------------: | -------------: |
-| Fortress |      2 |                 0.33 |           2.33 |
-| Sniper   |      2 |                 0.33 |           2.33 |
-| Bricks   |      2 |                 0.33 |           2.33 |
-| Post     |      2 |                 0.33 |           2.33 |
-| Stocks   |      1 |                 0.33 |           1.33 |
-| Balanced |      1 |                 0.33 |           1.33 |
-
-Old four-plus-two was Sniper 4.9 expected and Balanced 0.67 with a 42% chance of never seeing it. This set is the close even 5 can get without a sixth category question.
+Old four-plus-two was Sniper 4.9 expected and Balanced 0.67 with a 42% chance of never seeing it.
 
 ## Session picker
 
-**Five static, then one player pair from a pool of six.**
+**Six static, then one player pair from a pool of six.**
 
-`STATIC_IDS` = the five openers. `PLAYER_POOL` = the six name pairs. `RANDOM_COUNT = 1`. First run is six questions. If a static pair fails the cat filter, omit it (do not substitute a player question into the opening). Still draw one from the eligible player pool. If the pool has none eligible, skip the extra and snap after the statics. If nothing eligible at all, skip the walk and snap Balanced.
+`STATIC_IDS` = the six openers. `PLAYER_POOL` = the six name pairs. `RANDOM_COUNT = 1`. First run is seven questions. If a static pair fails the cat filter, omit it (do not substitute a player question into the opening). Still draw one from the eligible player pool. If the pool has none eligible, skip the extra and snap after the statics. If nothing eligible at all, skip the walk and snap Balanced.
 
 Seed once when Not sure starts. Mulberry32 or equivalent from that seed. Store `walkSeed`, `walkQuestionIds`, and `walkAnswers` on the in-memory `QuizDraft` only. **None of that on `DraftProfile`.** Back must not reshuffle the player extra. In-progress quiz still dies on refresh (same as today).
 
-Eligible question: both `toward` builds pass `isNamedBuildVisible(id, enabledCats)`. First run is 9-cat, so all eleven qualify. Retake after custom cats may drop Fortress questions if FT% is off, and so on.
+Eligible question: both `toward` builds pass `isNamedBuildVisible(id, enabledCats)`. First run is 9-cat, so all twelve qualify. Retake after custom cats may drop Fortress questions if FT% is off, and so on.
 
-Presentation order is the five statics, then the one player id. Do not shuffle the statics.
+Presentation order is the six statics, then the one player id. Do not shuffle the statics.
 
 Tap-to-advance through `walkQuestionIds`. `search.q` is the 0-based index while `step=walk`. Back decrements `q`, then Home. After the last answer, snap, then league.
 
@@ -234,7 +225,7 @@ Helpers (pure, tested in `app/core`):
 - `lerpTuners(a, b, t)` → `a + (b - a) * t`.
 - `previewFromAnswers(questionIds, answers, enabledCats)` → fold from Balanced with `alpha = 0.4`.
 - `nearestNamedBuild(preview, enabledCats)` → min Euclidean, gallery-order ties. Skip builds that are not visible.
-- `pickWalkQuestions(enabledCats, seed)` → ids (five static that survive, then one from the player pool).
+- `pickWalkQuestions(enabledCats, seed)` → ids (six static that survive, then one from the player pool).
 
 Quiz walk fields never reach `quizDraftToProfile`. Snap calls `applyArchetype` and drops the walk fields. Opening sliders after snap is the normal Custom-tuner path from G.
 
@@ -270,11 +261,11 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 
 ## Tests
 
-- Bank: eleven unique ids (five static, six player), both sides named builds, no `custom`. Static ids are not in the player pool.
+- Bank: twelve unique ids (six static, six player), both sides named builds, no `custom`. Static ids are not in the player pool.
 - `isNamedBuildVisible` false for Fortress when `ftPct` is off → questions with `toward: puntFt` drop (two static: `bigs-or-guards`, `dunks-or-free-throws`; two player: `giannis-or-embiid`, `giannis-or-draymond`).
-- 9-cat: first five ids are always `bigs-or-guards`, `points-or-stocks`, `dunks-or-free-throws`, `line-or-post`, `all-around-or-paint`. Last id is from the six-id player pool.
-- Same seed → same six ids and same order. Different seed can change only the last id.
-- `ftPct` off: static `bigs-or-guards` and `dunks-or-free-throws` drop. Opening is `points-or-stocks`, `line-or-post`, `all-around-or-paint`, plus one eligible player pair.
+- 9-cat: first six ids are always `bigs-or-guards`, `points-or-stocks`, `dunks-or-free-throws`, `line-or-post`, `all-around-or-paint`, `all-around-or-stocks`. Last id is from the six-id player pool.
+- Same seed → same seven ids and same order. Different seed can change only the last id.
+- `ftPct` off: static `bigs-or-guards` and `dunks-or-free-throws` drop. Opening is `points-or-stocks`, `line-or-post`, `all-around-or-paint`, `all-around-or-stocks`, plus one eligible player pair.
 - Lerp example matches the table above.
 - `previewFromAnswers` of `[bigs-or-guards: left]` then Back to `[]` returns all 1s.
 - Preview of the Fortress vector is nearest `puntFt`. All 1s is `balanced`. Equal distance: earlier in `NAMED_BUILD_IDS`.
@@ -299,7 +290,7 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 1. Home shows named cards, Custom, and Not sure.
 2. Named: league chart is that card (Fortress FT% at 0, Need cats at 1.5). Tap chart → sliders, no bar drag. Continue still works with sliders open or closed.
 3. Custom: chips first. Punt FT% moves FG% / REB / BLK / PTS bars to 1.25 (once G is in). No slider row until the chart is tapped.
-4. Not sure: first five prompts are always Bigs or guards, Points or stocks, Dunks or free throws, The line or the post, All-around or paint. The sixth is one of the six player pairs and varies by seed. Chart moves each tap. Back restores the previous bars and does not reshuffle the player extra. After the sixth, copy names a card and the bars jump to that preset. Refresh still does not keep in-progress answers.
+4. Not sure: first six prompts are always Bigs or guards, Points or stocks, Dunks or free throws, The line or the post, All-around or paint, All-around or stocks. The seventh is one of the six player pairs and varies by seed. Chart moves each tap. Back restores the previous bars and does not reshuffle the player extra. After the seventh, copy names a card and the bars jump to that preset. Refresh still does not keep in-progress answers.
 5. Closest build is one of the six names. `/draft` chrome says that name. Settings chips match the card, not the walk mix.
 6. 8-cat (TOV off in Settings, then retake Not sure): questions still run; vectors omit TOV.
 7. No neon bars, no pills, no drawer on `/onboard`.
