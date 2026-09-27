@@ -131,16 +131,16 @@ Toward ids: `balanced`, `puntFg` (Bricks), `puntFt` (Fortress), `guards` (Sniper
 
 Always this order when eligible. Same grain as Bigs or guards: two valid identities, no player names, no “ugly” frame.
 
-| Id                       | Prompt                  | Left       | Toward     | Right       | Toward     |
-| ------------------------ | ----------------------- | ---------- | ---------- | ----------- | ---------- |
-| `bigs-or-guards`         | Bigs or guards?         | Bigs       | `puntFt`   | Guards      | `guards`   |
-| `points-or-stocks`       | Points or stocks?       | Points     | `guards`   | Stocks      | `stocks`   |
-| `dunks-or-free-throws`   | Dunks or free throws?   | Dunks      | `puntFt`   | Free throws | `puntFg`   |
-| `line-or-post`           | The line or the post?   | The line   | `puntFg`   | The post    | `puntAst`  |
-| `all-around-or-paint`    | All-around or paint?    | All-around | `balanced` | Paint       | `puntAst`  |
-| `lock-down-or-do-it-all` | Lock down or do it all? | Lock down  | `stocks`   | Do it all   | `balanced` |
+| Id                       | Prompt                  | Left      | Toward    | Right       | Toward     |
+| ------------------------ | ----------------------- | --------- | --------- | ----------- | ---------- |
+| `bigs-or-guards`         | Bigs or guards?         | Bigs      | `puntFt`  | Guards      | `guards`   |
+| `points-or-stocks`       | Points or stocks?       | Points    | `guards`  | Stocks      | `stocks`   |
+| `dunks-or-free-throws`   | Dunks or free throws?   | Dunks     | `puntFt`  | Free throws | `puntFg`   |
+| `and-ones-or-post-ups`   | And-ones or post-ups?   | And-ones  | `puntFg`  | Post-ups    | `puntAst`  |
+| `inside-or-everywhere`   | Inside or everywhere?   | Inside    | `puntAst` | Everywhere  | `balanced` |
+| `lock-down-or-stay-even` | Lock down or stay even? | Lock down | `stocks`  | Stay even   | `balanced` |
 
-Do not clone 5 as “All-around or stocks?” That restates Q5’s all-around pole and Q2’s stocks pole. Same cycle edge (Balanced vs Stocks), different words.
+Same stances, different kind of question. Q3 is how you finish (rim vs free throws). Q4 is the play (through contact vs back-to-the-basket), not another word for the stripe. Q5 is where the offense lives. Q6 is specialist D vs no favorite cat. Do not collapse those back to “the line,” “all-around,” or “do it all.”
 
 Static sides: every named build twice.
 
@@ -161,10 +161,10 @@ Six pairs. Session draws **one**, after the six, seeded. Each named build appear
 
 - **Bigs → Fortress, guards → Sniper.** Default interior vs perimeter. One Fortress/Sniper pole, not two.
 - **Points → Sniper, stocks → Stocks.** Scoring vs steal-and-block. Do not point a generic “blocks” answer at Stocks; blocks-as-a-big keep scoring (Fortress).
-- **Dunks → Fortress, free throws → Bricks.** Dunks are high FG%. Bricks punts FG% and lives at the line.
-- **The line → Bricks, the post → Post.** FT% cluster vs a scoring-and-defense big who does not pass.
-- **All-around → Balanced, paint → Post.** Balanced has to be a pole, not a leftover. “All-around” is the honest name for no hole. Post is the paint identity that is not Fortress (Fortress already used dunks/bigs).
-- **Lock down → Stocks, do it all → Balanced.** Same Balanced vs Stocks edge as a sixth “All-around or stocks?” would be. “Lock down” is the defensive specialist without repeating the word stocks. “Do it all” is Balanced without repeating all-around.
+- **Dunks → Fortress, free throws → Bricks.** How you finish. Dunks are high FG%. Bricks needs the made free throw, not the hack-a-Shaq miss (that is Fortress).
+- **And-ones → Bricks, post-ups → Post.** Play type, not a second “free throws” prompt. The extra point on an and-one is the FT. Post-ups are the no-pass paint big.
+- **Inside → Post, everywhere → Balanced.** Floor, not a synonym of all-around. Paint already showed up as post-ups; “inside” is the location, “everywhere” is no favorite spot.
+- **Lock down → Stocks, stay even → Balanced.** Specialist D vs no favorite cat. Not “do it all” (that cloned all-around) and not the word stocks (that cloned Q2).
 - **Jokic → Balanced, not Post.** Post punts AST. Jokic is the assist-heavy big.
 - **Shai → Sniper.** Guard scoring, FT%, threes, not a shot blocker.
 - **Giannis → Fortress, Embiid → Bricks.** FT% hole vs living at the line with FG% as the tax.
@@ -179,10 +179,10 @@ Do not add a seventh named build to make Jokic a “passing big.” Balanced is 
 | -------- | --------------------- | -------------------------------- |
 | Fortress | bigs, dunks           | Giannis (vs Embiid, vs Draymond) |
 | Sniper   | guards, points        | Shai (vs Jokic, vs Embiid)       |
-| Bricks   | free throws, the line | Embiid (vs Giannis, vs Shai)     |
-| Post     | the post, paint       | AD (vs Draymond, vs Jokic)       |
+| Bricks   | free throws, and-ones | Embiid (vs Giannis, vs Shai)     |
+| Post     | post-ups, inside      | AD (vs Draymond, vs Jokic)       |
 | Stocks   | stocks, lock down     | Draymond (vs AD, vs Giannis)     |
-| Balanced | all-around, do it all | Jokic (vs Shai, vs AD)           |
+| Balanced | everywhere, stay even | Jokic (vs Shai, vs AD)           |
 
 Every run offers each build twice, then one player pair. Chance the extra names any given build: 2/6. Expected offers in a 9-cat run: **2.33** each.
 
@@ -265,9 +265,9 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 
 - Bank: twelve unique ids (six static, six player), both sides named builds, no `custom`. Static ids are not in the player pool.
 - `isNamedBuildVisible` false for Fortress when `ftPct` is off → questions with `toward: puntFt` drop (two static: `bigs-or-guards`, `dunks-or-free-throws`; two player: `giannis-or-embiid`, `giannis-or-draymond`).
-- 9-cat: first six ids are always `bigs-or-guards`, `points-or-stocks`, `dunks-or-free-throws`, `line-or-post`, `all-around-or-paint`, `lock-down-or-do-it-all`. Last id is from the six-id player pool.
+- 9-cat: first six ids are always `bigs-or-guards`, `points-or-stocks`, `dunks-or-free-throws`, `and-ones-or-post-ups`, `inside-or-everywhere`, `lock-down-or-stay-even`. Last id is from the six-id player pool.
 - Same seed → same seven ids and same order. Different seed can change only the last id.
-- `ftPct` off: static `bigs-or-guards` and `dunks-or-free-throws` drop. Opening is `points-or-stocks`, `line-or-post`, `all-around-or-paint`, `lock-down-or-do-it-all`, plus one eligible player pair.
+- `ftPct` off: static `bigs-or-guards` and `dunks-or-free-throws` drop. Opening is `points-or-stocks`, `and-ones-or-post-ups`, `inside-or-everywhere`, `lock-down-or-stay-even`, plus one eligible player pair.
 - Lerp example matches the table above.
 - `previewFromAnswers` of `[bigs-or-guards: left]` then Back to `[]` returns all 1s.
 - Preview of the Fortress vector is nearest `puntFt`. All 1s is `balanced`. Equal distance: earlier in `NAMED_BUILD_IDS`.
@@ -292,7 +292,7 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 1. Home shows named cards, Custom, and Not sure.
 2. Named: league chart is that card (Fortress FT% at 0, Need cats at 1.5). Tap chart → sliders, no bar drag. Continue still works with sliders open or closed.
 3. Custom: chips first. Punt FT% moves FG% / REB / BLK / PTS bars to 1.25 (once G is in). No slider row until the chart is tapped.
-4. Not sure: first six prompts are always Bigs or guards, Points or stocks, Dunks or free throws, The line or the post, All-around or paint, Lock down or do it all. The seventh is one of the six player pairs and varies by seed. Chart moves each tap. Back restores the previous bars and does not reshuffle the player extra. After the seventh, copy names a card and the bars jump to that preset. Refresh still does not keep in-progress answers.
+4. Not sure: first six prompts are always Bigs or guards, Points or stocks, Dunks or free throws, And-ones or post-ups, Inside or everywhere, Lock down or stay even. The seventh is one of the six player pairs and varies by seed. Chart moves each tap. Back restores the previous bars and does not reshuffle the player extra. After the seventh, copy names a card and the bars jump to that preset. Refresh still does not keep in-progress answers.
 5. Closest build is one of the six names. `/draft` chrome says that name. Settings chips match the card, not the walk mix.
 6. 8-cat (TOV off in Settings, then retake Not sure): questions still run; vectors omit TOV.
 7. No neon bars, no pills, no drawer on `/onboard`.
