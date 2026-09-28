@@ -24,6 +24,41 @@ export { CsvProvider, DEFAULT_MIN_GAMES } from './csv-provider.ts';
 export type { CsvProviderOptions } from './csv-provider.ts';
 export { draftProfileSchema, rankRequestSchema, profileWeight, LEAGUE_SIZE_MIN, LEAGUE_SIZE_MAX } from './profile.ts';
 export type { RankRequest } from './profile.ts';
+export {
+    TUNER_COMPLEMENT,
+    TUNER_MAX,
+    TUNER_NEED,
+    TUNER_NEUTRAL,
+    TUNER_PUNT,
+    applyCatStance,
+    applyCatTuner,
+    clampTuner,
+    complementCats,
+    complementsOfPunt,
+    formatTuner,
+    hasCustomCat,
+    migrateDraftProfile,
+    presetTuner,
+    resolveTuner,
+    sameTuner,
+    stancesMatchNamed,
+    tunersForArchetype,
+    tunersForStances
+} from './tuners.ts';
+export {
+    PLAYER_WALK_IDS,
+    STATIC_WALK_IDS,
+    WALK_LERP_ALPHA,
+    WALK_QUESTIONS,
+    isWalkQuestionEligible,
+    lerpTuners,
+    nearestNamedBuild,
+    pickWalkQuestions,
+    previewFromAnswers,
+    tunerVector,
+    walkQuestion
+} from './walk-questions.ts';
+export type { WalkChoice, WalkChoiceId, WalkQuestion } from './walk-questions.ts';
 export { DEFAULT_OPERATOR_WEIGHTS } from './operator-weights.ts';
 export { DEFAULT_AVAILABILITY_FLOOR } from './ranker-config.ts';
 export { mean, std, zScore } from './stats.ts';

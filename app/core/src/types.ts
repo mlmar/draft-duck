@@ -40,7 +40,7 @@ export const CAT_LABELS: Record<CatKey, string> = {
     tov: 'TOV'
 };
 
-export type CatStance = 'need' | 'neutral' | 'punt';
+export type CatStance = 'need' | 'neutral' | 'punt' | 'custom';
 
 export const ARCHETYPE_IDS = ['balanced', 'puntFg', 'puntFt', 'guards', 'stocks', 'puntAst', 'custom'] as const;
 export type ArchetypeId = (typeof ARCHETYPE_IDS)[number];
@@ -51,12 +51,14 @@ export type DraftProfile = {
     draftType: 'snake' | 'linear';
     enabledCats: CatKey[];
     stances: Partial<Record<CatKey, CatStance>>;
-    /** 0-2 intensity. Omit a cat (or the whole map) to default that cat to 1. */
+    /** 0-3 tuner. The ranker weight. Omit a cat to use that cat's stance preset. */
     intensity?: Partial<Record<CatKey, number>>;
     /** 1..leagueSize. Omit on old profiles. Slot is a lens, not a ranker input. */
     draftSlot?: number;
     /** Last gallery choice. Omit on old profiles. Do not infer from chips. */
     archetypeId?: ArchetypeId;
+    /** Intensity is the weight. Omit on pre-G localStorage so migrate can still run. */
+    weightModel?: 'tuner';
 };
 
 // RankedPlayer.z only includes enabled cats. Disabled cats are omitted, not zeroed.

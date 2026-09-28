@@ -8,7 +8,7 @@ import { quizDraftToProfile } from '@/lib/quiz';
 import { draftProfileSchema, overallPicksForDraft } from '@draft-duck/core';
 import { useQuery } from '@tanstack/react-query';
 
-// Slot preview, not a recap list. Stance edits re-rank the names at each pick.
+// Slot preview, not a recap list. Stance edits re-rank the names at your pick.
 export function ReviewStep({ value, onChange, parseError }: QuizStepProps) {
     const parsed = draftProfileSchema.safeParse(quizDraftToProfile(value));
     const profile = parsed.success ? parsed.data : null;

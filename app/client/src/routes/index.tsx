@@ -32,14 +32,25 @@ function HomePage() {
                         </LinkButton>
                     ))}
                 </div>
-                <LinkButton
-                    to='/onboard'
-                    search={{ build: 'custom' }}
-                    variant='ghost'
-                    className='h-auto w-full justify-start px-3 py-2 md:w-auto'
-                >
-                    Custom
-                </LinkButton>
+                <div className='grid gap-1'>
+                    <LinkButton
+                        to='/onboard'
+                        search={{ build: 'custom' }}
+                        variant='ghost'
+                        className='h-auto w-full justify-start px-3 py-2 md:w-auto'
+                    >
+                        Custom
+                    </LinkButton>
+                    <LinkButton
+                        to='/onboard'
+                        search={{ start: 'not-sure' }}
+                        variant='ghost'
+                        className='h-auto w-full justify-start px-3 py-2 md:w-auto'
+                    >
+                        Not sure
+                    </LinkButton>
+                    <p className='mb-0 px-3 text-muted-foreground'>A few questions</p>
+                </div>
             </div>
             <EntryCtas />
         </PageShell>
