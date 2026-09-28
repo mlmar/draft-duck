@@ -2,17 +2,25 @@ import { IntensityStep } from '@/components/onboard/steps/intensity-step';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { QuizDraft } from '@/lib/quiz';
-import { CAT_LABELS, formatTuner, type CatKey, type CatStance } from '@draft-duck/core';
+import {
+    CAT_LABELS,
+    TUNER_MAX,
+    TUNER_NEED,
+    TUNER_NEUTRAL,
+    TUNER_PUNT,
+    formatTuner,
+    type CatKey,
+    type CatStance
+} from '@draft-duck/core';
 import { useState, type CSSProperties, type KeyboardEvent } from 'react';
 
-const TUNER_MAX = 3;
 const TRACK_CLASS = 'h-44';
 
 const TICKS: { label: string; value: number }[] = [
-    { label: 'More', value: 3 },
-    { label: 'Need', value: 1.5 },
-    { label: 'Neutral', value: 1 },
-    { label: 'Punt', value: 0 }
+    { label: 'More', value: TUNER_MAX },
+    { label: 'Need', value: TUNER_NEED },
+    { label: 'Neutral', value: TUNER_NEUTRAL },
+    { label: 'Punt', value: TUNER_PUNT }
 ];
 
 type WeightChartProps = {
@@ -25,17 +33,18 @@ type WeightChartProps = {
 };
 
 function tunerOf(tuners: Partial<Record<CatKey, number>>, cat: CatKey): number {
-    return tuners[cat] ?? 1;
+    return tuners[cat] ?? TUNER_NEUTRAL;
 }
 
+// 0 is a visual floor. A Custom thumb at 0 looks muted and does not flip the chip to Punt.
 function isPunt(stances: Partial<Record<CatKey, CatStance>> | undefined, cat: CatKey, value: number): boolean {
     if (stances?.[cat] === 'punt') return true;
-    return value === 0;
+    return value === TUNER_PUNT;
 }
 
 function tickStyle(value: number): { bottom?: string; top?: string; transform?: string } {
     if (value >= TUNER_MAX) return { top: '0' };
-    if (value <= 0) return { bottom: '0' };
+    if (value <= TUNER_PUNT) return { bottom: '0' };
     return { bottom: `${(value / TUNER_MAX) * 100}%`, transform: 'translateY(50%)' };
 }
 
@@ -109,6 +118,7 @@ export function WeightChart({
         );
     }
 
+    // Native <button> ate the flex layout. Keep the div + keyboard handler.
     return (
         <div
             role='button'

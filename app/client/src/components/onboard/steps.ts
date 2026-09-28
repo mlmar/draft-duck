@@ -104,5 +104,19 @@ export function currentStepDef(path: OnboardPath, draft: QuizDraft, stepId: stri
     return match ?? steps[0] ?? LEAGUE_STEP;
 }
 
+export function nextOnboardStepId(path: OnboardPath, draft: QuizDraft, stepId: string): string | undefined {
+    const steps = stepsForPath(path, draft);
+    const index = steps.findIndex((entry) => entry.id === stepId);
+    if (index === -1) return steps[0]?.id;
+    return steps[index + 1]?.id;
+}
+
+export function previousOnboardStepId(path: OnboardPath, draft: QuizDraft, stepId: string): string | undefined {
+    const steps = stepsForPath(path, draft);
+    const index = steps.findIndex((entry) => entry.id === stepId);
+    if (index <= 0) return undefined;
+    return steps[index - 1]?.id;
+}
+
 // Fallback for search validation and first paint before the path is known.
 export const STEPS: QuizStepDef[] = [LEAGUE_STEP, REVIEW_STEP];

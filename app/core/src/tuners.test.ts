@@ -46,6 +46,12 @@ describe('presetTuner', () => {
         expect(complements.has('blk')).toBe(true);
         expect(presetTuner('trb', stances, CAT_KEYS)).toBe(1.25);
     });
+
+    it('does not give Custom the complement 1.25', () => {
+        const stances = { ftPct: 'punt' as const, fgPct: 'custom' as const };
+        expect(presetTuner('fgPct', stances, CAT_KEYS)).toBe(1);
+        expect(presetTuner('fgPct', stances, CAT_KEYS, 'neutral')).toBe(1.25);
+    });
 });
 
 describe('applyCatTuner and applyCatStance', () => {
