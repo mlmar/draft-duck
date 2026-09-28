@@ -111,6 +111,9 @@ describe('draftProfileSchema', () => {
         });
         expect(parsed.draftSlot).toBeUndefined();
         expect(parsed.archetypeId).toBeUndefined();
+        expect(parsed.weightModel).toBe('tuner');
+        expect(parsed.intensity?.ftPct).toBe(0);
+        expect(parsed.intensity?.fgPct).toBe(1.25);
         expect(
             draftProfileSchema.safeParse({
                 leagueSize: 12,

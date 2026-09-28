@@ -1,8 +1,9 @@
 import { z } from 'zod';
-import { ARCHETYPE_IDS, CAT_KEYS, type CatKey, type CatStance, type DraftProfile } from './types.ts';
+import { migrateDraftProfile, resolveTuner } from './tuners.ts';
+import { ARCHETYPE_IDS, CAT_KEYS, type CatKey, type DraftProfile } from './types.ts';
 
 const catKeySchema = z.enum(CAT_KEYS);
-const catStanceSchema = z.enum(['need', 'neutral', 'punt']);
+const catStanceSchema = z.enum(['need', 'neutral', 'punt', 'custom']);
 
 export const LEAGUE_SIZE_MIN = 4;
 export const LEAGUE_SIZE_MAX = 20;
@@ -20,9 +21,10 @@ export const draftProfileSchema = z
         draftType: z.enum(['snake', 'linear']),
         enabledCats: z.array(catKeySchema).min(1),
         stances: z.record(catKeySchema, catStanceSchema).default({}),
-        intensity: z.record(catKeySchema, z.number().min(0).max(2)).optional(),
+        intensity: z.record(catKeySchema, z.number().min(0).max(3)).optional(),
         draftSlot: z.number().int().min(1).optional(),
-        archetypeId: z.enum(ARCHETYPE_IDS).optional()
+        archetypeId: z.enum(ARCHETYPE_IDS).optional(),
+        weightModel: z.literal('tuner').optional()
     })
     .superRefine((profile, ctx) => {
         if (profile.draftSlot !== undefined && profile.draftSlot > profile.leagueSize) {
@@ -32,7 +34,8 @@ export const draftProfileSchema = z
                 path: ['draftSlot']
             });
         }
-    });
+    })
+    .transform((profile) => migrateDraftProfile(profile));
 
 export const rankRequestSchema = z.object({
     profile: draftProfileSchema
@@ -40,16 +43,7 @@ export const rankRequestSchema = z.object({
 
 export type RankRequest = z.infer<typeof rankRequestSchema>;
 
-// Stance multiplier before intensity: need 1.5, neutral 1, punt 0.
-const STANCE_WEIGHT: Record<CatStance, number> = {
-    need: 1.5,
-    neutral: 1,
-    punt: 0
-};
-
-// profile_w[c] = stanceWeight * (intensity[c] ?? 1). Missing stance on an enabled cat is neutral.
+// profile_w[c] = tuner[c]. Missing intensity uses the stance preset (Need 1.5, Neutral 1 or 1.25, Punt 0).
 export function profileWeight(profile: DraftProfile, cat: CatKey): number {
-    const stance = profile.stances[cat] ?? 'neutral';
-    const intensity = profile.intensity?.[cat] ?? 1;
-    return STANCE_WEIGHT[stance] * intensity;
+    return resolveTuner(profile, cat);
 }

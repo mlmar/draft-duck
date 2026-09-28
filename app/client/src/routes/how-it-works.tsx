@@ -31,8 +31,9 @@ function HowItWorksPage() {
                 volume-adjusted impact, so a 70% shooter on two attempts does not beat a 55% shooter on fifteen.
             </p>
             <p>
-                Need is 1.5. Neutral is 1. Punt is 0. Optional intensity (0–2, default 1) scales a non-punt cat. The
-                composite is operator weight times your profile weight times that z-score, summed across enabled cats.
+                The slider is the weight, from 0 to 3. Need is 1.5, Neutral is 1, Punt is 0. If you punt a hole,
+                leftover Neutral complements sit at 1.25. The composite is operator weight times that tuner times the
+                z-score, summed across enabled cats.
             </p>
 
             <h2>Punts and 8-cat</h2>

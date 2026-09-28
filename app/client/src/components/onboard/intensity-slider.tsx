@@ -1,9 +1,8 @@
+import { CAT_LABELS, formatTuner } from '@draft-duck/core';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
-export const INTENSITY_HINT = 'How hard to lean into each remaining cat. 1 is the default.';
-
-// Native 0-2 range for one category. Less / More are labels. The number is what gets saved.
+export const INTENSITY_HINT = 'This number is the weight. Neutral is 1, Need is 1.5, 3 is more.';
 
 type IntensitySliderProps = {
     id: string;
@@ -18,14 +17,14 @@ export function IntensitySlider({ id, label, value, onChange, disabled = false }
         <div className={cn('grid gap-2', disabled && 'opacity-50')}>
             <div className='flex items-baseline justify-between gap-4'>
                 <Label htmlFor={id}>{label}</Label>
-                <span className='text-muted-foreground'>{value.toFixed(1)}</span>
+                <span className='text-muted-foreground'>{formatTuner(value)}</span>
             </div>
             <input
                 id={id}
                 type='range'
                 min={0}
-                max={2}
-                step={0.1}
+                max={3}
+                step={0.05}
                 value={value}
                 disabled={disabled}
                 onChange={(event) => onChange(Number(event.target.value))}

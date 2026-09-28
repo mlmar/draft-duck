@@ -1,12 +1,11 @@
 import { INTENSITY_HINT, IntensitySlider } from '@/components/onboard/intensity-slider';
 import type { QuizStepProps } from '@/components/onboard/step-types';
+import { setCatTuner } from '@/lib/quiz';
 import { CAT_LABELS } from '@draft-duck/core';
 
 type IntensityStepProps = QuizStepProps & {
     idPrefix?: string;
 };
-
-// Every enabled cat. Punt sliders stay disabled so intensity is not written for them.
 
 export function IntensityStep({ value, onChange, idPrefix = 'intensity' }: IntensityStepProps) {
     return (
@@ -21,12 +20,7 @@ export function IntensityStep({ value, onChange, idPrefix = 'intensity' }: Inten
                         label={CAT_LABELS[cat]}
                         value={value.intensity[cat] ?? 1}
                         disabled={punted}
-                        onChange={(intensity) =>
-                            onChange({
-                                ...value,
-                                intensity: { ...value.intensity, [cat]: intensity }
-                            })
-                        }
+                        onChange={(tuner) => onChange(setCatTuner(value, cat, tuner))}
                     />
                 );
             })}

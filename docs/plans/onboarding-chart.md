@@ -1,6 +1,6 @@
 # Onboarding chart and Not sure questions
 
-Plan only. Implements after Approach G ([punt-complement-reweight.md](punt-complement-reweight.md), PR #12). This is **pass 2**: the live weight chart, the two opens, and the locked Not sure bank. Do not ship G math here. Walk-preview chrome (dashed bars, “preview” caption) is **pass 3**.
+Pass 2 is implemented with Approach G: the live weight chart, the two opens, and the locked Not sure bank. Walk-preview chrome (dashed bars, "preview" caption) is still **pass 3**.
 
 ## Why this pass
 
