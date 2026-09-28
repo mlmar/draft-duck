@@ -9,12 +9,6 @@ export const TUNER_NEED = 1.5;
 
 const TUNER_EPS = 1e-6;
 
-const OLD_STANCE_WEIGHT: Record<Exclude<CatStance, 'custom'>, number> = {
-    need: TUNER_NEED,
-    neutral: TUNER_NEUTRAL,
-    punt: TUNER_PUNT
-};
-
 export function clampTuner(value: number): number {
     if (!Number.isFinite(value)) return TUNER_NEUTRAL;
     return Math.min(TUNER_MAX, Math.max(TUNER_PUNT, value));
@@ -144,31 +138,4 @@ export function stancesMatchNamed(
 ): boolean {
     const expected = stancesForArchetype(id, enabledCats);
     return enabledCats.every((cat) => (stances[cat] ?? 'neutral') === (expected[cat] ?? 'neutral'));
-}
-
-// Pre-G localStorage: intensity was a 0-2 multiplier on stance weights.
-export function migrateDraftProfile(profile: DraftProfile): DraftProfile {
-    if (profile.weightModel === 'tuner') {
-        return {
-            ...profile,
-            intensity: tunersForStances(profile.stances, profile.enabledCats, profile.intensity ?? {})
-        };
-    }
-
-    const hadIntensity = profile.intensity !== undefined;
-    const stances: Partial<Record<CatKey, CatStance>> = { ...profile.stances };
-    const intensity: Partial<Record<CatKey, number>> = {};
-
-    for (const cat of profile.enabledCats) {
-        const oldStance = stances[cat] === 'custom' ? 'neutral' : (stances[cat] ?? 'neutral');
-        let tuner = clampTuner(OLD_STANCE_WEIGHT[oldStance] * (profile.intensity?.[cat] ?? 1));
-        if (!hadIntensity && oldStance === 'neutral') {
-            tuner = presetTuner(cat, stances, profile.enabledCats, 'neutral');
-        }
-        const preset = presetTuner(cat, stances, profile.enabledCats, oldStance);
-        if (!sameTuner(tuner, preset)) stances[cat] = 'custom';
-        intensity[cat] = tuner;
-    }
-
-    return { ...profile, stances, intensity, weightModel: 'tuner' };
 }
