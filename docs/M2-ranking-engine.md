@@ -109,7 +109,6 @@ type DraftProfile = {
     stances: Partial<Record<CatKey, CatStance>>;
     /** 0-3 tuner. The ranker weight. Omit a cat to use that cat's stance preset. */
     intensity?: Partial<Record<CatKey, number>>;
-    weightModel?: 'tuner';
 };
 ```
 
@@ -121,13 +120,11 @@ Preset tuners:
 | `neutral`                      | `1`    |
 | `neutral` complement of a punt | `1.25` |
 | `need`                         | `1.5`  |
-| old Need × intensity 2         | `3`    |
+| slider max                     | `3`    |
 
 `profile_w[c] = tuner[c]`. Missing intensity uses the preset. Missing stance on an enabled cat = `neutral`. Disabled cats are omitted from the sum (not the same as punt: they should not appear in per-cat z output either). Complements invert named-build Need lists. Need still wins over 1.25.
 
 8-cat (no TO): `enabledCats` omits `tov`.
-
-Zod migrates pre-tuner localStorage: `tuner = clamp(oldStanceWeight * (oldIntensity ?? 1), 0, 3)`, then Neutral complements default to 1.25 when intensity was omitted. See [punt-complement-reweight.md](plans/punt-complement-reweight.md).
 
 ### `RankedPlayer`
 
@@ -188,7 +185,7 @@ What would change, and what would not:
 - Replacement-level / VORP / positional scarcity (later, not M2).
 - Minutes floor for low-MP specialists.
 - Null FG%/FT% treated as impact 0 (neutral, not missing).
-- Need default is tuner 1.5. 3 is the old Need × intensity 2 point on the same slider. The floor does not cover star-sink while it is off.
+- Need default is tuner 1.5. 3 is the top of the slider. The floor does not cover star-sink while it is off.
 - Taken list / remaining-pool re-z.
 
 ## Acceptance checks

@@ -14,7 +14,6 @@ describe('quizDraftToProfile', () => {
         const walked = startWalk(DEFAULT_QUIZ_DRAFT, 7);
         const snapped = applyArchetype({ ...walked, walkAnswers: ['left', 'right'], snappedFromWalk: true }, 'puntFt');
         const profile = quizDraftToProfile(snapped);
-        expect(profile.weightModel).toBe('tuner');
         expect(profile.archetypeId).toBe('puntFt');
         expect(profile.intensity?.ftPct).toBe(0);
         expect(profile.intensity?.fgPct).toBe(1.5);

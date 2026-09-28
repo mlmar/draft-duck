@@ -37,7 +37,6 @@ export {
     complementsOfPunt,
     formatTuner,
     hasCustomCat,
-    migrateDraftProfile,
     presetTuner,
     resolveTuner,
     sameTuner,

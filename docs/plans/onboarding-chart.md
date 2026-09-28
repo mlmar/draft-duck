@@ -297,7 +297,7 @@ Home named builds stay outline-on-paper. These inverted cards are Not sure only.
 
 ## Out of scope
 
-- Approach G ranker, schema `custom`, intensity 0–3, migrate. That is PR #12 / pass 1.
+- Approach G ranker, schema `custom`, intensity 0-3. That is PR #12 / pass 1.
 - Walk-preview visual treatment (pass 3).
 - Persisting a Not sure fingerprint as Custom cats.
 - Dragging chart bars.
