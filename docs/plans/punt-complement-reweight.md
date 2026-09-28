@@ -1,6 +1,6 @@
 # Punt complement reweight
 
-Plan only. Next pass on this branch should implement **Approach G** with tuner max **0–3** (Need × 2 = 3 is a bar at 3). A later pass adds the [onboarding chart](#onboarding-chart). Stance chips are presets that write the tuner. The slider is the weight. The chart **shows** that vector; **tap the chart for sliders**. **Custom** (home card) opens Need / Neutral / Punt. A drag on a slider off the preset makes that cat’s chip Custom.
+Approach G is implemented: tuner max **0-3** (Need × 2 = 3 is a bar at 3). Stance chips are presets that write the tuner. The slider is the weight. The chart **shows** that vector; **tap the chart for sliders**. **Custom** (home card) opens Need / Neutral / Punt. A drag on a slider off the preset makes that cat's chip Custom. Walk-preview chrome (pass 3) is still later.
 
 ## The claim
 
