@@ -41,6 +41,7 @@ A first-time user (no account) should be able to:
 | [plans/deploy-review.md](plans/deploy-review.md)                       | Review follow-up for the first public deploy           |
 | [plans/punt-complement-reweight.md](plans/punt-complement-reweight.md) | Tuner 0–3, stance presets, onboarding chart mix        |
 | [plans/onboarding-chart.md](plans/onboarding-chart.md)                 | Weight chart, two opens, locked Not sure question bank |
+| [plans/onboarding-g-review.md](plans/onboarding-g-review.md)           | Review follow-up: comments, walk guards, no migrate    |
 
 Each milestone has **goal, in scope, out of scope, stack/touchpoints, acceptance checks, suggested build order**. M1–M4 are sequential. M5 is “do not paint into a corner” plus later optional work.
 
