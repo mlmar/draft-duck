@@ -35,7 +35,7 @@ export function rank(universe: PlayerSeason[], profile: DraftProfile, options: R
     if (universe.length === 0) return hook.annotate([]);
 
     const zByIndex = enabledCats.map((cat) => categoryZScores(universe, cat));
-    // Same z, Neutral weights, no intensity. Stand-in for ADP until a market source exists.
+    // Same z, Neutral tuners at 1. Stand-in for ADP until a market source exists.
     const consensusProfile: DraftProfile = { ...profile, stances: {}, intensity: undefined };
 
     const scored: ScoredPlayer[] = universe.map((player, index) => {
