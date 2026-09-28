@@ -1,8 +1,15 @@
 import { QuizShell } from '@/components/onboard/quiz-shell';
-import { currentStepDef, currentWalkQuestionId, stepProgress } from '@/components/onboard/steps';
+import {
+    currentStepDef,
+    currentWalkQuestionId,
+    nextOnboardStepId,
+    previousOnboardStepId,
+    stepProgress
+} from '@/components/onboard/steps';
 import { WeightChartPanel } from '@/components/onboard/weight-chart';
 import {
     applyArchetype,
+    appendWalkAnswer,
     boardSearch,
     canContinue,
     DEFAULT_QUIZ_DRAFT,
@@ -11,6 +18,7 @@ import {
     profileToQuizDraft,
     quizDraftToProfile,
     startWalk,
+    undoLastWalkAnswer,
     type QuizDraft
 } from '@/lib/quiz';
 import { useDraftProfileStore } from '@/stores/draft-profile';
@@ -18,7 +26,6 @@ import {
     ARCHETYPE_LABELS,
     draftProfileSchema,
     isNamedBuildId,
-    nearestNamedBuild,
     previewFromAnswers,
     restoreSummary,
     tunersForStances,
@@ -70,12 +77,9 @@ export function OnboardQuiz() {
             }
             let next = profile ? profileToQuizDraft(profile) : DEFAULT_QUIZ_DRAFT;
             if (entryStart === 'not-sure') {
+                // Fresh Balanced walk. Keep league size from the saved board. Do not name the old build.
                 next = startWalk(next, newWalkSeed());
                 setDraft(next);
-                if (profile) {
-                    setHasSavedProfile(true);
-                    setSavedSummary(restoreSummary(profile));
-                }
                 if ((next.walkQuestionIds?.length ?? 0) === 0) {
                     next = { ...applyArchetype(next, 'balanced'), snappedFromWalk: true };
                     setDraft(next);
@@ -85,14 +89,31 @@ export function OnboardQuiz() {
                 goTo({ step: 'walk', q: 0 });
                 return;
             }
-            if (entryBuild) next = applyArchetype(next, entryBuild);
+            if (entryBuild === 'custom') {
+                next = applyArchetype(next, 'custom');
+                if (profile) {
+                    setHasSavedProfile(true);
+                    setSavedSummary(restoreSummary(profile));
+                }
+                setDraft(next);
+                goTo({ step: 'stances' });
+                return;
+            }
+            if (entryBuild) {
+                next = applyArchetype(next, entryBuild);
+                if (profile) {
+                    setHasSavedProfile(true);
+                    setSavedSummary(restoreSummary(profile));
+                }
+                setDraft(next);
+                goTo({ step: 'league' });
+                return;
+            }
             if (profile) {
                 setHasSavedProfile(true);
                 setSavedSummary(restoreSummary(profile));
+                setDraft(next);
             }
-            if (profile || entryBuild) setDraft(next);
-            if (entryBuild === 'custom') goTo({ step: 'stances' });
-            else if (entryBuild) goTo({ step: 'league' });
         };
 
         const unsub = useDraftProfileStore.persist.onFinishHydration(applySaved);
@@ -117,70 +138,43 @@ export function OnboardQuiz() {
             return;
         }
         setParseError(null);
-        if (step.id === 'stances') {
-            goTo({ step: 'league' });
-            return;
-        }
-        goTo({ step: 'review' });
+        const nextId = nextOnboardStepId(path, draft, step.id);
+        if (nextId) goTo({ step: nextId });
     }
 
     function handleWalkAnswer(side: WalkChoiceId) {
-        const ids = draft.walkQuestionIds ?? [];
-        const answers = [...(draft.walkAnswers ?? []), side];
+        const next = appendWalkAnswer(draft, side, q);
+        if (next === draft) return;
         setParseError(null);
-        if (answers.length < ids.length) {
-            setDraft({ ...draft, walkAnswers: answers });
-            goTo({ step: 'walk', q: answers.length });
+        setDraft(next);
+        if (next.snappedFromWalk) {
+            goTo({ step: 'league' });
             return;
         }
-        const preview = previewFromAnswers(ids, answers, draft.enabledCats);
-        const nearest = nearestNamedBuild(preview, draft.enabledCats);
-        setDraft({
-            ...applyArchetype({ ...draft, walkAnswers: answers }, nearest),
-            walkSeed: draft.walkSeed,
-            walkQuestionIds: ids,
-            walkAnswers: answers,
-            snappedFromWalk: true
-        });
-        goTo({ step: 'league' });
+        goTo({ step: 'walk', q: next.walkAnswers?.length ?? 0 });
     }
 
     function handleBack() {
         setParseError(null);
         if (isWalk) {
-            const answers = (draft.walkAnswers ?? []).slice(0, -1);
             if ((draft.walkAnswers ?? []).length === 0) {
                 goHome();
                 return;
             }
-            setDraft({
-                ...draft,
-                walkAnswers: answers,
-                snappedFromWalk: false
-            });
-            goTo({ step: 'walk', q: answers.length });
+            const next = undoLastWalkAnswer(draft);
+            setDraft(next);
+            goTo({ step: 'walk', q: next.walkAnswers?.length ?? 0 });
             return;
         }
         if (step.id === 'league' && (draft.walkQuestionIds?.length ?? 0) > 0) {
-            const ids = draft.walkQuestionIds ?? [];
-            const answers = (draft.walkAnswers ?? []).slice(0, -1);
-            setDraft({
-                ...draft,
-                walkAnswers: answers,
-                snappedFromWalk: false,
-                archetypeId: null,
-                stances: {},
-                intensity: {}
-            });
-            goTo({ step: 'walk', q: Math.max(0, ids.length - 1) });
+            const next = undoLastWalkAnswer(draft);
+            setDraft(next);
+            goTo({ step: 'walk', q: next.walkAnswers?.length ?? 0 });
             return;
         }
-        if (step.id === 'review') {
-            goTo({ step: 'league' });
-            return;
-        }
-        if (step.id === 'stances') {
-            goHome();
+        const prevId = previousOnboardStepId(path, draft, step.id);
+        if (prevId) {
+            goTo({ step: prevId });
             return;
         }
         goHome();

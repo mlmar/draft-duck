@@ -1,6 +1,6 @@
 # Onboarding G review follow-up
 
-Plan only. Approach G and the Not sure walk already ship on this PR. **No old-profile migrate.** Intensity is the 0-3 tuner. Missing intensity uses the stance preset. Do not convert stance × slider payloads.
+Implemented on the Not sure PR. Approach G and the Not sure walk already shipped. **No old-profile migrate.** Intensity is the 0-3 tuner. Missing intensity uses the stance preset. Do not convert stance × slider payloads.
 
 This pass is the leftover review: comments on the dense blocks, a few correctness guards, and one source of tuner constants. Not pass 3 walk-preview chrome.
 
@@ -10,7 +10,7 @@ This pass is the leftover review: comments on the dense blocks, a few correctnes
 - Zod does not transform old Need × 2 into tuner 3.
 - `rank()` / `profileWeight()` read intensity as the weight. That is the contract.
 
-## Remainder
+## Remainder (implemented)
 
 ### 1. `presetTuner` must not treat Custom as Neutral
 

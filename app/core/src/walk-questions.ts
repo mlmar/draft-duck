@@ -177,16 +177,20 @@ function distanceSq(
     return sum;
 }
 
+// Keep the first gallery card on a tie. `<` plus slack, not `<=`, so Balanced vs Sniper does not flip.
+const NEAREST_TIE_EPS = 1e-12;
+
 export function nearestNamedBuild(
     preview: Partial<Record<CatKey, number>>,
     enabledCats: readonly CatKey[]
 ): NamedBuildId {
+    // Balanced is always visible. Used if every other card is hidden.
     let best: NamedBuildId = 'balanced';
     let bestDist = Number.POSITIVE_INFINITY;
     for (const id of NAMED_BUILD_IDS) {
         if (!isNamedBuildVisible(id, enabledCats)) continue;
         const dist = distanceSq(preview, tunerVector(id, enabledCats), enabledCats);
-        if (dist + 1e-12 < bestDist) {
+        if (dist + NEAREST_TIE_EPS < bestDist) {
             best = id;
             bestDist = dist;
         }
@@ -211,6 +215,7 @@ function mulberry32(seed: number): () => number {
     };
 }
 
+// Seeded draw so Back does not reshuffle the player extra.
 export function pickWalkQuestions(enabledCats: readonly CatKey[], seed: number): string[] {
     const staticIds = STATIC_WALK_IDS.filter((id) => {
         const question = WALK_QUESTIONS[id];

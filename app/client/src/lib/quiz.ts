@@ -7,7 +7,9 @@ import {
     hasCustomCat,
     isNamedBuildId,
     isNamedBuildVisible,
+    nearestNamedBuild,
     pickWalkQuestions,
+    previewFromAnswers,
     stancesForArchetype,
     stancesMatchNamed,
     tunersForStances,
@@ -84,6 +86,7 @@ function withRewrittenTuners(draft: QuizDraft): QuizDraft {
 }
 
 function withArchetypeFromStances(draft: QuizDraft): QuizDraft {
+    // Home Custom stays custom even when every chip is Neutral. Do not snap to Balanced.
     if (hasCustomCat(draft.stances, draft.enabledCats)) {
         return { ...draft, archetypeId: 'custom' };
     }
@@ -169,6 +172,41 @@ export function startWalk(draft: QuizDraft, seed: number): QuizDraft {
     };
 }
 
+// q must match the current answer count. A stale tap or a mismatched ?q= must not append.
+export function appendWalkAnswer(draft: QuizDraft, side: WalkChoiceId, q: number): QuizDraft {
+    const ids = draft.walkQuestionIds ?? [];
+    const answers = draft.walkAnswers ?? [];
+    if (answers.length !== q || q < 0 || q >= ids.length) return draft;
+
+    const nextAnswers = [...answers, side];
+    if (nextAnswers.length < ids.length) {
+        return { ...draft, walkAnswers: nextAnswers, snappedFromWalk: false };
+    }
+
+    const preview = previewFromAnswers(ids, nextAnswers, draft.enabledCats);
+    const nearest = nearestNamedBuild(preview, draft.enabledCats);
+    return {
+        ...applyArchetype({ ...draft, walkAnswers: nextAnswers }, nearest),
+        walkSeed: draft.walkSeed,
+        walkQuestionIds: ids,
+        walkAnswers: nextAnswers,
+        snappedFromWalk: true
+    };
+}
+
+// Pop one answer and fold from Balanced. From League this also clears the snapped named build.
+export function undoLastWalkAnswer(draft: QuizDraft): QuizDraft {
+    const answers = (draft.walkAnswers ?? []).slice(0, -1);
+    return {
+        ...draft,
+        walkAnswers: answers,
+        snappedFromWalk: false,
+        archetypeId: null,
+        stances: {},
+        intensity: {}
+    };
+}
+
 export function quizDraftToProfile(draft: QuizDraft): DraftProfile {
     const intensity = tunersForStances(draft.stances, draft.enabledCats, draft.intensity);
     const profile: DraftProfile = {
@@ -204,6 +242,7 @@ export function profileToQuizDraft(profile: DraftProfile): QuizDraft {
 }
 
 export function onboardPath(draft: QuizDraft): OnboardPath {
+    // In-memory Not sure flag, including []. Keep walk ids after snap so League Back can undo.
     if (draft.walkQuestionIds !== undefined) return 'not-sure';
     if (draft.archetypeId === 'custom') return 'custom';
     return 'named';
