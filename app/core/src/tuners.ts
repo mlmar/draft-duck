@@ -54,7 +54,7 @@ export function complementCats(
     return union;
 }
 
-// Custom has no preset. Callers pass Need / Neutral / Punt when writing a chip.
+// Custom has no preset. Complement 1.25 is Neutral-only. Chip writes pass Need / Neutral / Punt.
 export function presetTuner(
     cat: CatKey,
     stances: Partial<Record<CatKey, CatStance>>,
@@ -63,6 +63,7 @@ export function presetTuner(
 ): number {
     if (stance === 'punt') return TUNER_PUNT;
     if (stance === 'need') return TUNER_NEED;
+    if (stance === 'custom') return TUNER_NEUTRAL;
     const asNeutral: Partial<Record<CatKey, CatStance>> = { ...stances, [cat]: 'neutral' };
     return complementCats(asNeutral, enabledCats).has(cat) ? TUNER_COMPLEMENT : TUNER_NEUTRAL;
 }
