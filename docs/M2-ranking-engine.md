@@ -94,37 +94,40 @@ Sort descending by `composite` to get `fitRank`. Ties: sort by `playerId` ascend
 
 ### Profile weights (ranker input)
 
-Until M3 ships the quiz, the ranker accepts:
+`profile_w[c]` is the 0-3 tuner. Need / Neutral / Punt are presets that write that number. `custom` means the slider left the preset.
 
 ```ts
 type CatKey = 'pts' | 'trb' | 'ast' | 'stl' | 'blk' | 'fg3' | 'fgPct' | 'ftPct' | 'tov';
 
-type CatStance = 'need' | 'neutral' | 'punt';
+type CatStance = 'need' | 'neutral' | 'punt' | 'custom';
 
 type DraftProfile = {
-    leagueSize: 8 | 10 | 12 | 14;
+    leagueSize: number;
     draftRounds: number;
     draftType: 'snake' | 'linear';
     enabledCats: CatKey[];
     stances: Partial<Record<CatKey, CatStance>>;
-    /** optional 0–2 intensity; default 1 when omitted */
+    /** 0-3 tuner. The ranker weight. Omit a cat to use that cat's stance preset. */
     intensity?: Partial<Record<CatKey, number>>;
+    weightModel?: 'tuner';
 };
 ```
 
-Stance → multiplier (before intensity):
+Preset tuners:
 
-| Stance    | Weight |
-| --------- | ------ |
-| `need`    | `1.5`  |
-| `neutral` | `1`    |
-| `punt`    | `0`    |
+| Stance / meaning               | Weight |
+| ------------------------------ | ------ |
+| `punt`                         | `0`    |
+| `neutral`                      | `1`    |
+| `neutral` complement of a punt | `1.25` |
+| `need`                         | `1.5`  |
+| old Need × intensity 2         | `3`    |
 
-`profile_w[c] = stanceWeight * (intensity[c] ?? 1)`. Missing stance on an enabled cat = `neutral`. Disabled cats are omitted from the sum (not the same as punt: they should not appear in per-cat z output either).
+`profile_w[c] = tuner[c]`. Missing intensity uses the preset. Missing stance on an enabled cat = `neutral`. Disabled cats are omitted from the sum (not the same as punt: they should not appear in per-cat z output either). Complements invert named-build Need lists. Need still wins over 1.25.
 
 8-cat (no TO): `enabledCats` omits `tov`.
 
-Zod schema for `DraftProfile` can land in M2 (API needs it) even if the quiz is M3.
+Zod migrates pre-tuner localStorage: `tuner = clamp(oldStanceWeight * (oldIntensity ?? 1), 0, 3)`, then Neutral complements default to 1.25 when intensity was omitted. See [punt-complement-reweight.md](plans/punt-complement-reweight.md).
 
 ### `RankedPlayer`
 
@@ -185,9 +188,8 @@ What would change, and what would not:
 - Replacement-level / VORP / positional scarcity (later, not M2).
 - Minutes floor for low-MP specialists.
 - Null FG%/FT% treated as impact 0 (neutral, not missing).
-- Need 1.5 × intensity 2 = 3× weight. Stance weights stay. The floor does not cover star-sink while it is off.
+- Need default is tuner 1.5. 3 is the old Need × intensity 2 point on the same slider. The floor does not cover star-sink while it is off.
 - Taken list / remaining-pool re-z.
-- Custom punt-only does not tilt leftover Neutrals toward the hole’s usual partners. Plan: [punt-complement-reweight.md](plans/punt-complement-reweight.md) (stance presets write the tuner; slider is the weight).
 
 ## Acceptance checks
 

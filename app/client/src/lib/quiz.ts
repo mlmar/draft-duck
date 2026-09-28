@@ -2,20 +2,29 @@ import {
     CAT_KEYS,
     LEAGUE_SIZE_MAX,
     LEAGUE_SIZE_MIN,
+    applyCatStance,
+    applyCatTuner,
+    hasCustomCat,
     isNamedBuildId,
     isNamedBuildVisible,
+    pickWalkQuestions,
     stancesForArchetype,
+    stancesMatchNamed,
+    tunersForStances,
     type ArchetypeId,
     type CatKey,
     type CatStance,
-    type DraftProfile
+    type DraftProfile,
+    type WalkChoiceId
 } from '@draft-duck/core';
 
-// In-progress quiz shape plus conversions to DraftProfile. Skip intensity omits that field from the saved payload.
+// In-progress quiz shape plus conversions to DraftProfile. Walk fields stay in memory only.
 
 export const STANDARD_LEAGUE_SIZES = [8, 10, 12, 14] as const;
 
 export type CatPreset = '9cat' | '8cat' | 'custom';
+
+export type OnboardPath = 'named' | 'custom' | 'not-sure';
 
 export type QuizDraft = {
     leagueSize: number;
@@ -25,10 +34,12 @@ export type QuizDraft = {
     enabledCats: CatKey[];
     stances: Partial<Record<CatKey, CatStance>>;
     intensity: Partial<Record<CatKey, number>>;
-    // Skip Fine-tune leaves this false so the saved profile omits intensity.
-    includeIntensity: boolean;
     draftSlot?: number;
     archetypeId: ArchetypeId | null;
+    walkSeed?: number;
+    walkQuestionIds?: string[];
+    walkAnswers?: WalkChoiceId[];
+    snappedFromWalk?: boolean;
 };
 
 export const DEFAULT_QUIZ_DRAFT: QuizDraft = {
@@ -39,7 +50,6 @@ export const DEFAULT_QUIZ_DRAFT: QuizDraft = {
     enabledCats: [...CAT_KEYS],
     stances: {},
     intensity: {},
-    includeIntensity: false,
     archetypeId: null
 };
 
@@ -51,7 +61,6 @@ export function catsForPreset(preset: CatPreset, customCats: CatKey[] = [...CAT_
     return customCats.length > 0 ? [...customCats] : [...CAT_KEYS];
 }
 
-// Drop stances and intensity for cats the user turned off so they cannot leak into the payload.
 function keepEnabled<T>(record: Partial<Record<CatKey, T>>, enabledCats: CatKey[]): Partial<Record<CatKey, T>> {
     const next: Partial<Record<CatKey, T>> = {};
     for (const cat of enabledCats) {
@@ -67,20 +76,37 @@ function sameCats(left: readonly CatKey[], right: readonly CatKey[]): boolean {
     return left.every((cat) => rightSet.has(cat));
 }
 
+function withRewrittenTuners(draft: QuizDraft): QuizDraft {
+    return {
+        ...draft,
+        intensity: tunersForStances(draft.stances, draft.enabledCats, draft.intensity)
+    };
+}
+
+function withArchetypeFromStances(draft: QuizDraft): QuizDraft {
+    if (hasCustomCat(draft.stances, draft.enabledCats)) {
+        return { ...draft, archetypeId: 'custom' };
+    }
+    if (draft.archetypeId && isNamedBuildId(draft.archetypeId)) {
+        if (stancesMatchNamed(draft.stances, draft.archetypeId, draft.enabledCats)) return draft;
+        return { ...draft, archetypeId: 'custom' };
+    }
+    return { ...draft, archetypeId: draft.archetypeId ?? 'custom' };
+}
+
 export function applyPreset(draft: QuizDraft, preset: CatPreset, customCats?: CatKey[]): QuizDraft {
     const enabledCats = catsForPreset(preset, customCats ?? draft.enabledCats);
-    const next: QuizDraft = {
+    const next: QuizDraft = withRewrittenTuners({
         ...draft,
         preset,
         enabledCats,
         stances: keepEnabled(draft.stances, enabledCats),
         intensity: keepEnabled(draft.intensity, enabledCats)
-    };
+    });
     if (next.draftSlot && next.draftSlot > next.leagueSize) {
         next.draftSlot = next.leagueSize;
     }
     if (next.archetypeId && isNamedBuildId(next.archetypeId) && !isNamedBuildVisible(next.archetypeId, enabledCats)) {
-        // Keep stance-bar edits unless the named card itself no longer fits the cats.
         return { ...next, archetypeId: null };
     }
     return next;
@@ -90,16 +116,24 @@ export function setCustomCats(draft: QuizDraft, enabledCats: CatKey[]): QuizDraf
     return applyPreset({ ...draft, enabledCats }, 'custom', enabledCats);
 }
 
-// Overwrite every enabled cat. Named cards skip Fine-tune. Custom is a blank Neutral form.
-// Drop intensity so a later Custom Fine-tune cannot revive the previous slider map.
 export function applyArchetype(draft: QuizDraft, id: ArchetypeId): QuizDraft {
+    const stances = stancesForArchetype(id, draft.enabledCats);
     return {
         ...draft,
         archetypeId: id,
-        stances: stancesForArchetype(id, draft.enabledCats),
-        includeIntensity: false,
-        intensity: {}
+        stances,
+        intensity: tunersForStances(stances, draft.enabledCats)
     };
+}
+
+export function setCatStance(draft: QuizDraft, cat: CatKey, stance: Exclude<CatStance, 'custom'>): QuizDraft {
+    const next = applyCatStance(draft.stances, draft.intensity, cat, stance, draft.enabledCats);
+    return withArchetypeFromStances({ ...draft, stances: next.stances, intensity: next.intensity });
+}
+
+export function setCatTuner(draft: QuizDraft, cat: CatKey, tuner: number): QuizDraft {
+    const next = applyCatTuner(draft.stances, draft.intensity, cat, tuner, draft.enabledCats);
+    return withArchetypeFromStances({ ...draft, stances: next.stances, intensity: next.intensity });
 }
 
 export function setDraftSlot(draft: QuizDraft, draftSlot: number): QuizDraft {
@@ -109,7 +143,6 @@ export function setDraftSlot(draft: QuizDraft, draftSlot: number): QuizDraft {
     return { ...draft, draftSlot: Math.min(draftSlot, draft.leagueSize) };
 }
 
-// Snap odds down, then clamp 4-20. Slot shrinks with the league.
 export function clampLeagueSize(n: number): number {
     if (!Number.isFinite(n)) return 12;
     const even = n % 2 === 0 ? n : n - 1;
@@ -122,25 +155,33 @@ export function setLeagueSize(draft: QuizDraft, leagueSize: number): QuizDraft {
     return { ...draft, leagueSize: size, draftSlot };
 }
 
-// DraftProfile is the persist and API shape. Intensity is omitted unless Fine-tune changed a slider.
+export function startWalk(draft: QuizDraft, seed: number): QuizDraft {
+    const walkQuestionIds = pickWalkQuestions(draft.enabledCats, seed);
+    return {
+        ...draft,
+        walkSeed: seed,
+        walkQuestionIds,
+        walkAnswers: [],
+        snappedFromWalk: false,
+        archetypeId: null,
+        stances: {},
+        intensity: {}
+    };
+}
+
 export function quizDraftToProfile(draft: QuizDraft): DraftProfile {
+    const intensity = tunersForStances(draft.stances, draft.enabledCats, draft.intensity);
     const profile: DraftProfile = {
         leagueSize: draft.leagueSize,
         draftRounds: draft.draftRounds,
         draftType: draft.draftType,
         enabledCats: [...draft.enabledCats],
-        stances: keepEnabled(draft.stances, draft.enabledCats)
+        stances: keepEnabled(draft.stances, draft.enabledCats),
+        intensity,
+        weightModel: 'tuner'
     };
     if (draft.draftSlot) profile.draftSlot = draft.draftSlot;
     if (draft.archetypeId) profile.archetypeId = draft.archetypeId;
-    if (!draft.includeIntensity) return profile;
-
-    const intensity: Partial<Record<CatKey, number>> = {};
-    for (const cat of draft.enabledCats) {
-        if ((draft.stances[cat] ?? 'neutral') === 'punt') continue;
-        intensity[cat] = draft.intensity[cat] ?? 1;
-    }
-    profile.intensity = intensity;
     return profile;
 }
 
@@ -157,11 +198,16 @@ export function profileToQuizDraft(profile: DraftProfile): QuizDraft {
         preset,
         enabledCats,
         stances: { ...profile.stances },
-        intensity: { ...profile.intensity },
-        includeIntensity: profile.intensity !== undefined,
+        intensity: tunersForStances(profile.stances, enabledCats, profile.intensity ?? {}),
         draftSlot: profile.draftSlot,
         archetypeId: profile.archetypeId ?? null
     };
+}
+
+export function onboardPath(draft: QuizDraft): OnboardPath {
+    if (draft.walkQuestionIds !== undefined) return 'not-sure';
+    if (draft.archetypeId === 'custom') return 'custom';
+    return 'named';
 }
 
 export function canContinue(stepId: string, draft: QuizDraft): boolean {
@@ -171,12 +217,14 @@ export function canContinue(stepId: string, draft: QuizDraft): boolean {
     return true;
 }
 
-// Board edits persist without a slot so old profiles still re-rank from the stance bar.
 export function canPersist(draft: QuizDraft): boolean {
     return Number.isInteger(draft.draftRounds) && draft.draftRounds > 0 && draft.enabledCats.length >= 1;
 }
 
-// Assist is shareable. Simple vs full is session chrome, not a search param.
 export function boardSearch(): { assist: '1' } {
     return { assist: '1' };
+}
+
+export function newWalkSeed(): number {
+    return Math.floor(Math.random() * 0xffffffff);
 }

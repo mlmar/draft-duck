@@ -1,5 +1,5 @@
 import { OnboardQuiz } from '@/components/onboard/onboard-quiz';
-import { STEPS } from '@/components/onboard/steps';
+import { isOnboardStepId } from '@/components/onboard/steps';
 import { PageShell } from '@/components/page-shell';
 import { searchString } from '@/lib/search';
 import { ARCHETYPE_IDS, type ArchetypeId } from '@draft-duck/core';
@@ -8,6 +8,8 @@ import { createFileRoute } from '@tanstack/react-router';
 export type OnboardSearch = {
     step?: string;
     build?: ArchetypeId;
+    start?: 'not-sure';
+    q?: string;
 };
 
 function isArchetypeId(value: string): value is ArchetypeId {
@@ -18,9 +20,13 @@ export const Route = createFileRoute('/onboard')({
     validateSearch: (search: Record<string, unknown>): OnboardSearch => {
         const step = searchString(search.step);
         const build = searchString(search.build);
+        const start = searchString(search.start);
+        const q = searchString(search.q);
         return {
-            step: STEPS.some((entry) => entry.id === step) ? step : undefined,
-            build: build && isArchetypeId(build) ? build : undefined
+            step: isOnboardStepId(step) ? step : undefined,
+            build: build && isArchetypeId(build) ? build : undefined,
+            start: start === 'not-sure' ? start : undefined,
+            q: q && /^\d+$/.test(q) ? q : undefined
         };
     },
     component: OnboardPage,
