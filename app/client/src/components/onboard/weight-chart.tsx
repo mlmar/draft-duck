@@ -63,7 +63,7 @@ export function WeightChart({
                 ))}
             </div>
             <div className='min-w-0 flex-1 overflow-x-auto'>
-                <div className='grid min-w-full grid-cols-[repeat(var(--cat-count),minmax(1.75rem,1fr))] gap-x-2 gap-y-2'>
+                <div className='grid min-w-full grid-cols-[repeat(var(--cat-count),minmax(2.5rem,1fr))] gap-x-2 gap-y-2'>
                     {enabledCats.map((cat) => {
                         const value = tunerOf(tuners, cat);
                         const punted = isPunt(stances, cat, value);
