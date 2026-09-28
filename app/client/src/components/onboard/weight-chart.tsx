@@ -3,9 +3,10 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { QuizDraft } from '@/lib/quiz';
 import { CAT_LABELS, formatTuner, type CatKey, type CatStance } from '@draft-duck/core';
-import { useState } from 'react';
+import { useState, type CSSProperties, type KeyboardEvent } from 'react';
 
 const TUNER_MAX = 3;
+const TRACK_CLASS = 'h-44';
 
 const TICKS: { label: string; value: number }[] = [
     { label: 'More', value: 3 },
@@ -32,6 +33,12 @@ function isPunt(stances: Partial<Record<CatKey, CatStance>> | undefined, cat: Ca
     return value === 0;
 }
 
+function tickStyle(value: number): { bottom?: string; top?: string; transform?: string } {
+    if (value >= TUNER_MAX) return { top: '0' };
+    if (value <= 0) return { bottom: '0' };
+    return { bottom: `${(value / TUNER_MAX) * 100}%`, transform: 'translateY(50%)' };
+}
+
 export function WeightChart({
     enabledCats,
     tuners,
@@ -42,67 +49,80 @@ export function WeightChart({
 }: WeightChartProps) {
     const summary = enabledCats.map((cat) => `${CAT_LABELS[cat]} ${formatTuner(tunerOf(tuners, cat))}`).join(', ');
 
-    const plot = (
-        <div className='flex min-h-48 min-w-full items-stretch gap-2'>
-            {enabledCats.map((cat) => {
-                const value = tunerOf(tuners, cat);
-                const punted = isPunt(stances, cat, value);
-                const pct = Math.max(0, Math.min(100, (value / TUNER_MAX) * 100));
-                return (
-                    <div key={cat} className='flex min-w-[1.75rem] flex-1 flex-col items-center gap-2'>
-                        <div className='relative h-44 w-full rounded-lg bg-muted'>
-                            <div
-                                className={cn(
-                                    'absolute inset-x-0 bottom-0 rounded-lg',
-                                    punted ? 'bg-muted-foreground/40' : 'bg-primary',
-                                    'transition-[height] duration-300 ease-out motion-reduce:transition-none'
-                                )}
-                                style={{ height: `${pct}%` }}
-                            />
-                        </div>
-                        <span className='text-muted-foreground'>{CAT_LABELS[cat]}</span>
-                    </div>
-                );
-            })}
-        </div>
-    );
-
     const body = (
-        <div className='flex gap-3'>
-            <div className='relative h-44 w-16 shrink-0 text-muted-foreground'>
+        <div className='flex items-start gap-3'>
+            <div className={cn('relative w-20 shrink-0 text-muted-foreground', TRACK_CLASS)}>
                 {TICKS.map((tick) => (
                     <span
                         key={tick.label}
-                        className='absolute right-0 -translate-y-1/2'
-                        style={{ bottom: `${(tick.value / TUNER_MAX) * 100}%` }}
+                        className='absolute inset-x-0 text-right leading-none'
+                        style={tickStyle(tick.value)}
                     >
                         {tick.label}
                     </span>
                 ))}
             </div>
-            <div className='min-w-0 flex-1 overflow-x-auto'>{plot}</div>
+            <div className='min-w-0 flex-1 overflow-x-auto'>
+                <div className='grid min-w-full grid-cols-[repeat(var(--cat-count),minmax(1.75rem,1fr))] gap-x-2 gap-y-2'>
+                    {enabledCats.map((cat) => {
+                        const value = tunerOf(tuners, cat);
+                        const punted = isPunt(stances, cat, value);
+                        const pct = Math.max(0, Math.min(100, (value / TUNER_MAX) * 100));
+                        return (
+                            <div
+                                key={`${cat}-track`}
+                                className={cn('relative w-full rounded-lg bg-muted', TRACK_CLASS)}
+                            >
+                                <div
+                                    className={cn(
+                                        'absolute inset-x-0 bottom-0 rounded-lg',
+                                        punted ? 'bg-muted-foreground/40' : 'bg-primary',
+                                        'transition-[height] duration-300 ease-out motion-reduce:transition-none'
+                                    )}
+                                    style={{ height: `${pct}%` }}
+                                />
+                            </div>
+                        );
+                    })}
+                    {enabledCats.map((cat) => (
+                        <span key={`${cat}-label`} className='text-center text-muted-foreground'>
+                            {CAT_LABELS[cat]}
+                        </span>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 
+    function handleKey(event: KeyboardEvent<HTMLDivElement>) {
+        if (!interactive || !onToggleSliders) return;
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        onToggleSliders();
+    }
+
     if (!interactive) {
         return (
-            <div role='img' aria-label={summary}>
+            <div role='img' aria-label={summary} style={{ '--cat-count': enabledCats.length } as CSSProperties}>
                 {body}
             </div>
         );
     }
 
     return (
-        <button
-            type='button'
+        <div
+            role='button'
+            tabIndex={0}
             aria-label='Edit weights'
             aria-expanded={slidersOpen}
             onClick={onToggleSliders}
-            className='w-full rounded-lg text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50'
+            onKeyDown={handleKey}
+            className='w-full cursor-pointer rounded-lg text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50'
+            style={{ '--cat-count': enabledCats.length } as CSSProperties}
         >
             <span className='sr-only'>{summary}</span>
             {body}
-        </button>
+        </div>
     );
 }
 
