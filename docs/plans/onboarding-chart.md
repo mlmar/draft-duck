@@ -123,7 +123,7 @@ Source of truth for pass 2. **Six static category pairs**, then **one random pla
 
 Six questions have twelve sides. That is exactly two offers per named build. Do not keep **Threes or dunks?** next to **Bigs or guards?** They are the same Fortress vs Sniper pair. That was the old Sniper pile-up.
 
-Prompts are the quiz title. Two stacked buttons, tap to answer and advance. Back undoes the last answer.
+Prompts are the quiz title (the shell `h1`). The two sides are cards, not the title. Tap a card to answer and advance. Back undoes the last answer.
 
 Toward ids: `balanced`, `puntFg` (Bricks), `puntFt` (Fortress), `guards` (Sniper), `stocks` (Stocks), `puntAst` (Post).
 
@@ -237,11 +237,32 @@ Named path: chart sits above league and review with that card’s bars.
 
 Custom path: chart sits above chips. Chips move bars. League and review keep showing it.
 
-Not sure: chart sits above the two buttons. Each tap tweens the bars (CSS / 200–300ms, honor `motion-reduce`). After snap, the same chart shows the card. Then league and review.
+Not sure: chart sits above the two cards. Each tap tweens the bars (CSS / 200–300ms, honor `motion-reduce`). After snap, the same chart shows the card. Then league and review.
 
 Do not mount `WeightChart` on Home. Home is the picker. A static tease is out of scope.
 
 Board `/draft`: not required to show this chart in pass 2. Settings already has chips. After G, sliders stack under them. Optional later: same `WeightChart` under the headline on `/draft`, tap → drawer sliders.
+
+## Walk choice chrome
+
+Two cards, **or** between them. Same component for category questions and the player extra. Label only (Bigs, Guards, Jokic, Shai). No Need/Punt helper, no named-build face, not `ChoiceRow`.
+
+```text
+mobile:          desktop (md:):
+
+[ Bigs ]         [ Bigs ]  or  [ Guards ]
+   or
+[ Guards ]
+```
+
+- **Fill.** Ink cards, light text. Use `bg-primary text-primary-foreground` (the existing ink button tokens). Do not invent a `.dark` theme or a one-off `#000`. Both cards look the same until tap. Tap answers and advances, so a selected style is optional and brief.
+- **Type.** Public Sans, `text-base` or larger, `font-medium` on the label. No uppercase, no italics on the names. **or** is `text-muted-foreground`, lowercase, not a third card.
+- **Shape.** `--radius: 8px`. Not a pill. Equal flex. Min tap height 2.75rem. Generous padding so one word (Bigs) and two (Lock down) still sit in the card.
+- **Axis.** Stack on a phone (`flex-col`). Row from `md:` (`flex-row`, cards `flex-1`). This is the one place the walk flips axis. `md:` everywhere else stays width and type size.
+- **or.** In the middle of the stack or the row. `aria-hidden` on the word if the cards already have names. Cards are the buttons (`aria-pressed` while the tap registers).
+- Hide Continue on walk steps. Back still undoes.
+
+Home named builds stay outline-on-paper. These inverted cards are Not sure only.
 
 ## What this does to existing chrome
 
@@ -249,7 +270,7 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 - Custom first-run **gains** the stances step it currently skips.
 - Fine-tune `<details>` on Custom goes away. Sliders live behind the chart tap. Board Settings can drop that expand and show sliders under chips.
 - Intensity slider `max` is 3 from G, not this pass. This pass assumes that axis.
-- Walk uses two full-width buttons, not `ChoiceRow` chips and not named-build faces (those helper lines would name Need / Punt).
+- Walk uses two ink cards with **or** between them. Not `ChoiceRow`, not named-build faces. Row from `md:`, stack on a phone.
 - Quiz still must not open a drawer.
 
 ## Implementation (when this plan ships)
@@ -257,7 +278,7 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 1. Core bank + `tunerVector` / lerp / nearest / picker. Vitest the tables in [Static opening](#static-opening) and [Player pool](#player-pool), the Fortress 0.4 example, Back-recompute, ties, cat filter, seed stability.
 2. `WeightChart` display-only. Story it on a named-build vector in isolation if needed, then mount on league.
 3. Home Not sure + `start=not-sure`. Dynamic `STEPS`. Custom lands on chips.
-4. Walk step: tap left/right, chart lerp, last question snaps, Closest build copy, then league.
+4. Walk step: two ink cards and **or**, chart lerp, last question snaps, Closest build copy, then league.
 5. Chart tap expands in-page sliders. Punt locked. Off-preset → Custom chip. Collapse without a Sheet.
 6. `npm run format` and `npm test`. Browser: see [How to verify](#how-to-verify).
 
@@ -292,7 +313,7 @@ Board `/draft`: not required to show this chart in pass 2. Settings already has 
 1. Home shows named cards, Custom, and Not sure.
 2. Named: league chart is that card (Fortress FT% at 0, Need cats at 1.5). Tap chart → sliders, no bar drag. Continue still works with sliders open or closed.
 3. Custom: chips first. Punt FT% moves FG% / REB / BLK / PTS bars to 1.25 (once G is in). No slider row until the chart is tapped.
-4. Not sure: first six prompts are always Bigs or guards, Points or stocks, Dunks or free throws, And-ones or post-ups, Inside or roaming, Lock down or all-around. The seventh is one of the six player pairs and varies by seed. Chart moves each tap. Back restores the previous bars and does not reshuffle the player extra. After the seventh, copy names a card and the bars jump to that preset. Refresh still does not keep in-progress answers.
+4. Not sure: first six prompts are always Bigs or guards, Points or stocks, Dunks or free throws, And-ones or post-ups, Inside or roaming, Lock down or all-around. Two ink cards with **or** between them. Phone stacks them. `md:` puts them in a row. Tap a card to advance. The seventh is one of the six player pairs and varies by seed. Chart moves each tap. Back restores the previous bars and does not reshuffle the player extra. After the seventh, copy names a card and the bars jump to that preset. Refresh still does not keep in-progress answers.
 5. Closest build is one of the six names. `/draft` chrome says that name. Settings chips match the card, not the walk mix.
 6. 8-cat (TOV off in Settings, then retake Not sure): questions still run; vectors omit TOV.
-7. No neon bars, no pills, no drawer on `/onboard`.
+7. No neon bars, no pills, no drawer on `/onboard`. Walk cards are ink with light text, not brand fill.
