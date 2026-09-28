@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { migrateDraftProfile, resolveTuner } from './tuners.ts';
+import { resolveTuner } from './tuners.ts';
 import { ARCHETYPE_IDS, CAT_KEYS, type CatKey, type DraftProfile } from './types.ts';
 
 const catKeySchema = z.enum(CAT_KEYS);
@@ -23,8 +23,7 @@ export const draftProfileSchema = z
         stances: z.record(catKeySchema, catStanceSchema).default({}),
         intensity: z.record(catKeySchema, z.number().min(0).max(3)).optional(),
         draftSlot: z.number().int().min(1).optional(),
-        archetypeId: z.enum(ARCHETYPE_IDS).optional(),
-        weightModel: z.literal('tuner').optional()
+        archetypeId: z.enum(ARCHETYPE_IDS).optional()
     })
     .superRefine((profile, ctx) => {
         if (profile.draftSlot !== undefined && profile.draftSlot > profile.leagueSize) {
@@ -34,8 +33,7 @@ export const draftProfileSchema = z
                 path: ['draftSlot']
             });
         }
-    })
-    .transform((profile) => migrateDraftProfile(profile));
+    });
 
 export const rankRequestSchema = z.object({
     profile: draftProfileSchema
