@@ -57,8 +57,6 @@ export type DraftProfile = {
     draftSlot?: number;
     /** Last gallery choice. Omit on old profiles. Do not infer from chips. */
     archetypeId?: ArchetypeId;
-    /** Intensity is the weight. Omit on pre-G localStorage so migrate can still run. */
-    weightModel?: 'tuner';
 };
 
 // RankedPlayer.z only includes enabled cats. Disabled cats are omitted, not zeroed.
