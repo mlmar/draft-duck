@@ -177,8 +177,7 @@ export function quizDraftToProfile(draft: QuizDraft): DraftProfile {
         draftType: draft.draftType,
         enabledCats: [...draft.enabledCats],
         stances: keepEnabled(draft.stances, draft.enabledCats),
-        intensity,
-        weightModel: 'tuner'
+        intensity
     };
     if (draft.draftSlot) profile.draftSlot = draft.draftSlot;
     if (draft.archetypeId) profile.archetypeId = draft.archetypeId;

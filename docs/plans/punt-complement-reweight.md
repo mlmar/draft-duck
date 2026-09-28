@@ -152,7 +152,7 @@ Do not put chips and sliders behind the same tap. Settings on `/draft` can still
 
 Always persist `intensity` as the tuner for enabled cats. Drop `includeIntensity`. Ranker reads the tuner. Stance is preset metadata (heat uncolor, Need-fit, why-copy, which cats get rewritten when another punt flips).
 
-Old profiles with no intensity: `tuner = today’s stanceWeight` (Need 1.5, Neutral 1, Punt 0), then apply the Neutral complement default. Old Need × intensity 2 migrates to tuner **3** (Custom, because 3 ≠ Need’s 1.5) and **keeps** that board.
+Missing intensity uses the stance preset (Need 1.5, Neutral 1 or 1.25, Punt 0). Do not convert old stance × slider profiles.
 
 Consensus rank stays all tuners at 1 on the same enabled cats.
 
@@ -323,7 +323,7 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. **`profileWeight`.** `tuner[c]`, default preset if a cat is missing. Consensus uses tuner 1.
 4. **UI write path.** Stance click writes preset + chip. Slider `onChange` compares to preset; mismatch -> `custom`. Punt/unpunt re-runs presets on non-custom cats. Any custom cat sets `archetypeId: 'custom'`.
 5. **Layout.** Quiz: Custom opens chips. Chart tap opens sliders. Settings may stack both. Remove the Fine-tune expand. Slider `max={3}`.
-6. **Migrate.** `tuner = clamp((oldStanceWeight) * (oldIntensity ?? 1), 0, 3)`. If that is not the new preset, stance becomes custom. Old Need × 2 -> tuner 3.
+6. **No migrate.** Intensity is the tuner. Missing intensity uses the stance preset. Do not convert old stance × slider profiles.
 7. **Tests.**
     - All-neutral, no custom: same order as today.
     - Gallery Fortress, no old intensity: same as today.
@@ -331,14 +331,13 @@ Core + Settings wiring. Chart quiz is pass 2.
     - Drag FG% to 1.4: chip Custom, weight 1.4.
     - Click Neutral: back to 1.25 while FT% is punted.
     - Unpunt FT%: Neutral complements return to 1.0; Custom stays.
-    - Old Need × intensity 2 migrates to tuner 3, stance custom.
     - Punt TOV vs omit TOV still matches.
-8. **Scoring.** The slider (0–3) is the weight. Presets 0 / 1 / 1.25 / 1.5. 3 is old Need × 2.
+8. **Scoring.** The slider (0-3) is the weight. Presets 0 / 1 / 1.25 / 1.5. 3 is the top of the axis.
 
 ## Suggested order
 
 1. Preset helper + invert tests.
-2. Schema `custom`, intensity 0–3, `profileWeight` = tuner, migrate helper, core goldens.
+2. Schema `custom`, intensity 0-3, `profileWeight` = tuner, core goldens.
 3. Custom home card opens chips, not sliders. Chart tap opens sliders, max 3; Fine-tune expand gone.
 4. M2 + Scoring.
 5. `npm run format` and `npm test`. Browser: Custom punt FT% moves FG% to 1.25; drag to 3 is Custom; Neutral click snaps back; Fortress Need thumbs sit at 1.5.
@@ -362,6 +361,6 @@ Core + Settings wiring. Chart quiz is pass 2.
 2. Custom `{ ftPct: 'punt' }`: FG%/REB/BLK/PTS tuners 1.25. Giannis / Gobert ahead of today’s punt-only; Maxey behind it.
 3. Settings: those thumbs read 1.25. Drag REB to 3, chip Custom, weight 3. Neutral click returns 1.25.
 4. Unpunt FT%: Neutral complements 1.0. A Custom REB stays 3.
-5. Scoring: slider 0–3 is the weight. 3 equals old Need × intensity 2.
+5. Scoring: slider 0-3 is the weight. 3 is the top of the axis.
 6. (Pass 2) Custom: chips. Chart tap: in-page sliders. Not sure: 6 category + 1 player, two ink cards with **or**, wiggle then snap. No dragging bars. Do not rank the unsnapped mix. See [onboarding-chart.md](onboarding-chart.md).
 7. (Pass 3) Walk bars read as preview, snapped bars read as the board.

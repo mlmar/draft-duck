@@ -3,14 +3,7 @@ import { stancesForArchetype } from './named-builds.ts';
 import { CsvProvider } from './csv-provider.ts';
 import { fileURLToPath } from 'node:url';
 import { rank } from './ranker.ts';
-import {
-    applyCatStance,
-    applyCatTuner,
-    complementCats,
-    migrateDraftProfile,
-    presetTuner,
-    tunersForStances
-} from './tuners.ts';
+import { applyCatStance, applyCatTuner, complementCats, presetTuner, tunersForStances } from './tuners.ts';
 import { CAT_KEYS, type DraftProfile } from './types.ts';
 
 const seasonPath = fileURLToPath(new URL('../../data/25_26_per_game.csv', import.meta.url));
@@ -91,40 +84,6 @@ describe('applyCatTuner and applyCatStance', () => {
     });
 });
 
-describe('migrateDraftProfile', () => {
-    it('turns old Need times intensity 2 into tuner 3 Custom', () => {
-        const migrated = migrateDraftProfile(
-            profile({
-                stances: { pts: 'need' },
-                intensity: { pts: 2 }
-            })
-        );
-        expect(migrated.weightModel).toBe('tuner');
-        expect(migrated.stances.pts).toBe('custom');
-        expect(migrated.intensity?.pts).toBe(3);
-    });
-
-    it('fills gallery Fortress without old intensity using Need 1.5', () => {
-        const migrated = migrateDraftProfile(
-            profile({
-                stances: stancesForArchetype('puntFt', CAT_KEYS),
-                archetypeId: 'puntFt'
-            })
-        );
-        expect(migrated.intensity?.fgPct).toBe(1.5);
-        expect(migrated.intensity?.ftPct).toBe(0);
-        expect(migrated.intensity?.ast).toBe(1);
-        expect(migrated.stances.fgPct).toBe('need');
-    });
-
-    it('applies Neutral 1.25 on old punt-only profiles that omitted intensity', () => {
-        const migrated = migrateDraftProfile(profile({ stances: { ftPct: 'punt' } }));
-        expect(migrated.intensity?.fgPct).toBe(1.25);
-        expect(migrated.stances.fgPct ?? 'neutral').toBe('neutral');
-        expect(migrated.intensity?.fg3).toBe(1);
-    });
-});
-
 describe('rank goldens for G tuners', () => {
     it('keeps all-neutral order when every tuner is 1', async () => {
         const universe = await new CsvProvider(seasonPath).load();
@@ -132,8 +91,7 @@ describe('rank goldens for G tuners', () => {
         const explicit = rank(
             universe,
             profile({
-                intensity: Object.fromEntries(CAT_KEYS.map((cat) => [cat, 1])),
-                weightModel: 'tuner'
+                intensity: Object.fromEntries(CAT_KEYS.map((cat) => [cat, 1]))
             })
         );
         expect(explicit.map((player) => player.playerId)).toEqual(today.map((player) => player.playerId));
@@ -148,8 +106,7 @@ describe('rank goldens for G tuners', () => {
             profile({
                 stances: fortressStances,
                 intensity: tunersForStances(fortressStances, CAT_KEYS),
-                archetypeId: 'puntFt',
-                weightModel: 'tuner'
+                archetypeId: 'puntFt'
             })
         );
         expect(written.map((player) => player.playerId)).toEqual(implied.map((player) => player.playerId));
@@ -162,8 +119,7 @@ describe('rank goldens for G tuners', () => {
             universe,
             profile({
                 stances: { ftPct: 'punt' },
-                intensity: { ftPct: 0, ...Object.fromEntries(leftover.map((cat) => [cat, 1])) },
-                weightModel: 'tuner'
+                intensity: { ftPct: 0, ...Object.fromEntries(leftover.map((cat) => [cat, 1])) }
             })
         );
         const bumped = rank(universe, profile({ stances: { ftPct: 'punt' } }));
