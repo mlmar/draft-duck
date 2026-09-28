@@ -303,7 +303,7 @@ Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId`).
 ### Passes
 
 1. **Weights (this PR).** Approach G, tuner 0–3, Settings sliders = weight. No chart yet.
-2. **Chart quiz (follow-up).** [onboarding-chart.md](onboarding-chart.md). Shared `WeightChart` (display only). Tap chart → in-page sliders. Custom home card → Need / Neutral / Punt. Not sure is walk-then-snap: six category questions, then one random player vs player. No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
+2. **Chart quiz (follow-up).** [onboarding-chart.md](onboarding-chart.md). Shared `WeightChart` (display only). Tap chart → in-page sliders. Custom home card → Need / Neutral / Punt. Not sure is walk-then-snap: six category questions, then one random player vs player. Two ink cards with **or** between them (row from `md:`, stack on a phone). No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
 3. **Walk preview chrome (later).** Optional second look so the sketch is obviously not the board (muted/dashed/caption). Same tuners, no new ranker.
 
 Pass 2 only writes `stances` + tuners. Same ranker.
@@ -363,5 +363,5 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. Settings: those thumbs read 1.25. Drag REB to 3, chip Custom, weight 3. Neutral click returns 1.25.
 4. Unpunt FT%: Neutral complements 1.0. A Custom REB stays 3.
 5. Scoring: slider 0–3 is the weight. 3 equals old Need × intensity 2.
-6. (Pass 2) Custom: chips. Chart tap: in-page sliders. Not sure: 6 category + 1 player, wiggle then snap. No dragging bars. Do not rank the unsnapped mix. See [onboarding-chart.md](onboarding-chart.md).
+6. (Pass 2) Custom: chips. Chart tap: in-page sliders. Not sure: 6 category + 1 player, two ink cards with **or**, wiggle then snap. No dragging bars. Do not rank the unsnapped mix. See [onboarding-chart.md](onboarding-chart.md).
 7. (Pass 3) Walk bars read as preview, snapped bars read as the board.
