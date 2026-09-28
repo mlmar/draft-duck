@@ -1,13 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
     applyArchetype,
+    appendWalkAnswer,
     DEFAULT_QUIZ_DRAFT,
     quizDraftToProfile,
     setCatStance,
     setCatTuner,
-    startWalk
+    startWalk,
+    undoLastWalkAnswer
 } from './quiz.ts';
-import { CAT_KEYS } from '@draft-duck/core';
+import { CAT_KEYS, previewFromAnswers } from '@draft-duck/core';
 
 describe('quizDraftToProfile', () => {
     it('always writes tuners and never copies walk fields', () => {
@@ -56,5 +58,58 @@ describe('named applyArchetype', () => {
         expect(next.stances.ftPct).toBe('punt');
         expect(next.intensity.fgPct).toBe(1.5);
         expect(next.intensity.ast).toBe(1);
+    });
+});
+
+describe('Home Custom stays custom', () => {
+    it('keeps custom when every chip is Neutral', () => {
+        const custom = applyArchetype(DEFAULT_QUIZ_DRAFT, 'custom');
+        expect(custom.archetypeId).toBe('custom');
+        expect(quizDraftToProfile(custom).archetypeId).toBe('custom');
+        const stillCustom = setCatStance(custom, 'pts', 'neutral');
+        expect(stillCustom.archetypeId).toBe('custom');
+        expect(quizDraftToProfile(stillCustom).archetypeId).toBe('custom');
+    });
+});
+
+describe('appendWalkAnswer and undoLastWalkAnswer', () => {
+    function walkThrough(lastSide: 'left' | 'right' = 'left') {
+        let draft = startWalk(DEFAULT_QUIZ_DRAFT, 7);
+        const ids = draft.walkQuestionIds ?? [];
+        expect(ids.length).toBeGreaterThan(0);
+        for (let q = 0; q < ids.length - 1; q++) {
+            draft = appendWalkAnswer(draft, 'left', q);
+        }
+        const beforeSnap = draft;
+        const snapped = appendWalkAnswer(beforeSnap, lastSide, ids.length - 1);
+        return { ids, beforeSnap, snapped };
+    }
+
+    it('Back from League restores the last question and the previous bars', () => {
+        const { ids, beforeSnap, snapped } = walkThrough();
+        expect(snapped.snappedFromWalk).toBe(true);
+        expect(snapped.archetypeId).toBeTruthy();
+
+        const undone = undoLastWalkAnswer(snapped);
+        expect(undone.walkAnswers).toEqual(beforeSnap.walkAnswers);
+        expect(undone.walkAnswers?.length).toBe(ids.length - 1);
+        expect(undone.archetypeId).toBeNull();
+        expect(undone.snappedFromWalk).toBe(false);
+        expect(undone.stances).toEqual({});
+        expect(previewFromAnswers(ids, undone.walkAnswers ?? [], undone.enabledCats)).toEqual(
+            previewFromAnswers(ids, beforeSnap.walkAnswers ?? [], beforeSnap.enabledCats)
+        );
+    });
+
+    it('does not change the snapped build on a second tap', () => {
+        const { ids, snapped } = walkThrough('left');
+        expect(snapped.snappedFromWalk).toBe(true);
+        const firstId = snapped.archetypeId;
+        const staleLast = appendWalkAnswer(snapped, 'right', ids.length - 1);
+        expect(staleLast).toBe(snapped);
+        expect(staleLast.archetypeId).toBe(firstId);
+        const staleFirst = appendWalkAnswer(snapped, 'right', 0);
+        expect(staleFirst.archetypeId).toBe(firstId);
+        expect(staleFirst.walkAnswers).toEqual(snapped.walkAnswers);
     });
 });
