@@ -1,5 +1,7 @@
 # M3 — Onboarding
 
+**Status: complete.** The flow below is the original M3 scope. The current quiz has a build gallery, walk questions, league setup, and review, while retaining the `DraftProfile` contract.
+
 ## Goal
 
 A first-time user completes a short quiz on `/onboard`, persists a `DraftProfile` in `localStorage`, and can `POST /rank` with that profile. Ranking UI can be a simple ordered list; the draft board is M4.

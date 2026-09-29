@@ -1,5 +1,7 @@
 # M2 — Ranking engine
 
+**Status: complete.** This file records the production per-view ranker. The API currently selects one view for board order and uses the others for sleeper/dud tags. A three-season [ranking experiment](experiments/ranking/README.md) tested blends without changing `/rank`; its holdout did not establish an improvement.
+
 ## Goal
 
 Score the ingested universe with **weighted z-scores** so `/rank` returns a full board for a `DraftProfile`. Formulas are pure math in `app/core`. No AI.

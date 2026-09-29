@@ -15,7 +15,7 @@ Reading 1 is ranking. Reading 2 is build strategy. Custom punt-only does reading
 
 ## What the ranker does today
 
-[`rank()`](app/core/src/ranker.ts) is one z-score pass, then:
+[`rank()`](../../app/core/src/ranker.ts) is one z-score pass, then:
 
 ```text
 composite = Σ operator_w[c] * profile_w[c] * z[c]
@@ -137,7 +137,7 @@ flowchart TD
   drag --> custom --> rank
 ```
 
-Complement map: invert [`NAMED_BUILDS`](app/core/src/named-builds.ts), same table as before (FT% -> FG%, REB, BLK, PTS, and so on). Multi-punt unions those lists and drops cats that are themselves punted.
+Complement map: invert [`NAMED_BUILDS`](../../app/core/src/named-builds.ts), same table as before (FT% -> FG%, REB, BLK, PTS, and so on). Multi-punt unions those lists and drops cats that are themselves punted.
 
 Need still wins over the 1.25 Neutral default: Fortress FG% is Need at 1.5, not Neutral at 1.25. Custom punt-only leaves complements Neutral, so their thumbs move to 1.25.
 
