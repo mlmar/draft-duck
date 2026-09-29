@@ -51,6 +51,11 @@ function RootDocument({ children }: { children: ReactNode }) {
         <html lang='en'>
             <head>
                 <HeadContent />
+                <script
+                    defer
+                    src='https://cloud.umami.is/script.js'
+                    data-website-id='04747b00-9321-455a-9b75-fb902e15de59'
+                />
             </head>
             <body className='min-h-dvh bg-background font-sans text-foreground antialiased'>
                 <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
