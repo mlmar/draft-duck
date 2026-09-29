@@ -1,4 +1,3 @@
-import { AboutLink } from '@/components/about-link';
 import { EntryCtas } from '@/components/entry-ctas';
 import { PageShell } from '@/components/page-shell';
 import { createFileRoute } from '@tanstack/react-router';
@@ -48,7 +47,6 @@ function HowItWorksPage() {
                 everyone past a full roster. Your pick slot only marks which name in each round is yours.
             </p>
             <EntryCtas />
-            <AboutLink />
         </PageShell>
     );
 }

@@ -1,4 +1,4 @@
-import { IntensityStep } from '@/components/onboard/steps/intensity-step';
+import { WeightsDrawer } from '@/components/onboard/weights-drawer';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { QuizDraft } from '@/lib/quiz';
@@ -12,9 +12,10 @@ import {
     type CatKey,
     type CatStance
 } from '@draft-duck/core';
-import { useState, type CSSProperties, type KeyboardEvent } from 'react';
+import { Pencil } from 'lucide-react';
+import { useState } from 'react';
 
-const TRACK_CLASS = 'h-44';
+const TRACK_CLASS = 'h-8';
 
 const TICKS: { label: string; value: number }[] = [
     { label: 'More', value: TUNER_MAX },
@@ -27,9 +28,7 @@ type WeightChartProps = {
     enabledCats: readonly CatKey[];
     tuners: Partial<Record<CatKey, number>>;
     stances?: Partial<Record<CatKey, CatStance>>;
-    interactive?: boolean;
-    slidersOpen?: boolean;
-    onToggleSliders?: () => void;
+    variant?: 'default' | 'mini';
 };
 
 function tunerOf(tuners: Partial<Record<CatKey, number>>, cat: CatKey): number {
@@ -42,95 +41,84 @@ function isPunt(stances: Partial<Record<CatKey, CatStance>> | undefined, cat: Ca
     return value === TUNER_PUNT;
 }
 
-function tickStyle(value: number): { bottom?: string; top?: string; transform?: string } {
-    if (value >= TUNER_MAX) return { top: '0' };
-    if (value <= TUNER_PUNT) return { bottom: '0' };
-    return { bottom: `${(value / TUNER_MAX) * 100}%`, transform: 'translateY(50%)' };
-}
-
-export function WeightChart({
-    enabledCats,
-    tuners,
-    stances,
-    interactive = false,
-    slidersOpen = false,
-    onToggleSliders
-}: WeightChartProps) {
+export function WeightChart({ enabledCats, tuners, stances, variant = 'default' }: WeightChartProps) {
     const summary = enabledCats.map((cat) => `${CAT_LABELS[cat]} ${formatTuner(tunerOf(tuners, cat))}`).join(', ');
 
+    if (variant === 'mini') {
+        return (
+            <div
+                role='img'
+                aria-label={summary}
+                className='grid h-20 gap-x-1'
+                style={{ gridTemplateColumns: `repeat(${enabledCats.length}, minmax(0, 1fr))` }}
+            >
+                {enabledCats.map((cat) => {
+                    const value = tunerOf(tuners, cat);
+                    const punted = isPunt(stances, cat, value);
+                    const pct = Math.max(0, Math.min(100, (value / TUNER_MAX) * 100));
+                    return (
+                        <div key={cat} className='flex min-w-0 flex-col items-center justify-end gap-1'>
+                            <div className='relative h-12 w-full overflow-hidden rounded-sm bg-muted'>
+                                <div
+                                    className={cn(
+                                        'absolute inset-x-0 bottom-0 rounded-sm',
+                                        punted ? 'bg-muted-foreground/40' : 'bg-primary'
+                                    )}
+                                    style={{ height: `${pct}%` }}
+                                />
+                            </div>
+                            <span className='max-w-full truncate text-xs leading-none text-muted-foreground'>
+                                {CAT_LABELS[cat]}
+                            </span>
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    }
+
     const body = (
-        <div className='flex items-start gap-3'>
-            <div className={cn('relative w-20 shrink-0 text-muted-foreground', TRACK_CLASS)}>
-                {TICKS.map((tick) => (
+        <div className='grid gap-2'>
+            <div className='relative ml-14 h-5 text-sm text-muted-foreground'>
+                {[...TICKS].reverse().map((tick) => (
                     <span
                         key={tick.label}
-                        className='absolute inset-x-0 text-right leading-none'
-                        style={tickStyle(tick.value)}
+                        className='absolute -translate-x-1/2 whitespace-nowrap first:-translate-x-0 last:-translate-x-full'
+                        style={{ left: `${(tick.value / TUNER_MAX) * 100}%` }}
                     >
                         {tick.label}
                     </span>
                 ))}
             </div>
-            <div className='min-w-0 flex-1 overflow-x-auto'>
-                <div className='grid min-w-full grid-cols-[repeat(var(--cat-count),minmax(2.5rem,1fr))] gap-x-2 gap-y-2'>
-                    {enabledCats.map((cat) => {
-                        const value = tunerOf(tuners, cat);
-                        const punted = isPunt(stances, cat, value);
-                        const pct = Math.max(0, Math.min(100, (value / TUNER_MAX) * 100));
-                        return (
-                            <div
-                                key={`${cat}-track`}
-                                className={cn('relative w-full rounded-lg bg-muted', TRACK_CLASS)}
-                            >
+            <div className='grid gap-2'>
+                {enabledCats.map((cat) => {
+                    const value = tunerOf(tuners, cat);
+                    const punted = isPunt(stances, cat, value);
+                    const pct = Math.max(0, Math.min(100, (value / TUNER_MAX) * 100));
+                    return (
+                        <div key={cat} className='grid grid-cols-[2rem_minmax(0,1fr)] items-center gap-2'>
+                            <span className='truncate text-right text-base text-muted-foreground'>
+                                {CAT_LABELS[cat]}
+                            </span>
+                            <div className={cn('relative w-full overflow-hidden rounded-lg bg-muted', TRACK_CLASS)}>
                                 <div
                                     className={cn(
-                                        'absolute inset-x-0 bottom-0 rounded-lg',
+                                        'absolute inset-y-0 left-0 rounded-lg',
                                         punted ? 'bg-muted-foreground/40' : 'bg-primary',
-                                        'transition-[height] duration-300 ease-out motion-reduce:transition-none'
+                                        'transition-[width] duration-300 ease-out motion-reduce:transition-none'
                                     )}
-                                    style={{ height: `${pct}%` }}
+                                    style={{ width: `${pct}%` }}
                                 />
                             </div>
-                        );
-                    })}
-                    {enabledCats.map((cat) => (
-                        <span key={`${cat}-label`} className='text-center text-muted-foreground'>
-                            {CAT_LABELS[cat]}
-                        </span>
-                    ))}
-                </div>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
 
-    function handleKey(event: KeyboardEvent<HTMLDivElement>) {
-        if (!interactive || !onToggleSliders) return;
-        if (event.key !== 'Enter' && event.key !== ' ') return;
-        event.preventDefault();
-        onToggleSliders();
-    }
-
-    if (!interactive) {
-        return (
-            <div role='img' aria-label={summary} style={{ '--cat-count': enabledCats.length } as CSSProperties}>
-                {body}
-            </div>
-        );
-    }
-
-    // Native <button> ate the flex layout. Keep the div + keyboard handler.
     return (
-        <div
-            role='button'
-            tabIndex={0}
-            aria-label='Edit weights'
-            aria-expanded={slidersOpen}
-            onClick={onToggleSliders}
-            onKeyDown={handleKey}
-            className='w-full cursor-pointer rounded-lg text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50'
-            style={{ '--cat-count': enabledCats.length } as CSSProperties}
-        >
-            <span className='sr-only'>{summary}</span>
+        <div role='img' aria-label={summary}>
             {body}
         </div>
     );
@@ -139,38 +127,44 @@ export function WeightChart({
 type WeightChartPanelProps = {
     draft: QuizDraft;
     tuners: Partial<Record<CatKey, number>>;
-    interactive: boolean;
+    editable: boolean;
     caption?: string | null;
     onChange: (next: QuizDraft) => void;
+    className?: string;
 };
 
-export function WeightChartPanel({ draft, tuners, interactive, caption, onChange }: WeightChartPanelProps) {
-    const [slidersOpen, setSlidersOpen] = useState(false);
-    const showSliders = interactive && slidersOpen;
+export function WeightChartPanel({ draft, tuners, editable, caption, onChange, className }: WeightChartPanelProps) {
+    const [weightsOpen, setWeightsOpen] = useState(false);
 
     return (
-        <div className='grid gap-4'>
+        <div className={cn('grid gap-4', className)}>
             {caption ? <p className='mb-0 text-lg font-semibold tracking-tight md:text-xl'>{caption}</p> : null}
-            <WeightChart
-                enabledCats={draft.enabledCats}
-                tuners={tuners}
-                stances={interactive ? draft.stances : undefined}
-                interactive={interactive}
-                slidersOpen={showSliders}
-                onToggleSliders={() => setSlidersOpen((open) => !open)}
-            />
-            {showSliders ? (
-                <div className='grid gap-4'>
-                    <IntensityStep value={draft} onChange={onChange} idPrefix='chart-tuner' />
+            <div>
+                <div className='lg:hidden'>
+                    <WeightChart
+                        enabledCats={draft.enabledCats}
+                        tuners={tuners}
+                        stances={draft.stances}
+                        variant='mini'
+                    />
+                </div>
+                <div className='hidden lg:block'>
+                    <WeightChart enabledCats={draft.enabledCats} tuners={tuners} stances={draft.stances} />
+                </div>
+            </div>
+            {editable ? (
+                <>
                     <Button
                         type='button'
-                        variant='outline'
-                        onClick={() => setSlidersOpen(false)}
-                        className='w-full md:w-auto'
+                        variant='ghost'
+                        className='h-auto justify-self-end gap-1 px-1 py-1 text-sm text-muted-foreground hover:bg-transparent hover:text-foreground'
+                        onClick={() => setWeightsOpen(true)}
                     >
-                        Done
+                        <Pencil aria-hidden='true' />
+                        Edit weights
                     </Button>
-                </div>
+                    <WeightsDrawer open={weightsOpen} onOpenChange={setWeightsOpen} value={draft} onApply={onChange} />
+                </>
             ) : null}
         </div>
     );

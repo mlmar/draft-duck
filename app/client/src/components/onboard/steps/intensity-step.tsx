@@ -9,7 +9,7 @@ type IntensityStepProps = QuizStepProps & {
 
 export function IntensityStep({ value, onChange, idPrefix = 'intensity' }: IntensityStepProps) {
     return (
-        <div className='grid gap-5'>
+        <div className='grid gap-0'>
             <p className='mb-0 text-muted-foreground'>{INTENSITY_HINT}</p>
             {value.enabledCats.map((cat) => {
                 const punted = (value.stances[cat] ?? 'neutral') === 'punt';

@@ -43,7 +43,7 @@ const REVIEW_STEP: QuizStepDef = {
 const STANCES_STEP: QuizStepDef = {
     id: 'stances',
     title: 'Need and Punt',
-    description: 'Presets write the weights. Tap the chart if you want the sliders.',
+    description: 'Presets write the weights. Edit weights to fine-tune them.',
     Component: StancesStep
 };
 

@@ -259,8 +259,8 @@ export function canPersist(draft: QuizDraft): boolean {
     return Number.isInteger(draft.draftRounds) && draft.draftRounds > 0 && draft.enabledCats.length >= 1;
 }
 
-export function boardSearch(): { assist: '1' } {
-    return { assist: '1' };
+export function boardSearch(): Record<string, never> {
+    return {};
 }
 
 export function newWalkSeed(): number {
