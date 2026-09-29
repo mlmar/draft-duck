@@ -50,11 +50,7 @@ describe('rankWithDataModeSignals', () => {
     });
 
     it('uses the selected dataset for the board order', () => {
-        const players = universes(
-            ['a', 'b', 'c', 'd'],
-            ['d', 'c', 'b', 'a'],
-            ['b', 'c', 'a', 'd']
-        );
+        const players = universes(['a', 'b', 'c', 'd'], ['d', 'c', 'b', 'a'], ['b', 'c', 'a', 'd']);
         const totalsProfile = { ...profile, dataMode: 'totals' as const };
 
         expect(rankWithDataModeSignals(players, totalsProfile)[0]?.playerId).toBe('b');
@@ -75,11 +71,12 @@ describe('rankWithDataModeSignals', () => {
     it('does not signal a player missing from a comparison dataset', () => {
         const players = universes(
             ['sleeper', 'a', 'b', 'c', 'd', 'e', 'f', 'g'],
-            ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+            ['sleeper', 'a', 'b', 'c', 'd', 'e', 'f', 'g'],
             ['a', 'b', 'c', 'd', 'e', 'f', 'g']
         );
 
-        expect(rankWithDataModeSignals(players, profile).find((player) => player.playerId === 'sleeper'))
-            .not.toHaveProperty('upsideSignal');
+        expect(
+            rankWithDataModeSignals(players, profile).find((player) => player.playerId === 'sleeper')
+        ).not.toHaveProperty('upsideSignal');
     });
 });
