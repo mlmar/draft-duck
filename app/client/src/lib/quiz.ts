@@ -16,6 +16,7 @@ import {
     type ArchetypeId,
     type CatKey,
     type CatStance,
+    type DataMode,
     type DraftProfile,
     type WalkChoiceId
 } from '@draft-duck/core';
@@ -29,6 +30,7 @@ export type CatPreset = '9cat' | '8cat' | 'custom';
 export type OnboardPath = 'named' | 'custom' | 'not-sure';
 
 export type QuizDraft = {
+    dataMode: DataMode;
     leagueSize: number;
     draftRounds: number;
     draftType: 'snake' | 'linear';
@@ -45,6 +47,7 @@ export type QuizDraft = {
 };
 
 export const DEFAULT_QUIZ_DRAFT: QuizDraft = {
+    dataMode: 'perGame',
     leagueSize: 12,
     draftRounds: 13,
     draftType: 'snake',
@@ -210,6 +213,7 @@ export function undoLastWalkAnswer(draft: QuizDraft): QuizDraft {
 export function quizDraftToProfile(draft: QuizDraft): DraftProfile {
     const intensity = tunersForStances(draft.stances, draft.enabledCats, draft.intensity);
     const profile: DraftProfile = {
+        dataMode: draft.dataMode,
         leagueSize: draft.leagueSize,
         draftRounds: draft.draftRounds,
         draftType: draft.draftType,
@@ -229,6 +233,7 @@ export function profileToQuizDraft(profile: DraftProfile): QuizDraft {
     else if (sameCats(enabledCats, EIGHT_CAT_KEYS)) preset = '8cat';
 
     return {
+        dataMode: profile.dataMode ?? 'perGame',
         leagueSize: profile.leagueSize,
         draftRounds: profile.draftRounds,
         draftType: profile.draftType,

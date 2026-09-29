@@ -18,7 +18,7 @@ export type PlayerTableGroup = {
     players: RankedPlayer[];
 };
 
-// +/- is the highlight score as text. Raw keeps per-game stats. Heat uses the same score either way.
+// +/- is the highlight score as text. Raw shows the selected dataset's stats. Heat uses the same score either way.
 export type CatValueMode = 'raw' | 'plusMinus';
 
 type PlayerTableProps = {
@@ -141,7 +141,17 @@ export function PlayerTable({
                                     </span>
                                 </TableCell>
                                 <TableCell className={`${stickyName} ${fill} overflow-hidden`}>
-                                    <span className='block truncate font-medium'>{player.name}</span>
+                                    <span className='flex items-center gap-2 overflow-hidden'>
+                                        <span className='truncate font-medium'>{player.name}</span>
+                                        {player.upsideSignal ? (
+                                            <span
+                                                className='shrink-0 rounded bg-muted px-1.5 py-0.5 text-xs font-medium'
+                                                title='Single-season comparison across per-36, per-game, and totals rankings.'
+                                            >
+                                                {player.upsideSignal === 'sleeper' ? 'Sleeper signal' : 'Dud signal'}
+                                            </span>
+                                        ) : null}
+                                    </span>
                                 </TableCell>
                                 <TableCell className={`hidden text-sm text-muted-foreground md:table-cell ${colTeam}`}>
                                     {player.team}

@@ -1,6 +1,6 @@
 // Public surface for the core package. Apps import from here, not the files below.
-export type { ArchetypeId, CatKey, CatStance, DraftProfile, PlayerSeason, RankedPlayer } from './types.ts';
-export { ARCHETYPE_IDS, CAT_KEYS, CAT_LABELS } from './types.ts';
+export type { ArchetypeId, CatKey, CatStance, DataMode, DraftProfile, PlayerSeason, RankedPlayer } from './types.ts';
+export { ARCHETYPE_IDS, CAT_KEYS, CAT_LABELS, DATA_MODES } from './types.ts';
 export {
     ARCHETYPE_LABELS,
     NAMED_BUILD_IDS,
@@ -63,6 +63,8 @@ export { DEFAULT_AVAILABILITY_FLOOR } from './ranker-config.ts';
 export { mean, std, zScore } from './stats.ts';
 export { rank } from './ranker.ts';
 export type { RankOptions } from './ranker.ts';
+export { rankWithDataModeSignals } from './rank-modes.ts';
+export type { PlayerUniverses } from './rank-modes.ts';
 export { identitySuggestionHook } from './suggestion-hook.ts';
 export type { SuggestionHook } from './suggestion-hook.ts';
 export { partitionByRound } from './partition.ts';
