@@ -26,13 +26,23 @@ function HowItWorksPage() {
 
             <h2>Z-scores, then weights</h2>
             <p>
-                Counting stats are z-scored versus league mean. Turnovers flip: fewer is better. Percentages use
-                volume-adjusted impact, so a 70% shooter on two attempts does not beat a 55% shooter on fifteen.
+                Choose per-game, per-36, or season totals as the stats behind the board. Players below 20 games are
+                excluded. For each enabled category, counting stats are z-scored against the eligible-player mean and
+                standard deviation. Turnovers flip so fewer is better. FG% and FT% use volume-adjusted impact: the
+                difference from the league rate is multiplied by attempts, then z-scored.
             </p>
             <p>
                 The slider is the weight, from 0 to 3. Need is 1.5, Neutral is 1, Punt is 0. If you punt a hole,
                 leftover Neutral complements sit at 1.25. The composite is operator weight times that tuner times the
-                z-score, summed across enabled cats.
+                z-score, summed across enabled categories. Players are sorted by this composite to make the board.
+            </p>
+
+            <h2>Sleeper and dud signals</h2>
+            <p>
+                A sleeper signal marks a top-quarter per-36 rank with below-median per-game and totals ranks. A dud
+                signal marks the reverse pattern. These tags compare one season’s rate and realized production; they
+                are not predictions of future upside or failure. Historical seasons can help test whether the patterns
+                predict later results.
             </p>
 
             <h2>Punts and 8-cat</h2>
