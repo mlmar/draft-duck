@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { resolveTuner } from './tuners.ts';
-import { ARCHETYPE_IDS, CAT_KEYS, type CatKey, type DraftProfile } from './types.ts';
+import { ARCHETYPE_IDS, CAT_KEYS, DATA_MODES, type CatKey, type DraftProfile } from './types.ts';
 
 const catKeySchema = z.enum(CAT_KEYS);
 const catStanceSchema = z.enum(['need', 'neutral', 'punt', 'custom']);
@@ -19,6 +19,7 @@ export const draftProfileSchema = z
             .refine((n) => n % 2 === 0, { message: 'leagueSize must be even' }),
         draftRounds: z.number().int().positive(),
         draftType: z.enum(['snake', 'linear']),
+        dataMode: z.enum(DATA_MODES).default('perGame'),
         enabledCats: z.array(catKeySchema).min(1),
         stances: z.record(catKeySchema, catStanceSchema).default({}),
         intensity: z.record(catKeySchema, z.number().min(0).max(3)).optional(),

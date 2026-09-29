@@ -334,7 +334,7 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                                 emptyLabel='No players on this board.'
                                 profile={profile}
                                 highlight={highlight}
-                                // Raw / +/- is unmounted here. Stay on per-game stats.
+                                // Raw / +/- is unmounted here. Keep the selected dataset's stats.
                                 valueMode='raw'
                                 yourOverallPicks={yourPickSet}
                             />

@@ -27,6 +27,9 @@ export type PlayerSeason = {
 export const CAT_KEYS = ['pts', 'trb', 'ast', 'stl', 'blk', 'fg3', 'fgPct', 'ftPct', 'tov'] as const;
 export type CatKey = (typeof CAT_KEYS)[number];
 
+export const DATA_MODES = ['perGame', 'per36', 'totals'] as const;
+export type DataMode = (typeof DATA_MODES)[number];
+
 // Shared display names so the quiz and later draft UI do not drift.
 export const CAT_LABELS: Record<CatKey, string> = {
     pts: 'PTS',
@@ -46,6 +49,8 @@ export const ARCHETYPE_IDS = ['balanced', 'puntFg', 'puntFt', 'guards', 'stocks'
 export type ArchetypeId = (typeof ARCHETYPE_IDS)[number];
 
 export type DraftProfile = {
+    /** Statistical basis for the ranking board. Missing on legacy profiles means per-game. */
+    dataMode?: DataMode;
     leagueSize: number;
     draftRounds: number;
     draftType: 'snake' | 'linear';
@@ -69,6 +74,8 @@ export type RankedPlayer = PlayerSeason & {
     fitRank: number;
     /** 1-based all-neutral order on the same enabled cats. Still computed when the floor is off. */
     consensusRank: number;
+    /** Single-season rate-versus-realized production signal; it is not a future projection. */
+    upsideSignal?: 'sleeper' | 'dud';
     /** Unused in v1. Filled only by an annotator, never by z-score math. */
     notes?: string;
 };
