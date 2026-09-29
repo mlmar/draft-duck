@@ -1,5 +1,7 @@
 # M1 — Foundation
 
+**Status: complete.** This file records the original M1 scope. The current API loads per-game, per-36, and totals files; see [M2](M2-ranking-engine.md). The older season files are used by the offline [ranking experiment](experiments/ranking/README.md).
+
 ## Goal
 
 Scaffold the monorepo, ship a static home, a Fastify health route, and a `CsvProvider` that yields one `PlayerSeason` per Basketball-Reference id.

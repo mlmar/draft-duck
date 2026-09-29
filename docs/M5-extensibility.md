@@ -1,5 +1,7 @@
 # M5 — Extensibility
 
+**Status: seams only.** `PlayerStatsProvider` and the identity `SuggestionHook` exist. `NbaApiProvider`, Yahoo integration, auth, live stats, and AI suggestions are not implemented; the optional stub and environment switch below remain proposals.
+
 ## Goal
 
 Leave seams so live NBA stats, optional narrative suggestions, and a future Yahoo league import can land **without rewriting** `DraftProfile`, player ids, or the ranker. v1 does not ship those features.

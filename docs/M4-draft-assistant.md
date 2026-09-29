@@ -1,5 +1,7 @@
 # M4 — Draft assistant
 
+**Status: complete.** The sections below record the original M4 scope. The current draft board also includes pick cards, search, category heat, a Settings drawer, and a selector for the ranked stats view.
+
 ## Goal
 
 On `/draft`, the saved `DraftProfile` ranks the universe into a **stats table**. The user can edit every profile field there and the table re-ranks. Optional **draft assistance** splits that same list into round subsections. v1 does **not** simulate other teams’ brains and does not mark players taken.

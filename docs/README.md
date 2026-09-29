@@ -2,11 +2,11 @@
 
 Category-league fantasy basketball helper: quiz for CAT preferences, rank players with weighted z-scores, then optionally group that board into draft-round buckets.
 
-This folder is the living product plan. v1 (M1–M4) is the product. **Current work is deploying that helper** ([deploy.md](deploy.md)). Yahoo, auth, live NBA fetch, and AI are the second half: live-season services, not this deploy.
+This folder describes the shipped CSV-backed draft helper and its historical milestones. M1–M4 are complete; M5 records extension seams. The client and API deployment setup is in [deploy.md](deploy.md). Yahoo, auth, live NBA fetch, and AI remain future work.
 
 ## Status
 
-Update this table in the same change that closes a milestone. Do not start a later milestone until the previous one is marked done.
+This table tracks shipped milestone status. Later experiments do not change that status unless app behavior changes.
 
 | Milestone          | Status                    |
 | ------------------ | ------------------------- |
@@ -21,7 +21,7 @@ Update this table in the same change that closes a milestone. Do not start a lat
 A first-time user (no account) should be able to:
 
 1. Answer a short onboarding quiz (league size, draft type, CAT need / punt).
-2. Get a ranked stats table from the 2025–26 per-game CSV in [`app/data/`](../app/data/).
+2. Get a ranked stats table from the selected 2025–26 per-game, per-36, or totals CSV in [`app/data/`](../app/data/). The other views drive sleeper/dud tags.
 3. Edit that profile on `/draft` and optionally turn on draft assistance to see equal round buckets (leftovers in the last round).
 
 ## How to read these docs
@@ -30,7 +30,8 @@ A first-time user (no account) should be able to:
 | ---------------------------------------------------------------------- | ------------------------------------------------------ |
 | [00-product-and-stack.md](00-product-and-stack.md)                     | Stack, repo layout, API sketch, non-goals              |
 | [M1-foundation.md](M1-foundation.md)                                   | Workspaces, client home, Fastify health, CSV ingest    |
-| [M2-ranking-engine.md](M2-ranking-engine.md)                           | Z-score formulas, weights, Vitest goldens              |
+| [M2-ranking-engine.md](M2-ranking-engine.md)                           | Current scoring formula and rank contract              |
+| [experiments/ranking/README.md](experiments/ranking/README.md)         | Frozen three-season backtest and result                |
 | [M3-onboarding.md](M3-onboarding.md)                                   | Quiz and `DraftProfile`                                |
 | [M4-draft-assistant.md](M4-draft-assistant.md)                         | Ranked table and optional round sections               |
 | [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md)             | M4 implementation plan (current tree)                  |
@@ -45,7 +46,7 @@ A first-time user (no account) should be able to:
 
 Each milestone has **goal, in scope, out of scope, stack/touchpoints, acceptance checks, suggested build order**. M1–M4 are sequential. M5 is “do not paint into a corner” plus later optional work.
 
-Product specs stay in `docs/M1`–`docs/M5`. Implementation plans live under [`docs/plans/`](plans/). A plan can land in the same PR as the work that closes the milestone.
+Product specs stay in `docs/M1`–`docs/M5`. [`docs/plans/`](plans/README.md) contains historical implementation plans. Dated implementation notes live in [`docs/changes/`](changes/).
 
 ## Stack (one line)
 

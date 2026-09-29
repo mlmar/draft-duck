@@ -91,7 +91,7 @@ Root `package.json` workspaces: `app/client`, `app/api`, `app/core`.
 
 ## Data contract
 
-- Ranking source: **per-game** CSV only. Totals and per-36 stay unused in v1.
+- The current API loads all three 2025–26 CSV views. `DraftProfile.dataMode` selects which view provides the ranking and displayed stats; other views supply sleeper/dud tags. Historical 2023–24 and 2024–25 files are used only by the offline [ranking experiment](experiments/ranking/README.md).
 - Stable id: Basketball-Reference `Player-additional` (e.g. `doncilu01`). Do not invent Yahoo ids.
 - Standard 9-cat: `PTS`, `TRB`, `AST`, `STL`, `BLK`, `3P`, `FG%`, `FT%`, `TOV`.
 - Provider interface: `PlayerStatsProvider.load(): Promise<PlayerSeason[]>`.
@@ -107,7 +107,7 @@ All JSON. Prefix `/api` is optional; pick one in M1 and keep it.
 | `GET`  | `/health` | —                           | `{ ok: true }`                |
 | `POST` | `/rank`   | `{ profile: DraftProfile }` | `{ players: RankedPlayer[] }` |
 
-`RankedPlayer` includes `playerId`, identity fields, per-game cats, per-cat z, `composite`, `rank`, `fitRank`, `consensusRank`. Exact field list is locked in M2.
+`RankedPlayer` includes `playerId`, identity fields, selected-view cats and per-cat z-scores, `composite`, `rank`, `fitRank`, and `consensusRank`. Exact field descriptions are in M2.
 
 `GET /players` is optional in M1 for debugging the ingested universe; not required for the product loop.
 
