@@ -16,7 +16,7 @@ h5 {
 
 h1 {
     /* Phone titles stay short. md: is size only, not a second layout. */
-    @apply mb-6 text-2xl font-semibold tracking-tight md:text-4xl;
+    @apply mb-1 text-2xl font-semibold tracking-tight md:text-4xl;
 }
 
 h2 {
