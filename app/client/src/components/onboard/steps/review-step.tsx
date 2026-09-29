@@ -1,8 +1,6 @@
 import { PickCard } from '@/components/draft/pick-card';
-import { ExpandSection } from '@/components/expand-section';
 import { LoadingCopy } from '@/components/loading-copy';
 import type { QuizStepProps } from '@/components/onboard/step-types';
-import { StancesStep } from '@/components/onboard/steps/stances-step';
 import { rankPlayers } from '@/lib/api';
 import { quizDraftToProfile } from '@/lib/quiz';
 import { draftProfileSchema, overallPicksForDraft } from '@draft-duck/core';
@@ -50,10 +48,6 @@ export function ReviewStep({ value, onChange, parseError }: QuizStepProps) {
                     ))}
                 </ol>
             ) : null}
-
-            <ExpandSection label='Adjust Need and Punt'>
-                <StancesStep value={value} onChange={onChange} />
-            </ExpandSection>
         </div>
     );
 }

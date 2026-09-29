@@ -35,7 +35,7 @@ export const Route = createFileRoute('/onboard')({
             { title: 'Onboard - draft duck' },
             {
                 name: 'description',
-                content: "Pick a stance, we'll rank it. get your ducks in a row."
+                content: "Get your ducks in a row. Pick a punt, we'll rank it."
             }
         ]
     })
@@ -43,7 +43,7 @@ export const Route = createFileRoute('/onboard')({
 
 function OnboardPage() {
     return (
-        <PageShell inset='quiz'>
+        <PageShell inset='quiz' wide>
             <OnboardQuiz />
         </PageShell>
     );

@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { CAT_LABELS, formatTuner } from '@draft-duck/core';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -13,11 +14,15 @@ type IntensitySliderProps = {
 };
 
 export function IntensitySlider({ id, label, value, onChange, disabled = false }: IntensitySliderProps) {
+    const progress = `${(Math.min(3, Math.max(0, value)) / 3) * 100}%`;
+
     return (
-        <div className={cn('grid gap-2', disabled && 'opacity-50')}>
+        <div className={cn('grid gap-2 border-b border-border py-3 last:border-b-0', disabled && 'opacity-60')}>
             <div className='flex items-baseline justify-between gap-4'>
                 <Label htmlFor={id}>{label}</Label>
-                <span className='text-muted-foreground'>{formatTuner(value)}</span>
+                <output htmlFor={id} className='font-medium tabular-nums'>
+                    {formatTuner(value)}
+                </output>
             </div>
             <input
                 id={id}
@@ -28,9 +33,10 @@ export function IntensitySlider({ id, label, value, onChange, disabled = false }
                 value={value}
                 disabled={disabled}
                 onChange={(event) => onChange(Number(event.target.value))}
-                className='w-full accent-brand disabled:cursor-not-allowed'
+                style={{ '--slider-progress': progress } as CSSProperties}
+                className='tuner-slider w-full disabled:cursor-not-allowed'
             />
-            <div className='flex justify-between text-muted-foreground'>
+            <div aria-hidden='true' className='flex justify-between text-sm text-muted-foreground'>
                 <span>Less</span>
                 <span>More</span>
             </div>

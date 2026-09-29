@@ -208,11 +208,12 @@ export function OnboardQuiz() {
             continueDisabled={!canContinue(step.id, draft)}
             banner={restoreBanner}
         >
-            <div className='grid gap-8'>
+            <div className='grid gap-8 lg:grid-cols-2 lg:items-start'>
                 <WeightChartPanel
+                    className='lg:sticky lg:top-4'
                     draft={{ ...draft, intensity: chartTuners }}
                     tuners={chartTuners}
-                    interactive={!isWalk}
+                    editable={!isWalk}
                     caption={isWalk ? null : snapCaption}
                     onChange={(next) => {
                         setDraft(next);

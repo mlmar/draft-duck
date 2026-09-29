@@ -18,16 +18,16 @@ export function ProfileSettings({ value, onChange, onIntensityChange }: ProfileS
                 <h2 className='mb-0 text-lg font-medium md:text-lg'>League</h2>
                 <LeagueStep value={value} onChange={onChange} slotControl='select' />
             </div>
-            <div className='grid gap-3'>
+            <div className='grid gap-3 border-t border-border pt-6'>
                 <h2 className='mb-0 text-lg font-medium md:text-lg'>Categories</h2>
                 <PresetStep value={value} onChange={onChange} />
             </div>
-            <div className='grid gap-3'>
+            <div className='grid gap-3 border-t border-border pt-6'>
                 <h2 className='mb-0 text-lg font-medium md:text-lg'>Need and Punt</h2>
                 <StanceBar value={value} onChange={onChange} />
                 <p className='mb-0 text-sm text-muted-foreground'>Punted cats stay uncolored on the full table.</p>
             </div>
-            <div className='grid gap-3'>
+            <div className='grid gap-3 border-t border-border pt-6'>
                 <h2 className='mb-0 text-lg font-medium md:text-lg'>Weights</h2>
                 <IntensityStep value={value} idPrefix='board-intensity' onChange={onIntensityChange} />
             </div>

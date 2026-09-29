@@ -17,7 +17,7 @@ export const Route = createFileRoute('/draft')({
         const values = searchString(search.values);
         return {
             assist: assist === '1' ? assist : undefined,
-            values: values === 'pm' ? values : undefined
+            values: values === 'pm' || values === 'raw' ? values : undefined
         };
     },
     component: DraftPage,
@@ -30,25 +30,19 @@ function DraftPage() {
     const search = Route.useSearch();
     const navigate = useNavigate({ from: '/draft' });
     const assist = search.assist === '1';
-    const valueMode: CatValueMode = search.values === 'pm' ? 'plusMinus' : 'raw';
+    const valueMode: CatValueMode = search.values === 'raw' ? 'raw' : 'plusMinus';
 
     return (
         <PageShell wide>
             <DraftBoard
                 assist={assist}
                 valueMode={valueMode}
-                onAssistChange={(on) => {
-                    void navigate({
-                        search: (prev) => ({ ...prev, assist: on ? '1' : undefined }),
-                        replace: true,
-                        resetScroll: false
-                    });
-                }}
-                onValueModeChange={(mode) => {
+                onTableSettingsChange={({ assist: nextAssist, valueMode: nextValueMode }) => {
                     void navigate({
                         search: (prev) => ({
                             ...prev,
-                            values: mode === 'plusMinus' ? 'pm' : undefined
+                            assist: nextAssist ? '1' : undefined,
+                            values: nextValueMode === 'raw' ? 'raw' : undefined
                         }),
                         replace: true,
                         resetScroll: false

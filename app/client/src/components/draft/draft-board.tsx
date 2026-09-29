@@ -1,9 +1,11 @@
 import { PlayerTable, type CatValueMode } from '@/components/draft/player-table';
 import { SettingsDrawer } from '@/components/draft/settings-drawer';
+import { WeightsDrawer } from '@/components/onboard/weights-drawer';
+import { WeightChart } from '@/components/onboard/weight-chart';
 import { LoadingCopy } from '@/components/loading-copy';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useDebounce, useDebouncedValue } from '@/hooks/use-debounce';
+import { useDebouncedValue } from '@/hooks/use-debounce';
 import { rankPlayers } from '@/lib/api';
 import { readBoardView, writeBoardView } from '@/lib/board-view';
 import { applyDisplayCap } from '@/lib/display-cap';
@@ -21,18 +23,16 @@ import {
 } from '@draft-duck/core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { Eye, Layers, Settings, type LucideIcon } from 'lucide-react';
+import { Eye, Layers, Pencil, Settings, type LucideIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type Ref } from 'react';
 
-const INTENSITY_DEBOUNCE_MS = 200;
 const SEARCH_DEBOUNCE_MS = 200;
 const CAT_HIGHLIGHT_MODE = DEFAULT_CAT_HIGHLIGHT_MODE;
 
 type DraftBoardProps = {
     assist: boolean;
     valueMode: CatValueMode;
-    onAssistChange: (on: boolean) => void;
-    onValueModeChange: (mode: CatValueMode) => void;
+    onTableSettingsChange: (settings: { assist: boolean; valueMode: CatValueMode }) => void;
 };
 
 type ToolbarButtonProps = {
@@ -75,7 +75,7 @@ function ToolbarButton({
     );
 }
 
-export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChange }: DraftBoardProps) {
+export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBoardProps) {
     const navigate = useNavigate();
     const profile = useDraftProfileStore((state) => state.profile);
     const setProfile = useDraftProfileStore((state) => state.setProfile);
@@ -85,6 +85,7 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
     // Input stays live. The table filters after the pause so each key is not a full rebuild.
     const debouncedNameQuery = useDebouncedValue(nameQuery, SEARCH_DEBOUNCE_MS);
     const [settingsOpen, setSettingsOpen] = useState(false);
+    const [weightsOpen, setWeightsOpen] = useState(false);
     const [showRest, setShowRest] = useState(false);
     const [simpleView, setSimpleView] = useState(() => readBoardView() !== 'full');
     const settingsButtonRef = useRef<HTMLButtonElement>(null);
@@ -95,8 +96,6 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
         if (!parsed.success) return;
         setProfile(parsed.data);
     }
-
-    const persistIntensity = useDebounce(persistDraft, INTENSITY_DEBOUNCE_MS);
 
     useEffect(() => {
         const applySaved = () => {
@@ -122,14 +121,8 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
     });
 
     function handleDiscreteChange(next: QuizDraft) {
-        persistIntensity.cancel();
         setDraft(next);
         persistDraft(next);
-    }
-
-    function handleIntensityChange(next: QuizDraft) {
-        setDraft(next);
-        persistIntensity(next);
     }
 
     function handleSimpleViewChange(on: boolean) {
@@ -212,15 +205,45 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                 >
                     {summary}
                 </Button>
+                <WeightChart
+                    enabledCats={profile.enabledCats}
+                    tuners={draft.intensity}
+                    stances={draft.stances}
+                    variant='mini'
+                />
+                <Button
+                    type='button'
+                    variant='ghost'
+                    className='h-auto justify-self-end gap-1 px-1 py-1 text-sm text-muted-foreground hover:bg-transparent hover:text-foreground'
+                    onClick={() => setWeightsOpen(true)}
+                >
+                    <Pencil aria-hidden='true' />
+                    Edit weights
+                </Button>
+                <WeightsDrawer
+                    open={weightsOpen}
+                    onOpenChange={setWeightsOpen}
+                    value={draft}
+                    onApply={handleDiscreteChange}
+                />
             </header>
 
             <SettingsDrawer
                 open={settingsOpen}
                 onOpenChange={handleSettingsOpenChange}
                 value={draft}
-                onChange={handleDiscreteChange}
-                onIntensityChange={handleIntensityChange}
                 updating={rankQuery.isFetching}
+                hasSlot={hasSlot}
+                simpleView={simpleView}
+                assist={assist}
+                valueMode={valueMode}
+                onApply={(nextDraft, settings) => {
+                    handleDiscreteChange(nextDraft);
+                    if (settings.simpleView !== simpleView) handleSimpleViewChange(settings.simpleView);
+                    if (settings.assist !== assist || settings.valueMode !== valueMode) {
+                        onTableSettingsChange({ assist: settings.assist, valueMode: settings.valueMode });
+                    }
+                }}
             />
 
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
@@ -229,48 +252,49 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                 Search sits here too so the page is the only vertical scroller. */}
             <div className='sticky top-[env(safe-area-inset-top,0px)] z-40 -mx-1 grid gap-2 bg-background px-1 py-2'>
                 <div className='flex items-center gap-2'>
-                    {hasSlot ? (
-                        <ToolbarButton
-                            icon={Eye}
-                            label={showSimple ? 'Full table' : 'Simple view'}
-                            // min-w covers both labels so the first control does not resize on toggle.
-                            className='md:min-w-44'
-                            onClick={() => handleSimpleViewChange(!showSimple)}
-                        />
-                    ) : null}
-                    {showSimple ? null : (
-                        <>
+                    <div className='hidden items-center gap-2 md:flex'>
+                        {hasSlot ? (
                             <ToolbarButton
-                                icon={Layers}
-                                label='Draft assistance'
-                                pressed={assist}
-                                onClick={() => onAssistChange(!assist)}
+                                icon={Eye}
+                                label={showSimple ? 'Full table' : 'Simple view'}
+                                // min-w covers both labels so the first control does not resize on toggle.
+                                className='md:min-w-44'
+                                onClick={() => handleSimpleViewChange(!showSimple)}
                             />
-                            <Button
-                                type='button'
-                                variant={plusMinus ? 'default' : 'outline'}
-                                aria-label={plusMinus ? '+- Z Scores' : '# Raw Stats'}
-                                aria-pressed={plusMinus}
-                                // Phone matches other toolbar squares. Desktop holds the longer label still.
-                                className='size-11 px-0 md:h-11 md:w-auto md:min-w-36 md:px-4'
-                                onClick={() => onValueModeChange(plusMinus ? 'raw' : 'plusMinus')}
-                            >
-                                {plusMinus ? (
-                                    <>
-                                        +-<span className='hidden md:inline'> Z Scores</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        #<span className='hidden md:inline'> Raw Stats</span>
-                                    </>
-                                )}
-                            </Button>
-                        </>
-                    )}
-                    {settingsButton}
-                </div>
-                {showSimple ? null : (
-                    <div className='max-w-sm'>
+                        ) : null}
+                        {showSimple ? null : (
+                            <>
+                                <ToolbarButton
+                                    icon={Layers}
+                                    label='Draft assistance'
+                                    pressed={assist}
+                                    onClick={() => onTableSettingsChange({ assist: !assist, valueMode })}
+                                />
+                                <Button
+                                    type='button'
+                                    variant={plusMinus ? 'default' : 'outline'}
+                                    aria-label={plusMinus ? '+- Z Scores' : '# Raw Stats'}
+                                    aria-pressed={plusMinus}
+                                    // Phone matches other toolbar squares. Desktop holds the longer label still.
+                                    className='size-11 px-0 md:h-11 md:w-auto md:min-w-36 md:px-4'
+                                    onClick={() =>
+                                        onTableSettingsChange({ assist, valueMode: plusMinus ? 'raw' : 'plusMinus' })
+                                    }
+                                >
+                                    {plusMinus ? (
+                                        <>
+                                            +-<span className='hidden md:inline'> Z Scores</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            #<span className='hidden md:inline'> Raw Stats</span>
+                                        </>
+                                    )}
+                                </Button>
+                            </>
+                        )}
+                    </div>
+                    <div className='min-w-0 flex-1 md:hidden'>
                         <Input
                             type='search'
                             value={nameQuery}
@@ -279,7 +303,17 @@ export function DraftBoard({ assist, valueMode, onAssistChange, onValueModeChang
                             aria-label='Search players'
                         />
                     </div>
-                )}
+                    {settingsButton}
+                </div>
+                <div className='hidden max-w-sm md:block'>
+                    <Input
+                        type='search'
+                        value={nameQuery}
+                        onChange={(event) => setNameQuery(event.target.value)}
+                        placeholder='Search players'
+                        aria-label='Search players'
+                    />
+                </div>
             </div>
 
             <div

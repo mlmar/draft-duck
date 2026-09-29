@@ -16,9 +16,9 @@ function HomePage() {
     return (
         <PageShell className='justify-center'>
             <h1>draft duck</h1>
+            <p className='max-w-md text-muted-foreground'>Get your ducks in a row.</p>
             <p className='mb-0 max-w-md'>Pick a stance, we'll rank it.</p>
-            <p className='max-w-md text-muted-foreground'>get your ducks in a row.</p>
-            <div className='mt-8 grid gap-4'>
+            <div className='mt-2 grid gap-4'>
                 <div className='grid gap-2 md:grid-cols-2'>
                     {NAMED_BUILD_IDS.map((id) => (
                         <LinkButton
@@ -32,24 +32,21 @@ function HomePage() {
                         </LinkButton>
                     ))}
                 </div>
-                <div className='grid gap-1'>
+                <div className='grid gap-2'>
                     <LinkButton
                         to='/onboard'
                         search={{ build: 'custom' }}
-                        variant='ghost'
-                        className='h-auto w-full justify-start px-3 py-2 md:w-auto'
+                        className='h-11 w-full justify-start bg-primary px-3 text-primary-foreground hover:bg-primary/80 md:w-auto'
                     >
                         Custom
                     </LinkButton>
                     <LinkButton
                         to='/onboard'
                         search={{ start: 'not-sure' }}
-                        variant='ghost'
-                        className='h-auto w-full justify-start px-3 py-2 md:w-auto'
+                        className='h-11 w-full justify-start bg-primary px-3 text-primary-foreground hover:bg-primary/80 md:w-auto'
                     >
                         Not sure
                     </LinkButton>
-                    <p className='mb-0 px-3 text-muted-foreground'>A few questions</p>
                 </div>
             </div>
             <EntryCtas />

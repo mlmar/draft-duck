@@ -8,10 +8,10 @@ type WalkChoiceCardsProps = {
     onPick: (side: WalkChoiceId) => void;
 };
 
-// Two ink cards with lowercase or between them. Stack on a phone, row from md:.
+// Two ink cards with lowercase or between them. Stack until desktop width.
 export function WalkChoiceCards({ left, right, selected, onPick }: WalkChoiceCardsProps) {
     return (
-        <div className='flex flex-col items-stretch gap-3 md:flex-row md:items-stretch md:gap-4'>
+        <div className='flex flex-col items-stretch gap-3 lg:flex-row lg:items-stretch lg:gap-4'>
             <WalkCard choice={left} pressed={selected === 'left'} onPick={onPick} />
             <span className='self-center text-muted-foreground' aria-hidden='true'>
                 or

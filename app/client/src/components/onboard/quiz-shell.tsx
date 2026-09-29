@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 
 // Quiet progress plus the question. Sticky Back / Continue. Copy and order stay in STEPS.
@@ -49,11 +50,11 @@ export function QuizShell({
                     aria-valuemin={1}
                     aria-valuemax={stepCount}
                     aria-label={stepLabel}
-                    className='h-1 w-full overflow-hidden rounded-lg bg-muted'
+                    className='h-2 w-full overflow-hidden rounded-lg bg-muted'
                 >
                     <div
                         className={cn(
-                            'h-full w-full origin-left bg-brand',
+                            'h-full w-full origin-left rounded-lg bg-primary',
                             animateFill && 'transition-transform duration-300 ease-out motion-reduce:transition-none'
                         )}
                         style={{ transform: `scaleX(${fraction})` }}
@@ -63,14 +64,14 @@ export function QuizShell({
                 {description ? <p className='mb-0 text-muted-foreground'>{description}</p> : null}
             </header>
 
-            <div className='pt-5 pb-24'>{children}</div>
+            <div className='pt-0 pb-24'>{children}</div>
 
             {showFooter ? (
-                <div className='sticky bottom-0 z-10 -mx-4 mt-8 border-t border-border bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]'>
-                    <div className='flex flex-col gap-2 md:flex-row md:flex-wrap'>
+                <div className='fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]'>
+                    <div className='grid grid-cols-3 items-center gap-2'>
                         {onBack ? (
-                            <Button type='button' variant='outline' onClick={onBack} className='flex-1 md:flex-none'>
-                                Back
+                            <Button type='button' variant='outline' size='icon' onClick={onBack} aria-label='Back'>
+                                <ArrowLeft aria-hidden='true' />
                             </Button>
                         ) : null}
                         {onContinue ? (
@@ -78,7 +79,8 @@ export function QuizShell({
                                 type='button'
                                 onClick={onContinue}
                                 disabled={continueDisabled}
-                                className='w-full md:w-auto'
+                                size='lg'
+                                className='col-start-2 justify-self-center px-8 text-lg'
                             >
                                 {continueLabel}
                             </Button>

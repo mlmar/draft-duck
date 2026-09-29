@@ -103,3 +103,90 @@
         @apply font-sans;
     }
 }
+
+@layer components {
+    .tuner-slider {
+        --slider-track: var(--border);
+        appearance: none;
+        display: block;
+        height: 2rem;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        cursor: pointer;
+        touch-action: pan-y;
+        outline: none;
+    }
+
+    .tuner-slider::-webkit-slider-runnable-track {
+        height: 0.3rem;
+        border-radius: 999px;
+        background: linear-gradient(
+            to right,
+            var(--foreground) 0,
+            var(--foreground) var(--slider-progress),
+            var(--slider-track) var(--slider-progress),
+            var(--slider-track) 100%
+        );
+    }
+
+    .tuner-slider::-moz-range-track {
+        height: 0.3rem;
+        border-radius: 999px;
+        background: var(--slider-track);
+    }
+
+    .tuner-slider::-moz-range-progress {
+        height: 0.3rem;
+        border-radius: 999px;
+        background: var(--foreground);
+    }
+
+    .tuner-slider::-webkit-slider-thumb {
+        appearance: none;
+        width: 1.1rem;
+        height: 1.1rem;
+        margin-top: calc((0.3rem - 1.1rem) / 2);
+        border: 2px solid var(--background);
+        border-radius: 50%;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    .tuner-slider::-moz-range-thumb {
+        width: 0.85rem;
+        height: 0.85rem;
+        border: 2px solid var(--background);
+        border-radius: 50%;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    .tuner-slider:focus-visible::-webkit-slider-thumb {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+
+    .tuner-slider:focus-visible::-moz-range-thumb {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+
+    .tuner-slider:disabled {
+        --slider-track: var(--input);
+        cursor: not-allowed;
+    }
+
+    .tuner-slider:disabled::-webkit-slider-runnable-track,
+    .tuner-slider:disabled::-moz-range-progress {
+        background: var(--muted-foreground);
+    }
+
+    .tuner-slider:disabled::-webkit-slider-thumb,
+    .tuner-slider:disabled::-moz-range-thumb {
+        background: var(--muted-foreground);
+        box-shadow: 0 0 0 1px var(--muted-foreground);
+    }
+}
