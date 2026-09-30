@@ -37,12 +37,12 @@ function HowItWorksPage() {
                 z-score, summed across enabled categories. Players are sorted by this composite to make the board.
             </p>
 
-            <h2>Sleeper and dud signals</h2>
+            <h2>Upside and Streaky signals</h2>
             <p>
-                A sleeper signal marks a top-quarter per-36 rank with below-median per-game and totals ranks. A dud
-                signal marks the reverse pattern. These tags compare one season’s rate and realized production; they
-                are not predictions of future upside or failure. Historical seasons can help test whether the patterns
-                predict later results.
+                Upside marks a top-quarter per-36 rank with below-median per-game and totals ranks. Streaky marks a
+                bottom-quarter per-36 rank with top-half per-game and totals ranks. These labels describe a single
+                season’s rate-versus-production gap. Streaky does not measure game-to-game consistency, and neither
+                label predicts future performance.
             </p>
 
             <h2>Punts and 8-cat</h2>
