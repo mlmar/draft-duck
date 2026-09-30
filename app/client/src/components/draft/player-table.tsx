@@ -3,6 +3,7 @@ import { formatCatStat } from '@/lib/format-stats';
 import { YourPickMark } from '@/components/draft/your-pick-mark';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import { Activity, Sparkles } from 'lucide-react';
 import {
     CAT_LABELS,
     formatSignedScore,
@@ -145,10 +146,29 @@ export function PlayerTable({
                                         <span className='truncate font-medium'>{player.name}</span>
                                         {player.upsideSignal ? (
                                             <span
-                                                className='shrink-0 rounded bg-muted px-1.5 py-0.5 text-xs font-medium'
-                                                title='Single-season comparison across per-36, per-game, and totals rankings.'
+                                                className={cn(
+                                                    'inline-flex shrink-0 items-center gap-1 text-xs font-medium',
+                                                    player.upsideSignal === 'sleeper'
+                                                        ? 'text-sky-800'
+                                                        : 'text-amber-800'
+                                                )}
+                                                title={
+                                                    player.upsideSignal === 'sleeper'
+                                                        ? 'High per-36 rank with below-median per-game and totals ranks this season.'
+                                                        : 'Low per-36 rank with top-half per-game and totals ranks this season; this does not measure game-to-game consistency.'
+                                                }
                                             >
-                                                {player.upsideSignal === 'sleeper' ? 'Sleeper signal' : 'Dud signal'}
+                                                {player.upsideSignal === 'sleeper' ? (
+                                                    <>
+                                                        <Sparkles aria-hidden='true' className='size-3.5' />
+                                                        <span>Upside</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Activity aria-hidden='true' className='size-3.5' />
+                                                        <span>Streaky</span>
+                                                    </>
+                                                )}
                                             </span>
                                         ) : null}
                                     </span>
