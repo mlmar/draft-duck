@@ -63,6 +63,26 @@ describe('applyCatTuner and applyCatStance', () => {
         expect(next.intensity.fgPct).toBe(1.4);
     });
 
+    it('replaces a Punt with the chosen Custom weight and recalculates complements', () => {
+        const stances = { ftPct: 'punt' as const, pts: 'need' as const };
+        const intensity = tunersForStances(stances, CAT_KEYS);
+        const next = applyCatTuner(stances, intensity, 'ftPct', 0.8, CAT_KEYS);
+
+        expect(next.stances.ftPct).toBe('custom');
+        expect(next.stances.pts).toBe('need');
+        expect(next.intensity.ftPct).toBe(0.8);
+        expect(next.intensity.fgPct).toBe(1);
+        expect(next.intensity.trb).toBe(1);
+    });
+
+    it('keeps a zero-weight slider edit Custom after removing a Punt', () => {
+        const stances = { ftPct: 'punt' as const };
+        const next = applyCatTuner(stances, tunersForStances(stances, CAT_KEYS), 'ftPct', 0, CAT_KEYS);
+
+        expect(next.stances.ftPct).toBe('custom');
+        expect(next.intensity.ftPct).toBe(0);
+    });
+
     it('writes Neutral 1.25 when FT% is punted and snaps Custom back', () => {
         const started = applyCatTuner(
             { ftPct: 'punt' },
