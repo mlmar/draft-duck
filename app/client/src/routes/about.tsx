@@ -24,6 +24,18 @@ function AboutPage() {
                 to sign up for. Answers stay on this device.
             </p>
             <p className='mb-0'>The quiz sets the weights. The table is the result.</p>
+            <p className='text-sm text-muted-foreground'>
+                Player statistics are sourced from{' '}
+                <a
+                    href='https://www.basketball-reference.com/'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='text-foreground underline underline-offset-4 hover:text-brand'
+                >
+                    Basketball-Reference
+                </a>
+                .
+            </p>
             <EntryCtas />
         </PageShell>
     );

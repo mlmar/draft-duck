@@ -31,7 +31,7 @@ A first-time user (no account) should be able to:
 | [00-product-and-stack.md](00-product-and-stack.md)                     | Stack, repo layout, API sketch, non-goals              |
 | [M1-foundation.md](M1-foundation.md)                                   | Workspaces, client home, Fastify health, CSV ingest    |
 | [M2-ranking-engine.md](M2-ranking-engine.md)                           | Current scoring formula and rank contract              |
-| [experiments/ranking/README.md](experiments/ranking/README.md)         | Frozen three-season backtest and result                |
+| [experiments/ranking/README.md](experiments/ranking/README.md)         | Frozen five-season ranking experiments and results     |
 | [M3-onboarding.md](M3-onboarding.md)                                   | Quiz and `DraftProfile`                                |
 | [M4-draft-assistant.md](M4-draft-assistant.md)                         | Ranked table and optional round sections               |
 | [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md)             | M4 implementation plan (current tree)                  |

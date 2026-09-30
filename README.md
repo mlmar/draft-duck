@@ -10,7 +10,7 @@ Node.js 22 or newer is required. Install with `npm ci`, copy `.env.example` to `
 
 The live `/rank` endpoint scores the selected 2025–26 per-game, per-36, or totals view. The other views supply sleeper/dud comparisons. It does **not** use the experimental blend. The [ranking spec](docs/M2-ranking-engine.md) explains the production formula.
 
-Three consecutive season sets, including advanced-stat CSVs, support a reproducible [ranking experiment](docs/experiments/ranking/README.md). Its held-out comparison did not establish a better blended rule, so production ranking remains unchanged.
+Five consecutive season sets, including advanced-stat CSVs, support reproducible [ranking experiments](docs/experiments/ranking/README.md). The original held-out comparison and two historical replication checks did not establish a better blended rule, so production ranking remains unchanged.
 
 ## Project map
 
