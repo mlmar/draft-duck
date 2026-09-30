@@ -87,7 +87,7 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [weightsOpen, setWeightsOpen] = useState(false);
     const [showRest, setShowRest] = useState(false);
-    const [simpleView, setSimpleView] = useState(() => readBoardView() !== 'full');
+    const [simpleView, setSimpleView] = useState(() => readBoardView() === 'simple');
     const settingsButtonRef = useRef<HTMLButtonElement>(null);
 
     function persistDraft(next: QuizDraft) {
