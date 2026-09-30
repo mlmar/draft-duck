@@ -30,7 +30,7 @@ export function ProfileSettings({ value, onChange, onIntensityChange }: ProfileS
                     <option value='totals'>Season totals</option>
                 </select>
                 <p className='mb-0 text-sm text-muted-foreground'>
-                    Sleeper and dud tags compare per-36 rates with per-game and totals rankings for this season.
+                    Upside and Streaky markers compare per-36 rates with per-game and totals rankings for this season.
                 </p>
             </div>
             <div className='grid gap-3'>
