@@ -1,0 +1,906 @@
+{
+    "protocol": "docs/experiments/ranking/2026-09-29-extension-protocol.md",
+    "protocolSha256": "ae440d883459d3f40e016154b80d30ea143cf9a8edb783a6192ef0d15a01a7ed",
+    "command": "node --import tsx app/core/scripts/run-ranking-extension.ts",
+    "nodeVersion": "v24.11.1",
+    "codeSha256": {
+        "runner": "29af47a6419dc1f9d61b6f452b4396451f83472c01d921d801d635975a7cd82f",
+        "evaluator": "42cc06adcc8d0968cfa27a9474fa35acb7cfbc3950cc7a634d5281866f307f1e"
+    },
+    "inputSha256": {
+        "app/data/21_22_per_36.csv": "0fac1abcb0b49dadb77e56439f8a97e388e862c0c418363906a0fc4df7e43f76",
+        "app/data/21_22_per_game.csv": "beec3f0fbe46a35efd29db1158f85bdf6d31117d22eacdbfc9245f9abf0e611b",
+        "app/data/21_22_totals.csv": "c18682e50c947880b17d00ca32d59476c18249774a42f1c93f552801d348fe8b",
+        "app/data/22_23_per_36.csv": "a65d3501c501912bced4d0f478a1f5195f64ff26375b0b3c23764e3a6197c072",
+        "app/data/22_23_per_game.csv": "77b0576d057896de7fe7d43582c6e4058fb78c5538718b542693b81c1dec70c3",
+        "app/data/22_23_totals.csv": "d0ea5b7fbbed47e9bcc8e2da59b1bb72dca0d0b94ac286d2a86c925ea79417af",
+        "app/data/23_24_per_game.csv": "484a5ad5ecf010af475d419885a11c0b39db9264d051b98db4d0ac96c8d6fc0f"
+    },
+    "advancedPresenceSha256": {
+        "app/data/21_22_advanced.csv": "9072dd6ff26b92c3789a22e2fc29698dee5f95e04f4c978ce0e6cbe1207b3816",
+        "app/data/22_23_advanced.csv": "c24d360f90287ddb6fba7bd807924601de071f86b6804a120ff803278ca4dc87"
+    },
+    "transitions": [
+        {
+            "id": "21_22-to-22_23",
+            "from": "21_22",
+            "to": "22_23",
+            "profiles": [
+                {
+                    "profile": "9-cat",
+                    "sourceEligible": 443,
+                    "futureParticipants": 539,
+                    "futureReference": 436,
+                    "replacementComposite": 0.6956344795239098,
+                    "tests": [
+                        {
+                            "id": "per-game",
+                            "candidate": {
+                                "id": "per-game",
+                                "perGame": 1,
+                                "totals": 0,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 92.15208923601816,
+                            "at12": 37.1594424776162,
+                            "at50": 73.97127707654923,
+                            "at156": 92.15208923601816,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "duranke01",
+                                "embiijo01",
+                                "jamesle01",
+                                "irvinky01",
+                                "antetgi01",
+                                "townska01",
+                                "curryst01",
+                                "davisan02",
+                                "hardeja01",
+                                "youngtr01",
+                                "murrade01"
+                            ]
+                        },
+                        {
+                            "id": "totals",
+                            "candidate": {
+                                "id": "totals",
+                                "perGame": 0,
+                                "totals": 1,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 83.75279921228747,
+                            "at12": 35.72594596663419,
+                            "at50": 66.33869366466122,
+                            "at156": 83.75279921228747,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "townska01",
+                                "youngtr01",
+                                "tatumja01",
+                                "derozde01",
+                                "duranke01",
+                                "antetgi01",
+                                "halibty01",
+                                "bridgmi02",
+                                "murrade01",
+                                "curryst01"
+                            ]
+                        },
+                        {
+                            "id": "per-36",
+                            "candidate": {
+                                "id": "per-36",
+                                "perGame": 0,
+                                "totals": 0,
+                                "per36": 1,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 69.28618455535928,
+                            "at12": 30.341382134278714,
+                            "at50": 55.56731487711952,
+                            "at156": 69.28618455535928,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "reedpa01",
+                                "antetgi01",
+                                "duranke01",
+                                "porzikr01",
+                                "bassech01",
+                                "muscami01",
+                                "curryst01",
+                                "jamesle01",
+                                "irvinky01",
+                                "youngtr01"
+                            ]
+                        },
+                        {
+                            "id": "game-70-total-30",
+                            "candidate": {
+                                "id": "game-70-total-30",
+                                "perGame": 0.7,
+                                "totals": 0.3,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 90.19445646371734,
+                            "at12": 36.86497192747496,
+                            "at50": 71.80983271524563,
+                            "at156": 90.19445646371734,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "duranke01",
+                                "townska01",
+                                "antetgi01",
+                                "jamesle01",
+                                "youngtr01",
+                                "curryst01",
+                                "hardeja01",
+                                "murrade01",
+                                "tatumja01",
+                                "derozde01"
+                            ]
+                        },
+                        {
+                            "id": "game-50-total-50",
+                            "candidate": {
+                                "id": "game-50-total-50",
+                                "perGame": 0.5,
+                                "totals": 0.5,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 89.99885397827447,
+                            "at12": 36.96156545833501,
+                            "at50": 70.01888387790899,
+                            "at156": 89.99885397827447,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "duranke01",
+                                "townska01",
+                                "antetgi01",
+                                "youngtr01",
+                                "jamesle01",
+                                "tatumja01",
+                                "curryst01",
+                                "murrade01",
+                                "derozde01",
+                                "hardeja01"
+                            ]
+                        },
+                        {
+                            "id": "game-55-total-35-rate-10",
+                            "candidate": {
+                                "id": "game-55-total-35-rate-10",
+                                "perGame": 0.55,
+                                "totals": 0.35,
+                                "per36": 0.1,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 90.17784688520977,
+                            "at12": 36.883717956901656,
+                            "at50": 71.58628010985576,
+                            "at156": 90.17784688520977,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "duranke01",
+                                "townska01",
+                                "antetgi01",
+                                "youngtr01",
+                                "jamesle01",
+                                "curryst01",
+                                "murrade01",
+                                "tatumja01",
+                                "hardeja01",
+                                "derozde01"
+                            ]
+                        },
+                        {
+                            "id": "game-55-total-35-rate-10-minutes",
+                            "candidate": {
+                                "id": "game-55-total-35-rate-10-minutes",
+                                "perGame": 0.55,
+                                "totals": 0.35,
+                                "per36": 0.1,
+                                "minutesAdjusted": true
+                            },
+                            "primary": 90.18502324127417,
+                            "at12": 36.883717956901656,
+                            "at50": 71.58628010985576,
+                            "at156": 90.18502324127417,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "duranke01",
+                                "townska01",
+                                "antetgi01",
+                                "youngtr01",
+                                "jamesle01",
+                                "curryst01",
+                                "murrade01",
+                                "tatumja01",
+                                "hardeja01",
+                                "derozde01"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "profile": "8-cat",
+                    "sourceEligible": 443,
+                    "futureParticipants": 539,
+                    "futureReference": 436,
+                    "replacementComposite": 0.9939423658291404,
+                    "tests": [
+                        {
+                            "id": "per-game",
+                            "candidate": {
+                                "id": "per-game",
+                                "perGame": 1,
+                                "totals": 0,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 109.36274055695036,
+                            "at12": 45.698416835757335,
+                            "at50": 89.82853422249299,
+                            "at156": 109.36274055695036,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "duranke01",
+                                "embiijo01",
+                                "jamesle01",
+                                "hardeja01",
+                                "antetgi01",
+                                "youngtr01",
+                                "irvinky01",
+                                "curryst01",
+                                "townska01",
+                                "doncilu01",
+                                "georgpa01"
+                            ]
+                        },
+                        {
+                            "id": "totals",
+                            "candidate": {
+                                "id": "totals",
+                                "perGame": 0,
+                                "totals": 1,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 101.38379109738044,
+                            "at12": 44.87931188295071,
+                            "at50": 82.34202106798077,
+                            "at156": 101.38379109738044,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "youngtr01",
+                                "embiijo01",
+                                "townska01",
+                                "tatumja01",
+                                "derozde01",
+                                "antetgi01",
+                                "hardeja01",
+                                "duranke01",
+                                "ballla01",
+                                "halibty01",
+                                "curryst01"
+                            ]
+                        },
+                        {
+                            "id": "per-36",
+                            "candidate": {
+                                "id": "per-36",
+                                "perGame": 0,
+                                "totals": 0,
+                                "per36": 1,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 89.21884249500381,
+                            "at12": 44.62743517491833,
+                            "at50": 74.58603943926643,
+                            "at156": 89.21884249500381,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "antetgi01",
+                                "duranke01",
+                                "youngtr01",
+                                "curryst01",
+                                "jamesle01",
+                                "townska01",
+                                "doncilu01",
+                                "ballla01",
+                                "georgpa01",
+                                "hardeja01"
+                            ]
+                        },
+                        {
+                            "id": "game-70-total-30",
+                            "candidate": {
+                                "id": "game-70-total-30",
+                                "perGame": 0.7,
+                                "totals": 0.3,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 109.68067284333432,
+                            "at12": 46.94011998332863,
+                            "at50": 87.56146838665579,
+                            "at156": 109.68067284333432,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "duranke01",
+                                "youngtr01",
+                                "hardeja01",
+                                "antetgi01",
+                                "jamesle01",
+                                "townska01",
+                                "curryst01",
+                                "tatumja01",
+                                "doncilu01",
+                                "murrade01"
+                            ]
+                        },
+                        {
+                            "id": "game-50-total-50",
+                            "candidate": {
+                                "id": "game-50-total-50",
+                                "perGame": 0.5,
+                                "totals": 0.5,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 108.05505537527726,
+                            "at12": 45.57583735898731,
+                            "at50": 85.2019347663306,
+                            "at156": 108.05505537527726,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "youngtr01",
+                                "duranke01",
+                                "antetgi01",
+                                "hardeja01",
+                                "townska01",
+                                "jamesle01",
+                                "tatumja01",
+                                "curryst01",
+                                "derozde01",
+                                "ballla01"
+                            ]
+                        },
+                        {
+                            "id": "game-55-total-35-rate-10",
+                            "candidate": {
+                                "id": "game-55-total-35-rate-10",
+                                "perGame": 0.55,
+                                "totals": 0.35,
+                                "per36": 0.1,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 109.2578235240506,
+                            "at12": 46.77669437274027,
+                            "at50": 86.20620041868443,
+                            "at156": 109.2578235240506,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "duranke01",
+                                "youngtr01",
+                                "antetgi01",
+                                "hardeja01",
+                                "townska01",
+                                "jamesle01",
+                                "curryst01",
+                                "tatumja01",
+                                "doncilu01",
+                                "murrade01"
+                            ]
+                        },
+                        {
+                            "id": "game-55-total-35-rate-10-minutes",
+                            "candidate": {
+                                "id": "game-55-total-35-rate-10-minutes",
+                                "perGame": 0.55,
+                                "totals": 0.35,
+                                "per36": 0.1,
+                                "minutesAdjusted": true
+                            },
+                            "primary": 109.26033151402856,
+                            "at12": 46.77669437274027,
+                            "at50": 86.20620041868443,
+                            "at156": 109.26033151402856,
+                            "missing": 61,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "duranke01",
+                                "youngtr01",
+                                "antetgi01",
+                                "hardeja01",
+                                "townska01",
+                                "jamesle01",
+                                "curryst01",
+                                "tatumja01",
+                                "doncilu01",
+                                "murrade01"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "22_23-to-23_24",
+            "from": "22_23",
+            "to": "23_24",
+            "profiles": [
+                {
+                    "profile": "9-cat",
+                    "sourceEligible": 436,
+                    "futureParticipants": 572,
+                    "futureReference": 445,
+                    "replacementComposite": 0.9823650495953463,
+                    "tests": [
+                        {
+                            "id": "per-game",
+                            "candidate": {
+                                "id": "per-game",
+                                "perGame": 1,
+                                "totals": 0,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 103.34822040955028,
+                            "at12": 45.96687417986407,
+                            "at50": 82.77255308457384,
+                            "at156": 103.34822040955028,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "duranke01",
+                                "davisan02",
+                                "lillada01",
+                                "curryst01",
+                                "irvinky01",
+                                "tatumja01",
+                                "butleji01",
+                                "halibty01",
+                                "jacksja02"
+                            ]
+                        },
+                        {
+                            "id": "totals",
+                            "candidate": {
+                                "id": "totals",
+                                "perGame": 0,
+                                "totals": 1,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 96.7606608581649,
+                            "at12": 40.82751686050679,
+                            "at50": 78.73223850825562,
+                            "at156": 96.7606608581649,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "tatumja01",
+                                "sabondo01",
+                                "lopezbr01",
+                                "lillada01",
+                                "butleji01",
+                                "bridgmi01",
+                                "vucevni01",
+                                "mitchdo01",
+                                "porzikr01"
+                            ]
+                        },
+                        {
+                            "id": "per-36",
+                            "candidate": {
+                                "id": "per-36",
+                                "perGame": 0,
+                                "totals": 0,
+                                "per36": 1,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 86.26800128232665,
+                            "at12": 45.083245029984205,
+                            "at50": 72.71225762886739,
+                            "at156": 86.26800128232665,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "jacksja02",
+                                "curryst01",
+                                "lillada01",
+                                "davisan02",
+                                "butleji01",
+                                "halibty01",
+                                "duranke01",
+                                "leonaka01",
+                                "porzikr01"
+                            ]
+                        },
+                        {
+                            "id": "game-70-total-30",
+                            "candidate": {
+                                "id": "game-70-total-30",
+                                "perGame": 0.7,
+                                "totals": 0.3,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 101.78240658222917,
+                            "at12": 45.383658946840896,
+                            "at50": 82.25415982895376,
+                            "at156": 101.78240658222917,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "lillada01",
+                                "davisan02",
+                                "tatumja01",
+                                "butleji01",
+                                "duranke01",
+                                "irvinky01",
+                                "curryst01",
+                                "porzikr01",
+                                "jacksja02"
+                            ]
+                        },
+                        {
+                            "id": "game-50-total-50",
+                            "candidate": {
+                                "id": "game-50-total-50",
+                                "perGame": 0.5,
+                                "totals": 0.5,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 100.99385974915928,
+                            "at12": 44.44347361796191,
+                            "at50": 81.24996335414507,
+                            "at156": 100.99385974915928,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "lillada01",
+                                "tatumja01",
+                                "butleji01",
+                                "davisan02",
+                                "irvinky01",
+                                "porzikr01",
+                                "mitchdo01",
+                                "curryst01",
+                                "jacksja02"
+                            ]
+                        },
+                        {
+                            "id": "game-55-total-35-rate-10",
+                            "candidate": {
+                                "id": "game-55-total-35-rate-10",
+                                "perGame": 0.55,
+                                "totals": 0.35,
+                                "per36": 0.1,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 102.0565088179454,
+                            "at12": 45.162384914929135,
+                            "at50": 81.66961263050857,
+                            "at156": 102.0565088179454,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "lillada01",
+                                "tatumja01",
+                                "davisan02",
+                                "butleji01",
+                                "curryst01",
+                                "irvinky01",
+                                "duranke01",
+                                "jacksja02",
+                                "porzikr01"
+                            ]
+                        },
+                        {
+                            "id": "game-55-total-35-rate-10-minutes",
+                            "candidate": {
+                                "id": "game-55-total-35-rate-10-minutes",
+                                "perGame": 0.55,
+                                "totals": 0.35,
+                                "per36": 0.1,
+                                "minutesAdjusted": true
+                            },
+                            "primary": 102.0574312768646,
+                            "at12": 45.162384914929135,
+                            "at50": 81.66961263050857,
+                            "at156": 102.0574312768646,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "lillada01",
+                                "tatumja01",
+                                "davisan02",
+                                "butleji01",
+                                "curryst01",
+                                "irvinky01",
+                                "duranke01",
+                                "jacksja02",
+                                "porzikr01"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "profile": "8-cat",
+                    "sourceEligible": 436,
+                    "futureParticipants": 572,
+                    "futureReference": 445,
+                    "replacementComposite": 1.0779947343557716,
+                    "tests": [
+                        {
+                            "id": "per-game",
+                            "candidate": {
+                                "id": "per-game",
+                                "perGame": 1,
+                                "totals": 0,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 124.76441629477773,
+                            "at12": 56.005295481169924,
+                            "at50": 99.0468481785911,
+                            "at156": 124.76441629477773,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "duranke01",
+                                "lillada01",
+                                "curryst01",
+                                "davisan02",
+                                "tatumja01",
+                                "doncilu01",
+                                "irvinky01",
+                                "halibty01",
+                                "hardeja01"
+                            ]
+                        },
+                        {
+                            "id": "totals",
+                            "candidate": {
+                                "id": "totals",
+                                "perGame": 0,
+                                "totals": 1,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 119.25799910938741,
+                            "at12": 53.70689496766096,
+                            "at50": 95.96609150802519,
+                            "at156": 119.25799910938741,
+                            "missing": 45,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "gilgesh01",
+                                "tatumja01",
+                                "sabondo01",
+                                "lillada01",
+                                "youngtr01",
+                                "doncilu01",
+                                "mitchdo01",
+                                "edwaran01",
+                                "lopezbr01",
+                                "vucevni01"
+                            ]
+                        },
+                        {
+                            "id": "per-36",
+                            "candidate": {
+                                "id": "per-36",
+                                "perGame": 0,
+                                "totals": 0,
+                                "per36": 1,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 107.56346876502246,
+                            "at12": 56.671263963533654,
+                            "at50": 91.05691757160203,
+                            "at156": 107.56346876502246,
+                            "missing": 45,
+                            "topIds": [
+                                "jokicni01",
+                                "embiijo01",
+                                "gilgesh01",
+                                "curryst01",
+                                "lillada01",
+                                "duranke01",
+                                "halibty01",
+                                "jacksja02",
+                                "davisan02",
+                                "doncilu01",
+                                "butleji01",
+                                "tatumja01"
+                            ]
+                        },
+                        {
+                            "id": "game-70-total-30",
+                            "candidate": {
+                                "id": "game-70-total-30",
+                                "perGame": 0.7,
+                                "totals": 0.3,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 124.19471383642471,
+                            "at12": 55.4112437213002,
+                            "at50": 99.47995524852439,
+                            "at156": 124.19471383642471,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "lillada01",
+                                "tatumja01",
+                                "doncilu01",
+                                "curryst01",
+                                "davisan02",
+                                "duranke01",
+                                "mitchdo01",
+                                "irvinky01",
+                                "porzikr01"
+                            ]
+                        },
+                        {
+                            "id": "game-50-total-50",
+                            "candidate": {
+                                "id": "game-50-total-50",
+                                "perGame": 0.5,
+                                "totals": 0.5,
+                                "per36": 0,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 121.56813041999942,
+                            "at12": 54.72359473332948,
+                            "at50": 98.0389591022331,
+                            "at156": 121.56813041999942,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "lillada01",
+                                "tatumja01",
+                                "doncilu01",
+                                "curryst01",
+                                "mitchdo01",
+                                "davisan02",
+                                "sabondo01",
+                                "porzikr01",
+                                "youngtr01"
+                            ]
+                        },
+                        {
+                            "id": "game-55-total-35-rate-10",
+                            "candidate": {
+                                "id": "game-55-total-35-rate-10",
+                                "perGame": 0.55,
+                                "totals": 0.35,
+                                "per36": 0.1,
+                                "minutesAdjusted": false
+                            },
+                            "primary": 123.3244274524845,
+                            "at12": 55.368407390081806,
+                            "at50": 98.03674867370353,
+                            "at156": 123.3244274524845,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "lillada01",
+                                "tatumja01",
+                                "doncilu01",
+                                "curryst01",
+                                "davisan02",
+                                "mitchdo01",
+                                "duranke01",
+                                "porzikr01",
+                                "irvinky01"
+                            ]
+                        },
+                        {
+                            "id": "game-55-total-35-rate-10-minutes",
+                            "candidate": {
+                                "id": "game-55-total-35-rate-10-minutes",
+                                "perGame": 0.55,
+                                "totals": 0.35,
+                                "per36": 0.1,
+                                "minutesAdjusted": true
+                            },
+                            "primary": 123.32317594280174,
+                            "at12": 55.368407390081806,
+                            "at50": 98.03674867370353,
+                            "at156": 123.32317594280174,
+                            "missing": 45,
+                            "topIds": [
+                                "embiijo01",
+                                "jokicni01",
+                                "gilgesh01",
+                                "lillada01",
+                                "tatumja01",
+                                "doncilu01",
+                                "curryst01",
+                                "davisan02",
+                                "mitchdo01",
+                                "duranke01",
+                                "porzikr01",
+                                "irvinky01"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "comparisons": [
+        {
+            "transition": "21_22-to-22_23",
+            "fixedCandidate": "game-70-total-30",
+            "candidatePrimary": 90.19445646371734,
+            "strongestBaseline": 92.15208923601816,
+            "difference": -1.957632772300812,
+            "beatsAllSingleViews": false
+        },
+        {
+            "transition": "22_23-to-23_24",
+            "fixedCandidate": "game-70-total-30",
+            "candidatePrimary": 101.78240658222917,
+            "strongestBaseline": 103.34822040955028,
+            "difference": -1.565813827321108,
+            "beatsAllSingleViews": false
+        }
+    ],
+    "historicalReplicationSupport": false
+}
