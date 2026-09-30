@@ -46,6 +46,28 @@ describe('setCatStance and setCatTuner', () => {
         expect(reset.stances.fgPct).toBe('neutral');
         expect(reset.intensity.fgPct).toBe(1.25);
     });
+
+    it('converts a named build to Custom when its Punt slider is edited', () => {
+        const fortress = applyArchetype(DEFAULT_QUIZ_DRAFT, 'puntFt');
+        const edited = setCatTuner(fortress, 'ftPct', 0.8);
+
+        expect(edited.stances.ftPct).toBe('custom');
+        expect(edited.intensity.ftPct).toBe(0.8);
+        expect(edited.stances.fgPct).toBe('need');
+        expect(edited.stances.trb).toBe('need');
+        expect(edited.intensity.stl).toBe(1);
+        expect(edited.archetypeId).toBe('custom');
+        expect(quizDraftToProfile(edited).archetypeId).toBe('custom');
+    });
+
+    it('keeps an edited zero-weight Punt as Custom', () => {
+        const fortress = applyArchetype(DEFAULT_QUIZ_DRAFT, 'puntFt');
+        const edited = setCatTuner(fortress, 'ftPct', 0);
+
+        expect(edited.stances.ftPct).toBe('custom');
+        expect(edited.intensity.ftPct).toBe(0);
+        expect(edited.archetypeId).toBe('custom');
+    });
 });
 
 describe('named applyArchetype', () => {

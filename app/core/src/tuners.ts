@@ -116,16 +116,18 @@ export function applyCatTuner(
     tuner: number,
     enabledCats: readonly CatKey[]
 ): { stances: Partial<Record<CatKey, CatStance>>; intensity: Partial<Record<CatKey, number>> } {
-    if ((stances[cat] ?? 'neutral') === 'punt') {
-        return { stances, intensity: { ...intensity, [cat]: TUNER_PUNT } };
-    }
     const value = clampTuner(tuner);
     const stance = stances[cat] ?? 'neutral';
     let nextStances = stances;
-    if (stance !== 'custom' && !sameTuner(value, presetTuner(cat, stances, enabledCats, stance))) {
+    if (stance === 'punt') {
+        nextStances = { ...stances, [cat]: 'custom' };
+    } else if (stance !== 'custom' && !sameTuner(value, presetTuner(cat, stances, enabledCats, stance))) {
         nextStances = { ...stances, [cat]: 'custom' };
     }
-    return { stances: nextStances, intensity: { ...intensity, [cat]: value } };
+    return {
+        stances: nextStances,
+        intensity: tunersForStances(nextStances, enabledCats, { ...intensity, [cat]: value })
+    };
 }
 
 export function hasCustomCat(stances: Partial<Record<CatKey, CatStance>>, enabledCats: readonly CatKey[]): boolean {
