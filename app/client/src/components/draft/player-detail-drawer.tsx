@@ -180,7 +180,7 @@ function PlayerFitExplanation({ player, profile }: { player: RankedPlayer; profi
     const summary = contributionSummary(player, cats);
 
     return (
-        <section aria-labelledby='why-player-title' className='grid gap-2'>
+        <section aria-labelledby='why-player-title' className='grid gap-3 p-0'>
             <h2 id='why-player-title' className='mb-0 text-base font-semibold'>
                 Why this player?
             </h2>
@@ -190,7 +190,7 @@ function PlayerFitExplanation({ player, profile }: { player: RankedPlayer; profi
                     Score breakdown is unavailable in this response.
                 </p>
             ) : null}
-            <div className='grid gap-1'>
+            <div className='grid gap-2'>
                 {cats.map((cat) => (
                     <CategoryExplanation key={cat} player={player} cat={cat} showContribution={summary !== null} />
                 ))}
@@ -214,7 +214,7 @@ function CategoryExplanation({
     const contribution = player.contributions?.[cat];
 
     return (
-        <div className='flex items-baseline justify-between gap-3 border-b border-border/70 text-sm'>
+        <div className='flex items-baseline justify-between gap-3 border-b border-border/70 py-1.5 text-sm'>
             <span className='min-w-0 truncate'>
                 <span className='font-medium'>{CAT_LABELS[cat]}</span>
                 <span className='text-muted-foreground'> · {stat}</span>
