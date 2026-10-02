@@ -523,7 +523,7 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 ### Self review
 
 - Status: complete; no blocking findings.
-- Reviewed revision: Phase 2.2 implementation on `codex/player-visualizations`, based on `origin/main` at `79d38b5`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
+- Reviewed revision: implementation commit `f7881cf` on `codex/player-visualizations`, based on `origin/main` at `79d38b5`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
 - Evidence: helper unit tests, full workspace test run, client TypeScript check, production client build, desktop and phone screenshots, browser accessibility inspection, source review, and formatting/diff checks recorded below.
 - Findings: the drawer consumes the existing ranked response and authoritative `contributions`; malformed or older response maps suppress the complete score breakdown without hiding the chart.
 - Readability gate: comments explain the new geometry/data types, chart, explanatory sections, selection/focus effects, fallback paths, and tests.
@@ -563,7 +563,7 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 
 ### Documented misses, deviations
 
-- Assessment: No requirements or constraints were found to be missed in self-review.
+- Assessment: Not assessed; human review is pending. Self-review found no blocking findings.
 - Finding record: document each discovered miss separately.
     - Impact: identify affected behavior or requirement.
     - Cause: record why the gap occurred.
@@ -611,7 +611,7 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 
 - Active phase: 2.2.
 - Status: awaiting-human-review.
-- Reviewed revision: Phase 2.2 implementation on `codex/player-visualizations`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
+- Reviewed revision: implementation commit `f7881cf` on `codex/player-visualizations`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
 - Evidence: helper tests, 93 core and 31 client tests, client TypeScript check, production build, desktop/phone browser demonstrations, AX and interaction checks, comment review, Prettier and diff checks.
 - Outstanding work: human acceptance of this leaf before Phase 2.3 begins.
 - Pending decision: user acceptance of this phase after concrete review.
