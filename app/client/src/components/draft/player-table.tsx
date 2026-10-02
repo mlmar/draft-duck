@@ -29,6 +29,10 @@ type PlayerTableProps = {
     highlight: CatHighlightStrategy;
     valueMode: CatValueMode;
     yourOverallPicks?: ReadonlySet<number>;
+    // Optional so non-board PlayerTable consumers keep their existing static name presentation.
+    onPlayerSelect?: (player: RankedPlayer, trigger: HTMLButtonElement) => void;
+    // Prevent explaining placeholder rows using a different saved profile's weights.
+    playerDetailsDisabled?: boolean;
 };
 
 const IDENTITY_COLS = 4;
@@ -72,7 +76,9 @@ export function PlayerTable({
     profile,
     highlight,
     valueMode,
-    yourOverallPicks
+    yourOverallPicks,
+    onPlayerSelect,
+    playerDetailsDisabled = false
 }: PlayerTableProps) {
     const hasPlayers = groups.some((group) => group.players.length > 0);
     if (!hasPlayers) {
@@ -142,7 +148,19 @@ export function PlayerTable({
                                 </TableCell>
                                 <TableCell className={`${stickyName} ${fill} overflow-hidden`}>
                                     <span className='flex items-center gap-2 overflow-hidden'>
-                                        <span className='truncate font-medium'>{player.name}</span>
+                                        {onPlayerSelect ? (
+                                            <button
+                                                type='button'
+                                                aria-haspopup='dialog'
+                                                disabled={playerDetailsDisabled}
+                                                onClick={(event) => onPlayerSelect(player, event.currentTarget)}
+                                                className='min-w-0 truncate rounded-sm text-left font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-60'
+                                            >
+                                                {player.name}
+                                            </button>
+                                        ) : (
+                                            <span className='truncate font-medium'>{player.name}</span>
+                                        )}
                                         {player.upsideSignal ? (
                                             <span
                                                 className='shrink-0 rounded bg-muted px-1.5 py-0.5 text-xs font-medium'
