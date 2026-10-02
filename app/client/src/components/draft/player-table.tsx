@@ -1,6 +1,7 @@
 import { catHeatStyle } from '@/lib/cat-heat';
 import { formatCatStat } from '@/lib/format-stats';
 import { YourPickMark } from '@/components/draft/your-pick-mark';
+import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import {
@@ -149,15 +150,16 @@ export function PlayerTable({
                                 <TableCell className={`${stickyName} ${fill} overflow-hidden`}>
                                     <span className='flex items-center gap-2 overflow-hidden'>
                                         {onPlayerSelect ? (
-                                            <button
+                                            <Button
                                                 type='button'
+                                                variant='ghost'
                                                 aria-haspopup='dialog'
                                                 disabled={playerDetailsDisabled}
                                                 onClick={(event) => onPlayerSelect(player, event.currentTarget)}
-                                                className='min-w-0 truncate rounded-sm text-left font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-60'
+                                                className='h-auto w-fit min-w-0 max-w-full shrink justify-start overflow-hidden truncate rounded-sm px-0 py-0 text-left font-medium text-foreground underline-offset-2 hover:bg-transparent hover:text-foreground hover:underline focus-visible:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-60'
                                             >
                                                 {player.name}
-                                            </button>
+                                            </Button>
                                         ) : (
                                             <span className='truncate font-medium'>{player.name}</span>
                                         )}
