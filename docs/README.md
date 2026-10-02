@@ -4,6 +4,10 @@ Category-league fantasy basketball helper: quiz for CAT preferences, rank player
 
 This folder describes the shipped CSV-backed draft helper and its historical milestones. M1–M4 are complete; M5 records extension seams. The client and API deployment setup is in [deploy.md](deploy.md). Yahoo, auth, live NBA fetch, and AI remain future work.
 
+## Active feature roadmaps
+
+- [Player visualizations](plans/2026-10-02-player-visualizations.md): player detail drawer, category score contributions, and mini build charts. Specification v5 approved on 2026-10-02; no implementation or shipping acceptance is recorded.
+
 ## Status
 
 This table tracks shipped milestone status. Later experiments do not change that status unless app behavior changes.
