@@ -18,7 +18,7 @@ type PlayerDetailDrawerProps = {
 const Z_TICKS = [
     { value: 3, top: 0, label: '+3' },
     { value: 1.5, top: 25, label: '+1.5' },
-    { value: 0, top: 50, label: 'Average (0)' },
+    { value: 0, top: 50, label: 'Avg (0)' },
     { value: -1.5, top: 75, label: '−1.5' },
     { value: -3, top: 100, label: '−3' }
 ] as const;
@@ -180,7 +180,7 @@ function PlayerFitExplanation({ player, profile }: { player: RankedPlayer; profi
     const summary = contributionSummary(player, cats);
 
     return (
-        <section aria-labelledby='why-player-title' className='grid gap-3'>
+        <section aria-labelledby='why-player-title' className='grid gap-2'>
             <h2 id='why-player-title' className='mb-0 text-base font-semibold'>
                 Why this player?
             </h2>
@@ -190,7 +190,7 @@ function PlayerFitExplanation({ player, profile }: { player: RankedPlayer; profi
                     Score breakdown is unavailable in this response.
                 </p>
             ) : null}
-            <div className='grid gap-2'>
+            <div className='grid gap-1'>
                 {cats.map((cat) => (
                     <CategoryExplanation key={cat} player={player} cat={cat} showContribution={summary !== null} />
                 ))}
@@ -214,7 +214,7 @@ function CategoryExplanation({
     const contribution = player.contributions?.[cat];
 
     return (
-        <div className='flex items-baseline justify-between gap-3 border-b border-border/70 py-1.5 text-sm'>
+        <div className='flex items-baseline justify-between gap-3 border-b border-border/70 text-sm'>
             <span className='min-w-0 truncate'>
                 <span className='font-medium'>{CAT_LABELS[cat]}</span>
                 <span className='text-muted-foreground'> · {stat}</span>
