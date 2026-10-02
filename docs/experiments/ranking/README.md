@@ -4,6 +4,8 @@ The [frozen protocol](protocol.md) specifies the hypotheses, population, candida
 
 The [2026-09-29 extension protocol](2026-09-29-extension-protocol.md) and [extension results](2026-09-29-extension-results.md) add 2021–22 and 2022–23 data, creating two earlier transition tests. Their [machine record](2026-09-29-extension-results.json) includes individual scores and input hashes. The previously selected 70/30 blend trails the strongest single-view baseline on both new 9-cat transitions, so it does not meet the extension's historical replication criterion.
 
+The separate [minutes experiment protocol](../minutes/protocol.md) tests MP as a next-season predictor, a ranking signal, and an adjustment to Sleeper/Dud tags. Its [results](../minutes/results.md) include a seasonal volatility proxy and chronological prediction checks. These seasons overlap earlier ranking experiments, so the evidence is retrospective.
+
 **Conclusion:** the development transition selected a 70% per-game / 30% totals blend. It fell below the per-game-only baseline on the original held-out transition and both newly tested earlier transitions. No blend has demonstrated a reliable improvement under the prespecified checks, so the app's `/rank` behavior remains unchanged. Four overlapping historical transitions cannot establish a validated optimum.
 
 Run the report from the repository root with `node --import tsx app/core/scripts/run-ranking-experiment.ts`. Run the explicitly post-result diagnostics with `node --import tsx app/core/scripts/diagnose-ranking-misses.ts`. The JSON report records input and evaluator SHA-256 hashes. A changed input or code hash means a new run must be recorded and interpreted as such.

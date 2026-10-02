@@ -1,0 +1,1993 @@
+{
+  "protocol": "docs/experiments/minutes/protocol.md",
+  "protocolSha256": "f591ed8cc3025d3fe3b13311308a27ec655b7239a37674e03cd3b10011b0b7ee",
+  "command": "node --import tsx app/core/scripts/run-minutes-experiment.ts",
+  "nodeVersion": "v24.11.1",
+  "codeSha256": {
+    "app/core/src/minutes-experiment.ts": "907719e9535b404dbe228c534ada16fed81c0ea0a04d8d8a066d4ec826d0e5be",
+    "app/core/scripts/run-minutes-experiment.ts": "94341b1ba8a4ab26122f3ade956789e96997d531956fde5390eb566d0637a878",
+    "app/core/src/ranker.ts": "4625252c1eb926fe1f0495da302b8ea89c182a75d269b667ef9d1bed600dd8ae",
+    "app/core/src/ranking-experiment.ts": "42cc06adcc8d0968cfa27a9474fa35acb7cfbc3950cc7a634d5281866f307f1e",
+    "app/core/src/rank-modes.ts": "e4174345ecfa262dd40dd3ccc8b9e552f55f683b5b64b58ab44735331c5cea3d",
+    "app/core/src/csv-provider.ts": "081ff49c8bd221cf96f8584fa94dd5a86827ad934288587b166447bdd13eed49",
+    "app/core/src/profile.ts": "2e8fa6e981497464c6efbe03721c41454b60592048f72d589c933768c0bb75f3",
+    "app/core/src/stats.ts": "3efc35cb8302184e4a8d8082a3a761572d62d8314c7c59113b3ef077e8891948",
+    "app/core/src/types.ts": "71f2db204efce15871c7dec8b07db1534e89c940a06e85907a608ee945dc75c1",
+    "app/core/src/operator-weights.ts": "c73944f5fa79844757bb077a0f64d18ae3e0f111ed94f53edd69d411def1d3a1",
+    "app/core/config/category-weights.json": "48cc10ebc4deb013d2d9cf186f0ce7dfef2ddfe8af0f904942523a3de9a50663",
+    "app/core/config/ranker.json": "08f02752b2e3cb8ecb15253d7ff90a455da535c71b59beec4907cb1b7b4cd582"
+  },
+  "inputSha256": {
+    "app/data/21_22_per_36.csv": "0fac1abcb0b49dadb77e56439f8a97e388e862c0c418363906a0fc4df7e43f76",
+    "app/data/21_22_per_game.csv": "beec3f0fbe46a35efd29db1158f85bdf6d31117d22eacdbfc9245f9abf0e611b",
+    "app/data/21_22_totals.csv": "c18682e50c947880b17d00ca32d59476c18249774a42f1c93f552801d348fe8b",
+    "app/data/22_23_per_36.csv": "a65d3501c501912bced4d0f478a1f5195f64ff26375b0b3c23764e3a6197c072",
+    "app/data/22_23_per_game.csv": "77b0576d057896de7fe7d43582c6e4058fb78c5538718b542693b81c1dec70c3",
+    "app/data/22_23_totals.csv": "d0ea5b7fbbed47e9bcc8e2da59b1bb72dca0d0b94ac286d2a86c925ea79417af",
+    "app/data/23_24_per_36.csv": "6d66c3b276c295e8761f5d53fc311c84bb4356f3bea92ddf9009c654c9872bdd",
+    "app/data/23_24_per_game.csv": "484a5ad5ecf010af475d419885a11c0b39db9264d051b98db4d0ac96c8d6fc0f",
+    "app/data/23_24_totals.csv": "e7d44f5da1d41cecba532baf5d5bc53ae61999249914658873f08cc409a7b75d",
+    "app/data/24_25_per_36.csv": "13e8e1d3124aa86567076cc6ed4994024dce5c0f5547e0edfa47ded4555c9439",
+    "app/data/24_25_per_game.csv": "62a936e2ed809b0daedecb2f5f023770c8ae3d5895dc8895e063c7db76961429",
+    "app/data/24_25_totals.csv": "161574dcbfe2416b8490b6be290b505ae02c407ceb68ccaf65b8640ab2b5546d",
+    "app/data/25_26_per_game.csv": "bb7d74560793d6b373cc4b3212f382474b78fec0b4535a7a186bd754656a86c0"
+  },
+  "transitions": [
+    {
+      "id": "21_22-to-22_23",
+      "from": "21_22",
+      "to": "22_23",
+      "eligibleSourcePlayers": 443,
+      "futureParticipants": 539,
+      "futureReferencePlayers": 436,
+      "candidateScores": [
+        {
+          "id": "per-game",
+          "primary": 92.15208923601816,
+          "at12": 37.1594424776162,
+          "at50": 73.97127707654923,
+          "at156": 92.15208923601816,
+          "top156Hits": 116,
+          "missing": 61,
+          "parent": null
+        },
+        {
+          "id": "totals",
+          "primary": 83.75279921228747,
+          "at12": 35.72594596663419,
+          "at50": 66.33869366466122,
+          "at156": 83.75279921228747,
+          "top156Hits": 110,
+          "missing": 61,
+          "parent": null
+        },
+        {
+          "id": "per-36",
+          "primary": 69.28618455535928,
+          "at12": 30.341382134278714,
+          "at50": 55.56731487711952,
+          "at156": 69.28618455535928,
+          "top156Hits": 91,
+          "missing": 61,
+          "parent": null
+        },
+        {
+          "id": "game-70-total-30",
+          "primary": 90.19445646371734,
+          "at12": 36.86497192747496,
+          "at50": 71.80983271524563,
+          "at156": 90.19445646371734,
+          "top156Hits": 114,
+          "missing": 61,
+          "parent": null
+        },
+        {
+          "id": "game-55-total-35-rate-10",
+          "primary": 90.17784688520977,
+          "at12": 36.883717956901656,
+          "at50": 71.58628010985576,
+          "at156": 90.17784688520977,
+          "top156Hits": 116,
+          "missing": 61,
+          "parent": null
+        },
+        {
+          "id": "mp-added-per-game-10",
+          "primary": 89.56032540856425,
+          "at12": 34.36208606682355,
+          "at50": 71.8248624020813,
+          "at156": 89.56032540856425,
+          "top156Hits": 116,
+          "missing": 61,
+          "parent": "per-game"
+        },
+        {
+          "id": "mp-added-blend-10",
+          "primary": 89.13846941230887,
+          "at12": 35.23606295656157,
+          "at50": 70.31769625498322,
+          "at156": 89.13846941230887,
+          "top156Hits": 115,
+          "missing": 61,
+          "parent": "game-55-total-35-rate-10"
+        },
+        {
+          "id": "game-55-total-35-rate-10-minutes",
+          "primary": 90.18502324127417,
+          "at12": 36.883717956901656,
+          "at50": 71.58628010985576,
+          "at156": 90.18502324127417,
+          "top156Hits": 116,
+          "missing": 61,
+          "parent": "game-55-total-35-rate-10"
+        }
+      ],
+      "eightCatCandidateScores": [
+        {
+          "id": "per-game",
+          "primary": 109.36274055695036,
+          "at12": 45.698416835757335,
+          "at50": 89.82853422249299,
+          "at156": 109.36274055695036,
+          "top156Hits": 119,
+          "missing": 61
+        },
+        {
+          "id": "totals",
+          "primary": 101.38379109738044,
+          "at12": 44.87931188295071,
+          "at50": 82.34202106798077,
+          "at156": 101.38379109738044,
+          "top156Hits": 115,
+          "missing": 61
+        },
+        {
+          "id": "per-36",
+          "primary": 89.21884249500381,
+          "at12": 44.62743517491833,
+          "at50": 74.58603943926643,
+          "at156": 89.21884249500381,
+          "top156Hits": 95,
+          "missing": 61
+        },
+        {
+          "id": "game-70-total-30",
+          "primary": 109.68067284333432,
+          "at12": 46.94011998332863,
+          "at50": 87.56146838665579,
+          "at156": 109.68067284333432,
+          "top156Hits": 119,
+          "missing": 61
+        },
+        {
+          "id": "game-55-total-35-rate-10",
+          "primary": 109.2578235240506,
+          "at12": 46.77669437274027,
+          "at50": 86.20620041868443,
+          "at156": 109.2578235240506,
+          "top156Hits": 119,
+          "missing": 61
+        },
+        {
+          "id": "mp-added-per-game-10",
+          "primary": 105.42688584180502,
+          "at12": 43.615633751293615,
+          "at50": 84.71450519396014,
+          "at156": 105.42688584180502,
+          "top156Hits": 119,
+          "missing": 61
+        },
+        {
+          "id": "mp-added-blend-10",
+          "primary": 106.77264866166853,
+          "at12": 44.065107545274536,
+          "at50": 85.19108051863574,
+          "at156": 106.77264866166853,
+          "top156Hits": 119,
+          "missing": 61
+        },
+        {
+          "id": "game-55-total-35-rate-10-minutes",
+          "primary": 109.26033151402856,
+          "at12": 46.77669437274027,
+          "at50": 86.20620041868443,
+          "at156": 109.26033151402856,
+          "top156Hits": 119,
+          "missing": 61
+        }
+      ],
+      "mpgSpearman": {
+        "perGameN": 354,
+        "mpgVsFuturePerGame": 0.7140834205229265,
+        "totalMinutesVsFutureSeasonValue": 0.4551515462197761,
+        "mpgVsFutureVolatility": -0.06283903911569289
+      },
+      "sourceMpQuartiles": {
+        "sourceEligible": 443,
+        "matched": 354,
+        "missingFuture": 89,
+        "cutPoints": [
+          15.75,
+          22,
+          29.05
+        ],
+        "groups": [
+          {
+            "id": "q1",
+            "count": 62,
+            "mpgMin": 3,
+            "mpgMax": 15.7,
+            "meanSignedChange": 1.145924098835742,
+            "meanAbsoluteChange": 1.8494755024734275,
+            "medianAbsoluteChange": 1.3751462449262033
+          },
+          {
+            "id": "q2",
+            "count": 86,
+            "mpgMin": 15.8,
+            "mpgMax": 22,
+            "meanSignedChange": -0.30710360684625226,
+            "meanAbsoluteChange": 1.949217425140179,
+            "medianAbsoluteChange": 1.8213068431421964
+          },
+          {
+            "id": "q3",
+            "count": 98,
+            "mpgMin": 22.1,
+            "mpgMax": 29,
+            "meanSignedChange": -1.0506989582468158,
+            "meanAbsoluteChange": 1.8114131761586556,
+            "medianAbsoluteChange": 1.2828099331809906
+          },
+          {
+            "id": "q4",
+            "count": 108,
+            "mpgMin": 29.1,
+            "mpgMax": 37.9,
+            "meanSignedChange": -0.3502288740316284,
+            "meanAbsoluteChange": 1.7119979643631713,
+            "medianAbsoluteChange": 1.2663274374496085
+          }
+        ]
+      },
+      "perGamePercentileChange": {
+        "sourceEligible": 443,
+        "futureEligible": 436,
+        "matched": 354,
+        "mean": 1.5681116167021985e-19,
+        "median": 0.0028328611898016977,
+        "breakoutsAtLeast010": 91,
+        "declinesAtMostMinus010": 89
+      },
+      "signalCounts": {
+        "original": {
+          "sleeper": 12,
+          "untagged": 425,
+          "dud": 6
+        },
+        "mpAdjusted": {
+          "sleeper": 3,
+          "untagged": 435,
+          "dud": 5
+        },
+        "changes": {
+          "changed": 10,
+          "transitions": {
+            "dud->untagged": 1,
+            "sleeper->untagged": 9
+          }
+        }
+      },
+      "signalOutcomes": {
+        "original": [
+          {
+            "signal": "sleeper",
+            "count": 12,
+            "uniquePlayers": 12,
+            "outcomeCount": 9,
+            "missingOutcomeCount": 3,
+            "top156Hits": 0,
+            "top156Rate": 0,
+            "meanSeasonValue": -1.3208949449062033,
+            "meanPercentileChange": 0.1158325464274473,
+            "medianPercentileChange": 0.11898016997167138
+          },
+          {
+            "signal": "untagged",
+            "count": 425,
+            "uniquePlayers": 425,
+            "outcomeCount": 367,
+            "missingOutcomeCount": 58,
+            "top156Hits": 138,
+            "top156Rate": 0.3247058823529412,
+            "meanSeasonValue": 0.16511142875883422,
+            "meanPercentileChange": -0.003025061211528648,
+            "medianPercentileChange": 0
+          },
+          {
+            "signal": "dud",
+            "count": 6,
+            "uniquePlayers": 6,
+            "outcomeCount": 6,
+            "missingOutcomeCount": 0,
+            "top156Hits": 1,
+            "top156Rate": 0.16666666666666666,
+            "meanSeasonValue": -0.6174103611049511,
+            "meanPercentileChange": -0.002832861189801694,
+            "medianPercentileChange": 0.02691218130311615
+          }
+        ],
+        "mpAdjusted": [
+          {
+            "signal": "sleeper",
+            "count": 3,
+            "uniquePlayers": 3,
+            "outcomeCount": 3,
+            "missingOutcomeCount": 0,
+            "top156Hits": 0,
+            "top156Rate": 0,
+            "meanSeasonValue": -0.8477556274753629,
+            "meanPercentileChange": 0.049102927289896126,
+            "medianPercentileChange": 0.10481586402266291
+          },
+          {
+            "signal": "untagged",
+            "count": 435,
+            "uniquePlayers": 435,
+            "outcomeCount": 374,
+            "missingOutcomeCount": 61,
+            "top156Hits": 139,
+            "top156Rate": 0.3195402298850575,
+            "meanSeasonValue": 0.14201322880730288,
+            "meanPercentileChange": 0.00009824952103359175,
+            "medianPercentileChange": 0.0028328611898016665
+          },
+          {
+            "signal": "dud",
+            "count": 5,
+            "uniquePlayers": 5,
+            "outcomeCount": 5,
+            "missingOutcomeCount": 0,
+            "top156Hits": 0,
+            "top156Rate": 0,
+            "meanSeasonValue": -1.1132606015597268,
+            "meanPercentileChange": -0.036260623229461754,
+            "medianPercentileChange": 0.022662889518413665
+          }
+        ]
+      },
+      "signalEvents": {
+        "original": {
+          "matchedCount": 354,
+          "breakoutThreshold": 0.1,
+          "declineThreshold": -0.1,
+          "sleeperBreakout": {
+            "taggedMatched": 9,
+            "eventCount": 91,
+            "truePositive": 6,
+            "precision": 0.6666666666666666,
+            "recall": 0.06593406593406594
+          },
+          "dudDecline": {
+            "taggedMatched": 6,
+            "eventCount": 89,
+            "truePositive": 1,
+            "precision": 0.16666666666666666,
+            "recall": 0.011235955056179775
+          }
+        },
+        "mpAdjusted": {
+          "matchedCount": 354,
+          "breakoutThreshold": 0.1,
+          "declineThreshold": -0.1,
+          "sleeperBreakout": {
+            "taggedMatched": 3,
+            "eventCount": 91,
+            "truePositive": 2,
+            "precision": 0.6666666666666666,
+            "recall": 0.02197802197802198
+          },
+          "dudDecline": {
+            "taggedMatched": 5,
+            "eventCount": 89,
+            "truePositive": 1,
+            "precision": 0.2,
+            "recall": 0.011235955056179775
+          }
+        }
+      },
+      "totalMpObservedPlayers": 443
+    },
+    {
+      "id": "22_23-to-23_24",
+      "from": "22_23",
+      "to": "23_24",
+      "eligibleSourcePlayers": 436,
+      "futureParticipants": 572,
+      "futureReferencePlayers": 445,
+      "candidateScores": [
+        {
+          "id": "per-game",
+          "primary": 103.34822040955028,
+          "at12": 45.96687417986407,
+          "at50": 82.77255308457384,
+          "at156": 103.34822040955028,
+          "top156Hits": 122,
+          "missing": 45,
+          "parent": null
+        },
+        {
+          "id": "totals",
+          "primary": 96.7606608581649,
+          "at12": 40.82751686050679,
+          "at50": 78.73223850825562,
+          "at156": 96.7606608581649,
+          "top156Hits": 117,
+          "missing": 45,
+          "parent": null
+        },
+        {
+          "id": "per-36",
+          "primary": 86.26800128232665,
+          "at12": 45.083245029984205,
+          "at50": 72.71225762886739,
+          "at156": 86.26800128232665,
+          "top156Hits": 100,
+          "missing": 45,
+          "parent": null
+        },
+        {
+          "id": "game-70-total-30",
+          "primary": 101.78240658222917,
+          "at12": 45.383658946840896,
+          "at50": 82.25415982895376,
+          "at156": 101.78240658222917,
+          "top156Hits": 122,
+          "missing": 45,
+          "parent": null
+        },
+        {
+          "id": "game-55-total-35-rate-10",
+          "primary": 102.0565088179454,
+          "at12": 45.162384914929135,
+          "at50": 81.66961263050857,
+          "at156": 102.0565088179454,
+          "top156Hits": 122,
+          "missing": 45,
+          "parent": null
+        },
+        {
+          "id": "mp-added-per-game-10",
+          "primary": 102.64167557262287,
+          "at12": 45.490909477529925,
+          "at50": 82.04815370199684,
+          "at156": 102.64167557262287,
+          "top156Hits": 122,
+          "missing": 45,
+          "parent": "per-game"
+        },
+        {
+          "id": "mp-added-blend-10",
+          "primary": 102.38354525990992,
+          "at12": 46.925353798203375,
+          "at50": 81.9476190237685,
+          "at156": 102.38354525990992,
+          "top156Hits": 123,
+          "missing": 45,
+          "parent": "game-55-total-35-rate-10"
+        },
+        {
+          "id": "game-55-total-35-rate-10-minutes",
+          "primary": 102.0574312768646,
+          "at12": 45.162384914929135,
+          "at50": 81.66961263050857,
+          "at156": 102.0574312768646,
+          "top156Hits": 122,
+          "missing": 45,
+          "parent": "game-55-total-35-rate-10"
+        }
+      ],
+      "eightCatCandidateScores": [
+        {
+          "id": "per-game",
+          "primary": 124.76441629477773,
+          "at12": 56.005295481169924,
+          "at50": 99.0468481785911,
+          "at156": 124.76441629477773,
+          "top156Hits": 123,
+          "missing": 45
+        },
+        {
+          "id": "totals",
+          "primary": 119.25799910938741,
+          "at12": 53.70689496766096,
+          "at50": 95.96609150802519,
+          "at156": 119.25799910938741,
+          "top156Hits": 119,
+          "missing": 45
+        },
+        {
+          "id": "per-36",
+          "primary": 107.56346876502246,
+          "at12": 56.671263963533654,
+          "at50": 91.05691757160203,
+          "at156": 107.56346876502246,
+          "top156Hits": 98,
+          "missing": 45
+        },
+        {
+          "id": "game-70-total-30",
+          "primary": 124.19471383642471,
+          "at12": 55.4112437213002,
+          "at50": 99.47995524852439,
+          "at156": 124.19471383642471,
+          "top156Hits": 123,
+          "missing": 45
+        },
+        {
+          "id": "game-55-total-35-rate-10",
+          "primary": 123.3244274524845,
+          "at12": 55.368407390081806,
+          "at50": 98.03674867370353,
+          "at156": 123.3244274524845,
+          "top156Hits": 122,
+          "missing": 45
+        },
+        {
+          "id": "mp-added-per-game-10",
+          "primary": 123.06652575887315,
+          "at12": 54.580554623388466,
+          "at50": 98.28720679612579,
+          "at156": 123.06652575887315,
+          "top156Hits": 122,
+          "missing": 45
+        },
+        {
+          "id": "mp-added-blend-10",
+          "primary": 125.13908666055663,
+          "at12": 56.61868258324061,
+          "at50": 98.99533637659401,
+          "at156": 125.13908666055663,
+          "top156Hits": 123,
+          "missing": 45
+        },
+        {
+          "id": "game-55-total-35-rate-10-minutes",
+          "primary": 123.32317594280174,
+          "at12": 55.368407390081806,
+          "at50": 98.03674867370353,
+          "at156": 123.32317594280174,
+          "top156Hits": 122,
+          "missing": 45
+        }
+      ],
+      "mpgSpearman": {
+        "perGameN": 357,
+        "mpgVsFuturePerGame": 0.7706923298977278,
+        "totalMinutesVsFutureSeasonValue": 0.5385174031762835,
+        "mpgVsFutureVolatility": 0.047470846277572615
+      },
+      "sourceMpQuartiles": {
+        "sourceEligible": 436,
+        "matched": 357,
+        "missingFuture": 79,
+        "cutPoints": [
+          14.775,
+          21.35,
+          29.650000000000002
+        ],
+        "groups": [
+          {
+            "id": "q1",
+            "count": 65,
+            "mpgMin": 5.3,
+            "mpgMax": 14.7,
+            "meanSignedChange": 0.7460886172369037,
+            "meanAbsoluteChange": 1.5174087899015511,
+            "medianAbsoluteChange": 1.2127948861928362
+          },
+          {
+            "id": "q2",
+            "count": 83,
+            "mpgMin": 14.8,
+            "mpgMax": 21.2,
+            "meanSignedChange": -0.03638454616268383,
+            "meanAbsoluteChange": 1.750228071484281,
+            "medianAbsoluteChange": 1.4008706130180153
+          },
+          {
+            "id": "q3",
+            "count": 102,
+            "mpgMin": 21.5,
+            "mpgMax": 29.6,
+            "meanSignedChange": -0.5549048582864713,
+            "meanAbsoluteChange": 1.8496826706453533,
+            "medianAbsoluteChange": 1.541923207373069
+          },
+          {
+            "id": "q4",
+            "count": 107,
+            "mpgMin": 29.8,
+            "mpgMax": 37.4,
+            "meanSignedChange": -0.06855523514104202,
+            "meanAbsoluteChange": 1.6300004835316217,
+            "medianAbsoluteChange": 1.3553813339841518
+          }
+        ]
+      },
+      "perGamePercentileChange": {
+        "sourceEligible": 436,
+        "futureEligible": 445,
+        "matched": 357,
+        "mean": -3.109868416316965e-19,
+        "median": 0.002808988764044895,
+        "breakoutsAtLeast010": 85,
+        "declinesAtMostMinus010": 81
+      },
+      "signalCounts": {
+        "original": {
+          "sleeper": 11,
+          "untagged": 417,
+          "dud": 8
+        },
+        "mpAdjusted": {
+          "sleeper": 0,
+          "untagged": 430,
+          "dud": 6
+        },
+        "changes": {
+          "changed": 13,
+          "transitions": {
+            "dud->untagged": 2,
+            "sleeper->untagged": 11
+          }
+        }
+      },
+      "signalOutcomes": {
+        "original": [
+          {
+            "signal": "sleeper",
+            "count": 11,
+            "uniquePlayers": 11,
+            "outcomeCount": 7,
+            "missingOutcomeCount": 4,
+            "top156Hits": 0,
+            "top156Rate": 0,
+            "meanSeasonValue": -1.444379173156474,
+            "meanPercentileChange": 0.075374531835206,
+            "medianPercentileChange": 0.06601123595505619
+          },
+          {
+            "signal": "untagged",
+            "count": 417,
+            "uniquePlayers": 417,
+            "outcomeCount": 376,
+            "missingOutcomeCount": 41,
+            "top156Hits": 143,
+            "top156Rate": 0.34292565947242204,
+            "meanSeasonValue": 0.1088652639607288,
+            "meanPercentileChange": -0.003218462344809536,
+            "medianPercentileChange": 0
+          },
+          {
+            "signal": "dud",
+            "count": 8,
+            "uniquePlayers": 8,
+            "outcomeCount": 8,
+            "missingOutcomeCount": 0,
+            "top156Hits": 4,
+            "top156Rate": 0.5,
+            "meanSeasonValue": -0.1152781679229124,
+            "meanPercentileChange": 0.08146067415730339,
+            "medianPercentileChange": 0.074438202247191
+          }
+        ],
+        "mpAdjusted": [
+          {
+            "signal": "sleeper",
+            "count": 0,
+            "uniquePlayers": 0,
+            "outcomeCount": 0,
+            "missingOutcomeCount": 0,
+            "top156Hits": 0,
+            "top156Rate": null,
+            "meanSeasonValue": null,
+            "meanPercentileChange": null,
+            "medianPercentileChange": null
+          },
+          {
+            "signal": "untagged",
+            "count": 430,
+            "uniquePlayers": 430,
+            "outcomeCount": 385,
+            "missingOutcomeCount": 45,
+            "top156Hits": 144,
+            "top156Rate": 0.33488372093023255,
+            "meanSeasonValue": 0.07837416330715562,
+            "meanPercentileChange": -0.0014645155094593547,
+            "medianPercentileChange": 0
+          },
+          {
+            "signal": "dud",
+            "count": 6,
+            "uniquePlayers": 6,
+            "outcomeCount": 6,
+            "missingOutcomeCount": 0,
+            "top156Hits": 3,
+            "top156Rate": 0.5,
+            "meanSeasonValue": -0.045598863249897335,
+            "meanPercentileChange": 0.08567415730337082,
+            "medianPercentileChange": 0.074438202247191
+          }
+        ]
+      },
+      "signalEvents": {
+        "original": {
+          "matchedCount": 357,
+          "breakoutThreshold": 0.1,
+          "declineThreshold": -0.1,
+          "sleeperBreakout": {
+            "taggedMatched": 6,
+            "eventCount": 85,
+            "truePositive": 3,
+            "precision": 0.5,
+            "recall": 0.03529411764705882
+          },
+          "dudDecline": {
+            "taggedMatched": 8,
+            "eventCount": 81,
+            "truePositive": 0,
+            "precision": 0,
+            "recall": 0
+          }
+        },
+        "mpAdjusted": {
+          "matchedCount": 357,
+          "breakoutThreshold": 0.1,
+          "declineThreshold": -0.1,
+          "sleeperBreakout": {
+            "taggedMatched": 0,
+            "eventCount": 85,
+            "truePositive": 0,
+            "precision": null,
+            "recall": 0
+          },
+          "dudDecline": {
+            "taggedMatched": 6,
+            "eventCount": 81,
+            "truePositive": 0,
+            "precision": 0,
+            "recall": 0
+          }
+        }
+      },
+      "totalMpObservedPlayers": 436
+    },
+    {
+      "id": "23_24-to-24_25",
+      "from": "23_24",
+      "to": "24_25",
+      "eligibleSourcePlayers": 445,
+      "futureParticipants": 569,
+      "futureReferencePlayers": 456,
+      "candidateScores": [
+        {
+          "id": "per-game",
+          "primary": 91.30765028595458,
+          "at12": 34.6829315007347,
+          "at50": 69.17669955659868,
+          "at156": 91.30765028595458,
+          "top156Hits": 125,
+          "missing": 55,
+          "parent": null
+        },
+        {
+          "id": "totals",
+          "primary": 94.78425781086627,
+          "at12": 41.4903449929732,
+          "at50": 73.03972452594319,
+          "at156": 94.78425781086627,
+          "top156Hits": 123,
+          "missing": 55,
+          "parent": null
+        },
+        {
+          "id": "per-36",
+          "primary": 69.24274136006794,
+          "at12": 29.680474845718766,
+          "at50": 52.42391434732293,
+          "at156": 69.24274136006794,
+          "top156Hits": 99,
+          "missing": 55,
+          "parent": null
+        },
+        {
+          "id": "game-70-total-30",
+          "primary": 98.28115366142615,
+          "at12": 42.649642377911505,
+          "at50": 76.15953308807244,
+          "at156": 98.28115366142615,
+          "top156Hits": 125,
+          "missing": 55,
+          "parent": null
+        },
+        {
+          "id": "game-55-total-35-rate-10",
+          "primary": 97.90701008688211,
+          "at12": 41.58991270156224,
+          "at50": 76.05104715507626,
+          "at156": 97.90701008688211,
+          "top156Hits": 124,
+          "missing": 55,
+          "parent": null
+        },
+        {
+          "id": "mp-added-per-game-10",
+          "primary": 90.8416508195615,
+          "at12": 34.140139675764786,
+          "at50": 68.77336877529858,
+          "at156": 90.8416508195615,
+          "top156Hits": 126,
+          "missing": 55,
+          "parent": "per-game"
+        },
+        {
+          "id": "mp-added-blend-10",
+          "primary": 92.7759523937491,
+          "at12": 36.27406104856703,
+          "at50": 70.44285590006939,
+          "at156": 92.7759523937491,
+          "top156Hits": 125,
+          "missing": 55,
+          "parent": "game-55-total-35-rate-10"
+        },
+        {
+          "id": "game-55-total-35-rate-10-minutes",
+          "primary": 97.91375553827517,
+          "at12": 41.58991270156224,
+          "at50": 76.05104715507626,
+          "at156": 97.91375553827517,
+          "top156Hits": 124,
+          "missing": 55,
+          "parent": "game-55-total-35-rate-10"
+        }
+      ],
+      "eightCatCandidateScores": [
+        {
+          "id": "per-game",
+          "primary": 110.99263405827102,
+          "at12": 41.22344415374724,
+          "at50": 84.33809075223287,
+          "at156": 110.99263405827102,
+          "top156Hits": 125,
+          "missing": 55
+        },
+        {
+          "id": "totals",
+          "primary": 114.89635378424215,
+          "at12": 51.106342421739924,
+          "at50": 91.09754683273145,
+          "at156": 114.89635378424215,
+          "top156Hits": 122,
+          "missing": 55
+        },
+        {
+          "id": "per-36",
+          "primary": 86.95757678069312,
+          "at12": 38.37293846588942,
+          "at50": 69.88827504595642,
+          "at156": 86.95757678069312,
+          "top156Hits": 97,
+          "missing": 55
+        },
+        {
+          "id": "game-70-total-30",
+          "primary": 118.74279867085136,
+          "at12": 50.728858159987425,
+          "at50": 91.8373494239987,
+          "at156": 118.74279867085136,
+          "top156Hits": 124,
+          "missing": 55
+        },
+        {
+          "id": "game-55-total-35-rate-10",
+          "primary": 119.08329565283289,
+          "at12": 50.127274254931066,
+          "at50": 92.32502001186558,
+          "at156": 119.08329565283289,
+          "top156Hits": 125,
+          "missing": 55
+        },
+        {
+          "id": "mp-added-per-game-10",
+          "primary": 112.67709480675632,
+          "at12": 42.15003405038904,
+          "at50": 86.39656825604781,
+          "at156": 112.67709480675632,
+          "top156Hits": 125,
+          "missing": 55
+        },
+        {
+          "id": "mp-added-blend-10",
+          "primary": 113.80357371629363,
+          "at12": 45.241797930954505,
+          "at50": 87.26751761881384,
+          "at156": 113.80357371629363,
+          "top156Hits": 125,
+          "missing": 55
+        },
+        {
+          "id": "game-55-total-35-rate-10-minutes",
+          "primary": 119.08880863810765,
+          "at12": 50.127274254931066,
+          "at50": 92.32502001186558,
+          "at156": 119.08880863810765,
+          "top156Hits": 125,
+          "missing": 55
+        }
+      ],
+      "mpgSpearman": {
+        "perGameN": 357,
+        "mpgVsFuturePerGame": 0.7889454371165491,
+        "totalMinutesVsFutureSeasonValue": 0.553521754777805,
+        "mpgVsFutureVolatility": 0.06284960912009127
+      },
+      "sourceMpQuartiles": {
+        "sourceEligible": 445,
+        "matched": 357,
+        "missingFuture": 88,
+        "cutPoints": [
+          13.9,
+          21.1,
+          29.1
+        ],
+        "groups": [
+          {
+            "id": "q1",
+            "count": 64,
+            "mpgMin": 2.5,
+            "mpgMax": 13.9,
+            "meanSignedChange": 0.6678525703339476,
+            "meanAbsoluteChange": 1.4883543384060884,
+            "medianAbsoluteChange": 1.1337737120604614
+          },
+          {
+            "id": "q2",
+            "count": 85,
+            "mpgMin": 14,
+            "mpgMax": 21.1,
+            "meanSignedChange": 0.351220885701533,
+            "meanAbsoluteChange": 1.6681102355763753,
+            "medianAbsoluteChange": 1.3363381807757153
+          },
+          {
+            "id": "q3",
+            "count": 101,
+            "mpgMin": 21.2,
+            "mpgMax": 29.1,
+            "meanSignedChange": -0.3963396719585409,
+            "meanAbsoluteChange": 1.829028873699537,
+            "medianAbsoluteChange": 1.633983985778856
+          },
+          {
+            "id": "q4",
+            "count": 107,
+            "mpgMin": 29.2,
+            "mpgMax": 37.8,
+            "meanSignedChange": -0.4606924798055522,
+            "meanAbsoluteChange": 1.7956528754496617,
+            "medianAbsoluteChange": 1.4619544272179938
+          }
+        ]
+      },
+      "perGamePercentileChange": {
+        "sourceEligible": 445,
+        "futureEligible": 456,
+        "matched": 357,
+        "mean": -1.7881743393822547e-18,
+        "median": -0.002808988764044895,
+        "breakoutsAtLeast010": 85,
+        "declinesAtMostMinus010": 82
+      },
+      "signalCounts": {
+        "original": {
+          "sleeper": 13,
+          "untagged": 426,
+          "dud": 6
+        },
+        "mpAdjusted": {
+          "sleeper": 1,
+          "untagged": 440,
+          "dud": 4
+        },
+        "changes": {
+          "changed": 14,
+          "transitions": {
+            "dud->untagged": 2,
+            "sleeper->untagged": 12
+          }
+        }
+      },
+      "signalOutcomes": {
+        "original": [
+          {
+            "signal": "sleeper",
+            "count": 13,
+            "uniquePlayers": 13,
+            "outcomeCount": 12,
+            "missingOutcomeCount": 1,
+            "top156Hits": 0,
+            "top156Rate": 0,
+            "meanSeasonValue": -2.1253616094399224,
+            "meanPercentileChange": 0.016598569969356484,
+            "medianPercentileChange": 0.008426966292134797
+          },
+          {
+            "signal": "untagged",
+            "count": 426,
+            "uniquePlayers": 426,
+            "outcomeCount": 372,
+            "missingOutcomeCount": 54,
+            "top156Hits": 146,
+            "top156Rate": 0.3427230046948357,
+            "meanSeasonValue": 0.16412122039866717,
+            "meanPercentileChange": -0.00037892517051633305,
+            "medianPercentileChange": -0.002808988764044895
+          },
+          {
+            "signal": "dud",
+            "count": 6,
+            "uniquePlayers": 6,
+            "outcomeCount": 6,
+            "missingOutcomeCount": 0,
+            "top156Hits": 2,
+            "top156Rate": 0.3333333333333333,
+            "meanSeasonValue": -0.23990241674807175,
+            "meanPercentileChange": -0.01067415730337079,
+            "medianPercentileChange": -0.02247191011235955
+          }
+        ],
+        "mpAdjusted": [
+          {
+            "signal": "sleeper",
+            "count": 1,
+            "uniquePlayers": 1,
+            "outcomeCount": 1,
+            "missingOutcomeCount": 0,
+            "top156Hits": 0,
+            "top156Rate": 0,
+            "meanSeasonValue": -2.2432035666788326,
+            "meanPercentileChange": -0.19382022471910113,
+            "medianPercentileChange": -0.19382022471910113
+          },
+          {
+            "signal": "untagged",
+            "count": 440,
+            "uniquePlayers": 440,
+            "outcomeCount": 385,
+            "missingOutcomeCount": 55,
+            "top156Hits": 146,
+            "top156Rate": 0.33181818181818185,
+            "meanSeasonValue": 0.08818101184618035,
+            "meanPercentileChange": -0.0004456186141261214,
+            "medianPercentileChange": -0.002808988764044895
+          },
+          {
+            "signal": "dud",
+            "count": 4,
+            "uniquePlayers": 4,
+            "outcomeCount": 4,
+            "missingOutcomeCount": 0,
+            "top156Hits": 2,
+            "top156Rate": 0.5,
+            "meanSeasonValue": 0.6007135451090142,
+            "meanPercentileChange": 0.11704119850187265,
+            "medianPercentileChange": 0.0955056179775281
+          }
+        ]
+      },
+      "signalEvents": {
+        "original": {
+          "matchedCount": 357,
+          "breakoutThreshold": 0.1,
+          "declineThreshold": -0.1,
+          "sleeperBreakout": {
+            "taggedMatched": 11,
+            "eventCount": 85,
+            "truePositive": 2,
+            "precision": 0.18181818181818182,
+            "recall": 0.023529411764705882
+          },
+          "dudDecline": {
+            "taggedMatched": 5,
+            "eventCount": 82,
+            "truePositive": 2,
+            "precision": 0.4,
+            "recall": 0.024390243902439025
+          }
+        },
+        "mpAdjusted": {
+          "matchedCount": 357,
+          "breakoutThreshold": 0.1,
+          "declineThreshold": -0.1,
+          "sleeperBreakout": {
+            "taggedMatched": 1,
+            "eventCount": 85,
+            "truePositive": 0,
+            "precision": 0,
+            "recall": 0
+          },
+          "dudDecline": {
+            "taggedMatched": 3,
+            "eventCount": 82,
+            "truePositive": 0,
+            "precision": 0,
+            "recall": 0
+          }
+        }
+      },
+      "totalMpObservedPlayers": 445
+    },
+    {
+      "id": "24_25-to-25_26",
+      "from": "24_25",
+      "to": "25_26",
+      "eligibleSourcePlayers": 456,
+      "futureParticipants": 582,
+      "futureReferencePlayers": 452,
+      "candidateScores": [
+        {
+          "id": "per-game",
+          "primary": 75.33037104149497,
+          "at12": 36.81806118074833,
+          "at50": 62.64955771488959,
+          "at156": 75.33037104149497,
+          "top156Hits": 113,
+          "missing": 47,
+          "parent": null
+        },
+        {
+          "id": "totals",
+          "primary": 66.66871895829507,
+          "at12": 33.5343634162732,
+          "at50": 55.59932853649582,
+          "at156": 66.66871895829507,
+          "top156Hits": 104,
+          "missing": 47,
+          "parent": null
+        },
+        {
+          "id": "per-36",
+          "primary": 59.453912366070924,
+          "at12": 30.756851761136986,
+          "at50": 45.148501927839305,
+          "at156": 59.453912366070924,
+          "top156Hits": 92,
+          "missing": 47,
+          "parent": null
+        },
+        {
+          "id": "game-70-total-30",
+          "primary": 74.70401624761635,
+          "at12": 35.68552580187666,
+          "at50": 59.0554158761982,
+          "at156": 74.70401624761635,
+          "top156Hits": 113,
+          "missing": 47,
+          "parent": null
+        },
+        {
+          "id": "game-55-total-35-rate-10",
+          "primary": 74.11243096105277,
+          "at12": 36.043336752504906,
+          "at50": 59.78503137035737,
+          "at156": 74.11243096105277,
+          "top156Hits": 111,
+          "missing": 47,
+          "parent": null
+        },
+        {
+          "id": "mp-added-per-game-10",
+          "primary": 73.87831985374798,
+          "at12": 35.557978720495456,
+          "at50": 61.3094753663003,
+          "at156": 73.87831985374798,
+          "top156Hits": 112,
+          "missing": 47,
+          "parent": "per-game"
+        },
+        {
+          "id": "mp-added-blend-10",
+          "primary": 74.61762241011752,
+          "at12": 35.52045571351951,
+          "at50": 59.16326680221562,
+          "at156": 74.61762241011752,
+          "top156Hits": 113,
+          "missing": 47,
+          "parent": "game-55-total-35-rate-10"
+        },
+        {
+          "id": "game-55-total-35-rate-10-minutes",
+          "primary": 74.44026453819495,
+          "at12": 36.043336752504906,
+          "at50": 59.78503137035737,
+          "at156": 74.44026453819495,
+          "top156Hits": 112,
+          "missing": 47,
+          "parent": "game-55-total-35-rate-10"
+        }
+      ],
+      "eightCatCandidateScores": [
+        {
+          "id": "per-game",
+          "primary": 95.9329740304906,
+          "at12": 47.21989653689476,
+          "at50": 74.39274037077509,
+          "at156": 95.9329740304906,
+          "top156Hits": 119,
+          "missing": 47
+        },
+        {
+          "id": "totals",
+          "primary": 86.47369203277455,
+          "at12": 39.53350616740666,
+          "at50": 67.79418491759841,
+          "at156": 86.47369203277455,
+          "top156Hits": 110,
+          "missing": 47
+        },
+        {
+          "id": "per-36",
+          "primary": 77.50686386362088,
+          "at12": 39.38520219474946,
+          "at50": 62.220992187299885,
+          "at156": 77.50686386362088,
+          "top156Hits": 93,
+          "missing": 47
+        },
+        {
+          "id": "game-70-total-30",
+          "primary": 96.13576635644154,
+          "at12": 46.679048847514544,
+          "at50": 75.2877319492774,
+          "at156": 96.13576635644154,
+          "top156Hits": 119,
+          "missing": 47
+        },
+        {
+          "id": "game-55-total-35-rate-10",
+          "primary": 94.90576945844434,
+          "at12": 46.52203874879272,
+          "at50": 74.36301194246515,
+          "at156": 94.90576945844434,
+          "top156Hits": 116,
+          "missing": 47
+        },
+        {
+          "id": "mp-added-per-game-10",
+          "primary": 95.84983986602083,
+          "at12": 46.69659049102594,
+          "at50": 77.1251823171466,
+          "at156": 95.84983986602083,
+          "top156Hits": 118,
+          "missing": 47
+        },
+        {
+          "id": "mp-added-blend-10",
+          "primary": 95.58293560169902,
+          "at12": 44.67042556323981,
+          "at50": 74.79117413402463,
+          "at156": 95.58293560169902,
+          "top156Hits": 118,
+          "missing": 47
+        },
+        {
+          "id": "game-55-total-35-rate-10-minutes",
+          "primary": 94.905227528078,
+          "at12": 46.52203874879272,
+          "at50": 74.36301194246515,
+          "at156": 94.905227528078,
+          "top156Hits": 116,
+          "missing": 47
+        }
+      ],
+      "mpgSpearman": {
+        "perGameN": 358,
+        "mpgVsFuturePerGame": 0.6537737064221121,
+        "totalMinutesVsFutureSeasonValue": 0.43865171694459537,
+        "mpgVsFutureVolatility": -0.09460982421841341
+      },
+      "sourceMpQuartiles": {
+        "sourceEligible": 456,
+        "matched": 358,
+        "missingFuture": 98,
+        "cutPoints": [
+          14.775,
+          21.5,
+          28.6
+        ],
+        "groups": [
+          {
+            "id": "q1",
+            "count": 70,
+            "mpgMin": 5.2,
+            "mpgMax": 14.7,
+            "meanSignedChange": 1.867377035168758,
+            "meanAbsoluteChange": 2.4626845430956523,
+            "medianAbsoluteChange": 1.9823498706523937
+          },
+          {
+            "id": "q2",
+            "count": 87,
+            "mpgMin": 14.8,
+            "mpgMax": 21.5,
+            "meanSignedChange": 0.22445496679299054,
+            "meanAbsoluteChange": 2.077565517401793,
+            "medianAbsoluteChange": 1.6704487679950244
+          },
+          {
+            "id": "q3",
+            "count": 98,
+            "mpgMin": 21.6,
+            "mpgMax": 28.6,
+            "meanSignedChange": -0.5118624874331517,
+            "meanAbsoluteChange": 1.9823731007163075,
+            "medianAbsoluteChange": 1.8186435889271397
+          },
+          {
+            "id": "q4",
+            "count": 103,
+            "mpgMin": 28.8,
+            "mpgMax": 37.7,
+            "meanSignedChange": -0.6144855636203616,
+            "meanAbsoluteChange": 2.0198619701144715,
+            "medianAbsoluteChange": 1.8525462833043722
+          }
+        ]
+      },
+      "perGamePercentileChange": {
+        "sourceEligible": 456,
+        "futureEligible": 452,
+        "matched": 358,
+        "mean": 1.860708979818698e-18,
+        "median": -0.0014005602240896309,
+        "breakoutsAtLeast010": 96,
+        "declinesAtMostMinus010": 103
+      },
+      "signalCounts": {
+        "original": {
+          "sleeper": 14,
+          "untagged": 438,
+          "dud": 4
+        },
+        "mpAdjusted": {
+          "sleeper": 0,
+          "untagged": 453,
+          "dud": 3
+        },
+        "changes": {
+          "changed": 15,
+          "transitions": {
+            "dud->untagged": 1,
+            "sleeper->untagged": 14
+          }
+        }
+      },
+      "signalOutcomes": {
+        "original": [
+          {
+            "signal": "sleeper",
+            "count": 14,
+            "uniquePlayers": 14,
+            "outcomeCount": 12,
+            "missingOutcomeCount": 2,
+            "top156Hits": 3,
+            "top156Rate": 0.21428571428571427,
+            "meanSeasonValue": -1.012158685961408,
+            "meanPercentileChange": 0.18894830659536543,
+            "medianPercentileChange": 0.1484593837535014
+          },
+          {
+            "signal": "untagged",
+            "count": 438,
+            "uniquePlayers": 438,
+            "outcomeCount": 393,
+            "missingOutcomeCount": 45,
+            "top156Hits": 138,
+            "top156Rate": 0.3150684931506849,
+            "meanSeasonValue": -0.27666787920816066,
+            "meanPercentileChange": -0.004834586895982913,
+            "medianPercentileChange": -0.0028011204481792618
+          },
+          {
+            "signal": "dud",
+            "count": 4,
+            "uniquePlayers": 4,
+            "outcomeCount": 4,
+            "missingOutcomeCount": 0,
+            "top156Hits": 1,
+            "top156Rate": 0.25,
+            "meanSeasonValue": -1.4200727195660785,
+            "meanPercentileChange": -0.10504201680672268,
+            "medianPercentileChange": -0.030812324929971963
+          }
+        ],
+        "mpAdjusted": [
+          {
+            "signal": "sleeper",
+            "count": 0,
+            "uniquePlayers": 0,
+            "outcomeCount": 0,
+            "missingOutcomeCount": 0,
+            "top156Hits": 0,
+            "top156Rate": null,
+            "meanSeasonValue": null,
+            "meanPercentileChange": null,
+            "medianPercentileChange": null
+          },
+          {
+            "signal": "untagged",
+            "count": 453,
+            "uniquePlayers": 453,
+            "outcomeCount": 406,
+            "missingOutcomeCount": 47,
+            "top156Hits": 141,
+            "top156Rate": 0.31125827814569534,
+            "meanSeasonValue": -0.2987797814611829,
+            "meanPercentileChange": 0.001396614984021752,
+            "medianPercentileChange": 0
+          },
+          {
+            "signal": "dud",
+            "count": 3,
+            "uniquePlayers": 3,
+            "outcomeCount": 3,
+            "missingOutcomeCount": 0,
+            "top156Hits": 1,
+            "top156Rate": 0.3333333333333333,
+            "meanSeasonValue": -1.7506934551227105,
+            "meanPercentileChange": -0.165266106442577,
+            "medianPercentileChange": -0.11204481792717086
+          }
+        ]
+      },
+      "signalEvents": {
+        "original": {
+          "matchedCount": 358,
+          "breakoutThreshold": 0.1,
+          "declineThreshold": -0.1,
+          "sleeperBreakout": {
+            "taggedMatched": 11,
+            "eventCount": 96,
+            "truePositive": 6,
+            "precision": 0.5454545454545454,
+            "recall": 0.0625
+          },
+          "dudDecline": {
+            "taggedMatched": 4,
+            "eventCount": 103,
+            "truePositive": 2,
+            "precision": 0.5,
+            "recall": 0.019417475728155338
+          }
+        },
+        "mpAdjusted": {
+          "matchedCount": 358,
+          "breakoutThreshold": 0.1,
+          "declineThreshold": -0.1,
+          "sleeperBreakout": {
+            "taggedMatched": 0,
+            "eventCount": 96,
+            "truePositive": 0,
+            "precision": null,
+            "recall": 0
+          },
+          "dudDecline": {
+            "taggedMatched": 3,
+            "eventCount": 103,
+            "truePositive": 2,
+            "precision": 0.6666666666666666,
+            "recall": 0.019417475728155338
+          }
+        }
+      },
+      "totalMpObservedPlayers": 456
+    }
+  ],
+  "rankingDecision": [
+    {
+      "id": "mp-added-per-game-10",
+      "parent": "per-game",
+      "deltas": [
+        {
+          "transition": "21_22-to-22_23",
+          "delta": -2.591763827453903
+        },
+        {
+          "transition": "22_23-to-23_24",
+          "delta": -0.7065448369274065
+        },
+        {
+          "transition": "23_24-to-24_25",
+          "delta": -0.465999466393086
+        },
+        {
+          "transition": "24_25-to-25_26",
+          "delta": -1.4520511877469886
+        }
+      ],
+      "positiveTransitions": 0,
+      "meanDifference": -1.304089829630346,
+      "retrospectivelyPromising": false
+    },
+    {
+      "id": "mp-added-blend-10",
+      "parent": "game-55-total-35-rate-10",
+      "deltas": [
+        {
+          "transition": "21_22-to-22_23",
+          "delta": -1.0393774729009095
+        },
+        {
+          "transition": "22_23-to-23_24",
+          "delta": 0.3270364419645233
+        },
+        {
+          "transition": "23_24-to-24_25",
+          "delta": -5.131057693133016
+        },
+        {
+          "transition": "24_25-to-25_26",
+          "delta": 0.5051914490647533
+        }
+      ],
+      "positiveTransitions": 2,
+      "meanDifference": -1.3345518187511622,
+      "retrospectivelyPromising": false
+    },
+    {
+      "id": "game-55-total-35-rate-10-minutes",
+      "parent": "game-55-total-35-rate-10",
+      "deltas": [
+        {
+          "transition": "21_22-to-22_23",
+          "delta": 0.007176356064391598
+        },
+        {
+          "transition": "22_23-to-23_24",
+          "delta": 0.0009224589192058374
+        },
+        {
+          "transition": "23_24-to-24_25",
+          "delta": 0.006745451393058488
+        },
+        {
+          "transition": "24_25-to-25_26",
+          "delta": 0.3278335771421865
+        }
+      ],
+      "positiveTransitions": 4,
+      "meanDifference": 0.08566946087971061,
+      "retrospectivelyPromising": true
+    }
+  ],
+  "predictorEvaluation": [
+    {
+      "target": "futurePerGameComposite",
+      "trainTransitions": [
+        "21_22-to-22_23"
+      ],
+      "testTransition": "22_23-to-23_24",
+      "baseline": {
+        "n": 357,
+        "mae": 1.7119145755577554,
+        "rmse": 2.1497475600280613,
+        "r2": 0.7582613284099535,
+        "coefficients": {
+          "intercept": 0.46111262633244243,
+          "sourceCompositeZ": 3.641831240538438,
+          "sourceGamesZ": -0.14283124155021407,
+          "ageZ": -0.6079729656989447
+        }
+      },
+      "withMp": {
+        "n": 357,
+        "mae": 1.7123664306303958,
+        "rmse": 2.1489268313944008,
+        "r2": 0.7584458747078427,
+        "coefficients": {
+          "intercept": 0.4611126263324424,
+          "sourceCompositeZ": 3.686419339392504,
+          "sourceGamesZ": -0.13225456863057672,
+          "ageZ": -0.606661068386426,
+          "mpgZ": -0.057560998391690224
+        }
+      }
+    },
+    {
+      "target": "futureSeasonValue",
+      "trainTransitions": [
+        "21_22-to-22_23"
+      ],
+      "testTransition": "22_23-to-23_24",
+      "baseline": {
+        "n": 436,
+        "mae": 1.4031897426349034,
+        "rmse": 1.7545761360088292,
+        "r2": 0.6269487681483301,
+        "coefficients": {
+          "intercept": 0.10158776000836614,
+          "sourceCompositeZ": 2.167307575128493,
+          "sourceGamesZ": -0.44340915398855635,
+          "ageZ": -0.18817903867988114
+        }
+      },
+      "withMp": {
+        "n": 436,
+        "mae": 1.387772664455846,
+        "rmse": 1.7384825415165905,
+        "r2": 0.633760898933974,
+        "coefficients": {
+          "intercept": 0.10158776000836597,
+          "sourceCompositeZ": 2.382941243686515,
+          "sourceGamesZ": -0.39424445640291594,
+          "ageZ": -0.18687024394484997,
+          "mpgZ": -0.27419655154567496
+        }
+      }
+    },
+    {
+      "target": "futureVolatility",
+      "trainTransitions": [
+        "21_22-to-22_23"
+      ],
+      "testTransition": "22_23-to-23_24",
+      "baseline": {
+        "n": 357,
+        "mae": 1.1055006567077206,
+        "rmse": 1.367504032709431,
+        "r2": -0.03044280287122536,
+        "coefficients": {
+          "intercept": 1.8212272630795998,
+          "sourceCompositeZ": 0.09799620624644828,
+          "sourceGamesZ": -0.14020344145611446,
+          "ageZ": 0.06292667398829725
+        }
+      },
+      "withMp": {
+        "n": 357,
+        "mae": 1.1020969078117817,
+        "rmse": 1.3682223736166075,
+        "r2": -0.03152565690839659,
+        "coefficients": {
+          "intercept": 1.8212272630795996,
+          "sourceCompositeZ": 0.43479557817951536,
+          "sourceGamesZ": -0.060311791261872263,
+          "ageZ": 0.07283618352677523,
+          "mpgZ": -0.4347910900981068
+        }
+      }
+    },
+    {
+      "target": "futurePerGameComposite",
+      "trainTransitions": [
+        "21_22-to-22_23",
+        "22_23-to-23_24"
+      ],
+      "testTransition": "23_24-to-24_25",
+      "baseline": {
+        "n": 357,
+        "mae": 1.5993956339645123,
+        "rmse": 2.046703966810839,
+        "r2": 0.7666705863770614,
+        "coefficients": {
+          "intercept": 0.5348507735061142,
+          "sourceCompositeZ": 3.7326891356076954,
+          "sourceGamesZ": 0.021163865560925556,
+          "ageZ": -0.5087102045212125
+        }
+      },
+      "withMp": {
+        "n": 357,
+        "mae": 1.6017730195775386,
+        "rmse": 2.045511725947983,
+        "r2": 0.7669423441321284,
+        "coefficients": {
+          "intercept": 0.5348507735061144,
+          "sourceCompositeZ": 3.8162083468423145,
+          "sourceGamesZ": 0.0436268584025484,
+          "ageZ": -0.5073868294754641,
+          "mpgZ": -0.10888132285217703
+        }
+      }
+    },
+    {
+      "target": "futureSeasonValue",
+      "trainTransitions": [
+        "21_22-to-22_23",
+        "22_23-to-23_24"
+      ],
+      "testTransition": "23_24-to-24_25",
+      "baseline": {
+        "n": 445,
+        "mae": 1.4030748350651892,
+        "rmse": 1.7698706927762402,
+        "r2": 0.5689992005448565,
+        "coefficients": {
+          "intercept": 0.08521483205626963,
+          "sourceCompositeZ": 2.311419483975571,
+          "sourceGamesZ": -0.4068256991757248,
+          "ageZ": -0.12098598970055031
+        }
+      },
+      "withMp": {
+        "n": 445,
+        "mae": 1.4043130053054345,
+        "rmse": 1.7723375080435355,
+        "r2": 0.5677969202979196,
+        "coefficients": {
+          "intercept": 0.08521483205627058,
+          "sourceCompositeZ": 2.656050526924741,
+          "sourceGamesZ": -0.3155347291411302,
+          "ageZ": -0.1207522491284286,
+          "mpgZ": -0.44622756003950426
+        }
+      }
+    },
+    {
+      "target": "futureVolatility",
+      "trainTransitions": [
+        "21_22-to-22_23",
+        "22_23-to-23_24"
+      ],
+      "testTransition": "23_24-to-24_25",
+      "baseline": {
+        "n": 357,
+        "mae": 1.0665717787555073,
+        "rmse": 1.3437774669818814,
+        "r2": 0.013063528389994583,
+        "coefficients": {
+          "intercept": 1.7604678432499072,
+          "sourceCompositeZ": 0.10933276201061455,
+          "sourceGamesZ": -0.04825355777974318,
+          "ageZ": -0.03710526896954561
+        }
+      },
+      "withMp": {
+        "n": 357,
+        "mae": 1.0692830462332599,
+        "rmse": 1.3542800712083345,
+        "r2": -0.0024240207302843597,
+        "coefficients": {
+          "intercept": 1.760467843249908,
+          "sourceCompositeZ": 0.37247458763117325,
+          "sourceGamesZ": 0.022520014645903343,
+          "ageZ": -0.03293574533095804,
+          "mpgZ": -0.34304957683110027
+        }
+      }
+    },
+    {
+      "target": "futurePerGameComposite",
+      "trainTransitions": [
+        "21_22-to-22_23",
+        "22_23-to-23_24",
+        "23_24-to-24_25"
+      ],
+      "testTransition": "24_25-to-25_26",
+      "baseline": {
+        "n": 358,
+        "mae": 2.0001648337810005,
+        "rmse": 2.532712977516565,
+        "r2": 0.6312882362063728,
+        "coefficients": {
+          "intercept": 0.5941468920377535,
+          "sourceCompositeZ": 3.730636286551004,
+          "sourceGamesZ": 0.07051229589440923,
+          "ageZ": -0.520490030562216
+        }
+      },
+      "withMp": {
+        "n": 358,
+        "mae": 1.9984686568357402,
+        "rmse": 2.525997900547602,
+        "r2": 0.6332408029874814,
+        "coefficients": {
+          "intercept": 0.5941468920377537,
+          "sourceCompositeZ": 3.8191278527542756,
+          "sourceGamesZ": 0.09217229171115925,
+          "ageZ": -0.520197070117881,
+          "mpgZ": -0.11415225892550658
+        }
+      }
+    },
+    {
+      "target": "futureSeasonValue",
+      "trainTransitions": [
+        "21_22-to-22_23",
+        "22_23-to-23_24",
+        "23_24-to-24_25"
+      ],
+      "testTransition": "24_25-to-25_26",
+      "baseline": {
+        "n": 456,
+        "mae": 1.544625366667722,
+        "rmse": 1.946307763996647,
+        "r2": 0.43986181283063497,
+        "coefficients": {
+          "intercept": 0.0823362368217502,
+          "sourceCompositeZ": 2.272337466110923,
+          "sourceGamesZ": -0.3724960504181529,
+          "ageZ": -0.10226078379069385
+        }
+      },
+      "withMp": {
+        "n": 456,
+        "mae": 1.5300595712098815,
+        "rmse": 1.9285526708960326,
+        "r2": 0.4500348626167322,
+        "coefficients": {
+          "intercept": 0.08233623682175048,
+          "sourceCompositeZ": 2.550380290067682,
+          "sourceGamesZ": -0.3019114228316172,
+          "ageZ": -0.1042686817200784,
+          "mpgZ": -0.35871397809360367
+        }
+      }
+    },
+    {
+      "target": "futureVolatility",
+      "trainTransitions": [
+        "21_22-to-22_23",
+        "22_23-to-23_24",
+        "23_24-to-24_25"
+      ],
+      "testTransition": "24_25-to-25_26",
+      "baseline": {
+        "n": 358,
+        "mae": 1.2924478165906501,
+        "rmse": 1.695308120574542,
+        "r2": -0.059713346631812714,
+        "coefficients": {
+          "intercept": 1.7468197173683844,
+          "sourceCompositeZ": 0.13459740834112863,
+          "sourceGamesZ": -0.058774921472012055,
+          "ageZ": -0.06293052504565994
+        }
+      },
+      "withMp": {
+        "n": 358,
+        "mae": 1.297793883672941,
+        "rmse": 1.6953745559221602,
+        "r2": -0.059796403868620285,
+        "coefficients": {
+          "intercept": 1.7468197173683848,
+          "sourceCompositeZ": 0.3172099478551476,
+          "sourceGamesZ": -0.014077025258107022,
+          "ageZ": -0.06232596742494513,
+          "mpgZ": -0.2355663346014761
+        }
+      }
+    }
+  ],
+  "predictorSummary": [
+    {
+      "target": "futurePerGameComposite",
+      "evaluatedTransitions": 3,
+      "meanMaeImprovement": -0.000377687913468779,
+      "meanRmseImprovement": 0.002909348821826511,
+      "meanR2Change": 0.0008029569446882748,
+      "foldsWithLowerMae": 1
+    },
+    {
+      "target": "futureSeasonValue",
+      "evaluatedTransitions": 3,
+      "meanMaeImprovement": 0.009581567798884269,
+      "meanRmseImprovement": 0.010460624108519298,
+      "meanR2Change": 0.005260966774934743,
+      "foldsWithLowerMae": 2
+    },
+    {
+      "target": "futureVolatility",
+      "evaluatedTransitions": 3,
+      "meanMaeImprovement": -0.0015511952213681883,
+      "meanRmseImprovement": -0.0037624601604159627,
+      "meanR2Change": -0.005551153464752582,
+      "foldsWithLowerMae": 1
+    }
+  ],
+  "limits": {
+    "retrospective": true,
+    "priorRankingStudiesUsedTheseSeasons": true,
+    "sleeperDudCurrentSourceCohortCounts": [
+      {
+        "transition": "21_22-to-22_23",
+        "counts": {
+          "original": {
+            "sleeper": 12,
+            "untagged": 425,
+            "dud": 6
+          },
+          "mpAdjusted": {
+            "sleeper": 3,
+            "untagged": 435,
+            "dud": 5
+          },
+          "changes": {
+            "changed": 10,
+            "transitions": {
+              "dud->untagged": 1,
+              "sleeper->untagged": 9
+            }
+          }
+        }
+      },
+      {
+        "transition": "22_23-to-23_24",
+        "counts": {
+          "original": {
+            "sleeper": 11,
+            "untagged": 417,
+            "dud": 8
+          },
+          "mpAdjusted": {
+            "sleeper": 0,
+            "untagged": 430,
+            "dud": 6
+          },
+          "changes": {
+            "changed": 13,
+            "transitions": {
+              "dud->untagged": 2,
+              "sleeper->untagged": 11
+            }
+          }
+        }
+      },
+      {
+        "transition": "23_24-to-24_25",
+        "counts": {
+          "original": {
+            "sleeper": 13,
+            "untagged": 426,
+            "dud": 6
+          },
+          "mpAdjusted": {
+            "sleeper": 1,
+            "untagged": 440,
+            "dud": 4
+          },
+          "changes": {
+            "changed": 14,
+            "transitions": {
+              "dud->untagged": 2,
+              "sleeper->untagged": 12
+            }
+          }
+        }
+      },
+      {
+        "transition": "24_25-to-25_26",
+        "counts": {
+          "original": {
+            "sleeper": 14,
+            "untagged": 438,
+            "dud": 4
+          },
+          "mpAdjusted": {
+            "sleeper": 0,
+            "untagged": 453,
+            "dud": 3
+          },
+          "changes": {
+            "changed": 15,
+            "transitions": {
+              "dud->untagged": 1,
+              "sleeper->untagged": 14
+            }
+          }
+        }
+      }
+    ]
+  }
+}
