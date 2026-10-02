@@ -16,8 +16,12 @@ type IntensitySliderProps = {
 export function IntensitySlider({ id, label, value, onChange, disabled = false }: IntensitySliderProps) {
     const progress = `${(Math.min(3, Math.max(0, value)) / 3) * 100}%`;
 
+    // Vaul ignores drag gestures that begin inside this weight control.
     return (
-        <div className={cn('grid gap-2 border-b border-border py-3 last:border-b-0', disabled && 'opacity-60')}>
+        <div
+            data-vaul-no-drag
+            className={cn('grid gap-2 border-b border-border py-3 last:border-b-0', disabled && 'opacity-60')}
+        >
             <div className='flex items-baseline justify-between gap-4'>
                 <Label htmlFor={id}>{label}</Label>
                 <output htmlFor={id} className='font-medium tabular-nums'>
