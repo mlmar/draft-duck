@@ -2,16 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from '@/components/ui/drawer';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { formatCatStat } from '@/lib/format-stats';
-import { contributionSummary, formatSignedValue, signedBarGeometry, strengthDatum } from '@/lib/player-strength-chart';
-import {
-    CAT_KEYS,
-    CAT_LABELS,
-    formatTuner,
-    profileWeight,
-    type CatKey,
-    type DraftProfile,
-    type RankedPlayer
-} from '@draft-duck/core';
+import { contributionSummary, formatSignedValue, strengthDatum } from '@/lib/player-strength-chart';
+import { CAT_KEYS, CAT_LABELS, type CatKey, type DraftProfile, type RankedPlayer } from '@draft-duck/core';
 import { X } from 'lucide-react';
 
 type PlayerDetailDrawerProps = {
@@ -19,6 +11,7 @@ type PlayerDetailDrawerProps = {
     player: RankedPlayer | null;
     profile: DraftProfile;
     onOpenChange: (open: boolean) => void;
+    onAnimationEnd: (open: boolean) => void;
 };
 
 // Match signed geometry to an uncluttered five-tick symmetric zero-centered scale.
@@ -31,13 +24,21 @@ const Z_TICKS = [
 ] as const;
 
 // Keep the drawer mounted for reliable dialog dismissal while rendering its content only for a selected player.
-export function PlayerDetailDrawer({ open, player, profile, onOpenChange }: PlayerDetailDrawerProps) {
+export function PlayerDetailDrawer({ open, player, profile, onOpenChange, onAnimationEnd }: PlayerDetailDrawerProps) {
     const isDesktop = useMediaQuery('(min-width: 768px)');
+    const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+
+    // Vaul reports the transition after 500ms; reduced-motion users close immediately after motion is disabled.
+    function handleOpenChange(nextOpen: boolean) {
+        onOpenChange(nextOpen);
+        if (!nextOpen && prefersReducedMotion) onAnimationEnd(false);
+    }
 
     return (
         <Drawer
             open={open && player !== null}
-            onOpenChange={onOpenChange}
+            onOpenChange={handleOpenChange}
+            onAnimationEnd={onAnimationEnd}
             direction={isDesktop ? 'right' : 'bottom'}
             autoFocus
         >
@@ -46,6 +47,7 @@ export function PlayerDetailDrawer({ open, player, profile, onOpenChange }: Play
                     id='player-details'
                     aria-labelledby='player-details-title'
                     aria-describedby='player-details-description'
+                    disableAnimation={prefersReducedMotion}
                     className='gap-0'
                 >
                     <div className='flex shrink-0 items-start justify-between gap-3 border-b border-border px-4 py-3'>
@@ -172,7 +174,7 @@ function ClippedEndpoint({ positive }: { positive: boolean }) {
     );
 }
 
-// Explain fit from authoritative server terms while retaining useful stat and stance details for older responses.
+// Keep the fit summary short and expose category stats beside their authoritative server contributions.
 function PlayerFitExplanation({ player, profile }: { player: RankedPlayer; profile: DraftProfile }) {
     const cats = CAT_KEYS.filter((cat) => profile.enabledCats.includes(cat));
     const summary = contributionSummary(player, cats);
@@ -183,11 +185,6 @@ function PlayerFitExplanation({ player, profile }: { player: RankedPlayer; profi
                 Why this player?
             </h2>
             {summary ? <ContributionSummaryText summary={summary} /> : null}
-            <p className='mb-0 text-xs leading-relaxed text-muted-foreground'>
-                Category z-scores compare players in the ranked pool. FG% and FT% account for attempts; lower turnovers
-                are better. A no-attempt rate has no chart bar, though the ranker may retain its standardized neutral
-                impact. Profile weight multiplies category z-score; contribution is its weighted score term.
-            </p>
             {!summary ? (
                 <p className='mb-0 rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground'>
                     Score breakdown is unavailable in this response.
@@ -195,81 +192,72 @@ function PlayerFitExplanation({ player, profile }: { player: RankedPlayer; profi
             ) : null}
             <div className='grid gap-2'>
                 {cats.map((cat) => (
-                    <CategoryExplanation
-                        key={cat}
-                        player={player}
-                        profile={profile}
-                        cat={cat}
-                        showContribution={summary !== null}
-                    />
+                    <CategoryExplanation key={cat} player={player} cat={cat} showContribution={summary !== null} />
                 ))}
             </div>
         </section>
     );
 }
 
-// Show only available contribution details and retain saved stance labels even when a legacy tuner overrides them.
+// Pair each raw category stat with its server contribution without repeating chart scores or profile controls.
 function CategoryExplanation({
     player,
-    profile,
     cat,
     showContribution
 }: {
     player: RankedPlayer;
-    profile: DraftProfile;
     cat: CatKey;
     showContribution: boolean;
 }) {
-    const stance = profile.stances[cat] ?? 'neutral';
-    const weight = profileWeight(profile, cat);
     const stat =
         (cat === 'fgPct' || cat === 'ftPct') && player[cat] === null ? 'No attempts' : formatCatStat(player, cat);
-    const z = player.z[cat];
-    const geometry = signedBarGeometry(z);
     const contribution = player.contributions?.[cat];
-    const ignored = weight === 0;
-    const strength =
-        typeof z === 'number' && Number.isFinite(z)
-            ? `${formatSignedValue(z)}${geometry?.clipped ? ' · bar clipped at the ±3 endpoint' : ''}`
-            : 'Unavailable';
 
     return (
-        <div className='grid gap-1 rounded-md border border-border px-3 py-2 text-sm'>
-            <div className='flex flex-wrap items-baseline justify-between gap-x-3'>
-                <h3 className='mb-0 font-medium'>{CAT_LABELS[cat]}</h3>
-                <span className='tabular-nums text-muted-foreground'>{stat}</span>
-            </div>
-            <p className='mb-0 text-xs leading-relaxed text-muted-foreground'>
-                Strength {strength} · Saved stance {capitalize(stance)} · Profile weight {formatTuner(weight)}
-                {ignored ? ' · Ignored · contributes 0' : ''}
-                {showContribution && !ignored && typeof contribution === 'number' && Number.isFinite(contribution)
-                    ? ` · Contribution ${formatSignedValue(contribution)}`
-                    : ''}
-            </p>
+        <div className='flex items-baseline justify-between gap-3 border-b border-border/70 py-1.5 text-sm'>
+            <span className='min-w-0 truncate'>
+                <span className='font-medium'>{CAT_LABELS[cat]}</span>
+                <span className='text-muted-foreground'> · {stat}</span>
+            </span>
+            {showContribution && typeof contribution === 'number' && Number.isFinite(contribution) ? (
+                <span
+                    className='shrink-0 tabular-nums text-muted-foreground'
+                    aria-label={`Contribution ${formatSignedValue(contribution)}`}
+                >
+                    {formatSignedValue(contribution)}
+                </span>
+            ) : null}
         </div>
     );
 }
 
-// Summarize the largest positive and negative score terms using the same sign and precision as category rows.
+// Put the strongest boost and drag on separate lines and retain a compact composite total.
 function ContributionSummaryText({ summary }: { summary: NonNullable<ReturnType<typeof contributionSummary>> }) {
-    const parts = [
-        summary.largestPositive
-            ? `Largest boost: ${CAT_LABELS[summary.largestPositive.cat]} ${formatSignedValue(summary.largestPositive.value)}`
-            : null,
-        summary.mostNegative
-            ? `Largest drag: ${CAT_LABELS[summary.mostNegative.cat]} ${formatSignedValue(summary.mostNegative.value)}`
-            : null
-    ].filter((part): part is string => part !== null);
-
     return (
-        <div className='grid gap-1 text-sm'>
-            <p className='mb-0'>
-                {parts.length ? parts.join(' · ') : 'No category adds to or subtracts from this score.'}
-            </p>
-            <p className='mb-0 tabular-nums text-muted-foreground'>
-                Total contribution: {formatSignedValue(summary.total)}. Displayed terms are rounded to two decimals.
-            </p>
-        </div>
+        <dl className='grid gap-1 text-sm'>
+            {summary.largestPositive ? (
+                <div className='flex justify-between gap-3'>
+                    <dt className='text-muted-foreground'>Largest boost</dt>
+                    <dd className='mb-0 text-right font-medium'>
+                        {CAT_LABELS[summary.largestPositive.cat]} {formatSignedValue(summary.largestPositive.value)}
+                    </dd>
+                </div>
+            ) : null}
+            {summary.mostNegative ? (
+                <div className='flex justify-between gap-3'>
+                    <dt className='text-muted-foreground'>Largest drag</dt>
+                    <dd className='mb-0 text-right font-medium'>
+                        {CAT_LABELS[summary.mostNegative.cat]} {formatSignedValue(summary.mostNegative.value)}
+                    </dd>
+                </div>
+            ) : null}
+            {!summary.largestPositive && !summary.mostNegative ? (
+                <div className='text-muted-foreground'>No category adds to or subtracts from this score.</div>
+            ) : null}
+            <div className='border-t border-border/70 pt-1 tabular-nums text-muted-foreground'>
+                Total contribution {formatSignedValue(summary.total)}
+            </div>
+        </dl>
     );
 }
 
@@ -287,9 +275,4 @@ function chartDescription(player: RankedPlayer, cat: CatKey): string {
 function dataModeLabel(profile: DraftProfile): string {
     const mode = profile.dataMode ?? 'perGame';
     return mode === 'perGame' ? 'Per game' : mode === 'per36' ? 'Per 36 minutes' : 'Totals';
-}
-
-// Present saved labels in readable title case without changing the stored stance value.
-function capitalize(value: string): string {
-    return `${value.slice(0, 1).toUpperCase()}${value.slice(1)}`;
 }

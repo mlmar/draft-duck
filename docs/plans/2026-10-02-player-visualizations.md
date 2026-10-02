@@ -28,7 +28,7 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 - Process: do not install global rules, hooks, or automations.
 - Scope: do not deploy or add onboarding player drawers.
 - Local changes: preserve the pre-existing package-lock.json modification.
-- Current state: Phase 2.1 is accepted; Phase 2.2 is implemented and awaits review.
+- Current state: Phase 2.1 is accepted; Phase 2.2 feedback fixes are implemented and await re-review.
 
 ## Tests
 
@@ -50,12 +50,12 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 
 ## Handoff
 
-- Next leaf: 2.2 review.
-- Status: Phase 2.1 accepted; Phase 2.2 implementation and self-review are complete.
+- Next leaf: 2.2 re-review.
+- Status: Phase 2.1 accepted; Phase 2.2 feedback fixes and self-review are complete.
 - Accepted phases: 1; user accepted roadmap v5 with “approved” on 2026-10-02.
 - Reviewed revision: roadmap v5, working-tree document and existing index edits dated 2026-10-02.
 - Revision scope: v5 adds signed vertical bars; v4 added tables, v3 labelled lists, and v2 below-chart explanations.
-- Next action: review Phase 2.2 in [PR #19](https://github.com/mlmar/draft-duck/pull/19); wait for explicit acceptance before starting 2.3.
+- Next action: review the Phase 2.2 feedback revision in [PR #19](https://github.com/mlmar/draft-duck/pull/19); wait for explicit acceptance before starting 2.3.
 - Authorization: user explicitly requested implementation and a new PR on 2026-10-02.
 - Evidence: Phase 2.1 test, type-check, and diff-review results are recorded below.
 - Accepted: Phase 2.1 implementation and readability in PR #19 on 2026-10-02.
@@ -218,7 +218,7 @@ Provide a decision-complete handoff whose scope, math, interactions, evidence re
 ## Phase 2 — Integrated player and build visualizations
 
 - ID: 2.
-- Status: active; child 2.1 complete and child 2.2 underway.
+- Status: active; child 2.1 accepted and child 2.2 feedback revision awaits re-review.
 - Depends on: 1 accepted and explicit implementation authorization (both satisfied).
 - Parent: none.
 - Children: 2.1, 2.2, 2.3 in order.
@@ -480,31 +480,29 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
     - Requests: Opening details makes no additional network request.
 - [x] R3: Header shows name, team, position, board rank, and data mode (legacy default per-game).
     - Categories: Place enabled category labels on the x-axis in CAT_KEYS order, excluding disabled categories.
-    - Text placement: Keep all stats, score totals, stance labels, weights, and contribution explanations below the whole chart.
+    - Text placement: Keep raw stats, signed contributions, and the compact total below the whole chart; keep signed z-scores in chart labels and its accessible description.
 - [x] R4: Render vertical bars from a central zero baseline labelled Average (0), using the stance chart's ink/paper styling and rounded bar treatment.
     - Direction: Positive player.z values rise above zero; negative values fall below zero. Zero produces no bar height rather than a minimum-size fill.
     - Scale: Use a fixed symmetric y-axis from −3 to +3 z-score units, labelled Standardized strength (z-score), with signed ticks at −3, −1.5, 0, +1.5, and +3.
     - Height: Clamp z to ±3 for geometry; each bar uses abs(clamped z) / 3 of its half of the plot, anchored at the zero baseline.
     - Meaning: Above zero means strength and below zero means weakness relative to the ranked player pool.
     - Consistency: Keep the same scale for all players; preserve turnover inversion so fewer turnovers produce better scores.
-    - Clipping: Mark clipped bars at their endpoint, and retain exact signed z values with a clipping explanation in the text below.
+    - Clipping: Mark clipped bars at their endpoint and announce exact signed z values and clipping in the accessible chart description.
     - Phone layout: Keep equal-width category columns with readable abbreviated labels; allow horizontal chart scrolling if 1.75rem minimum columns do not fit.
-- [x] R5: Below the entire chart, add a Why this player? text section with a concise summary followed by compact category lines containing raw stat, signed z value, saved stance (default Neutral), resolved profile weight, and signed contribution.
-    - Phone layout: Wrap these text lines naturally on phones.
-    - Units: Explain weights separately from z-score units.
+- [x] R5: Below the chart, show a concise Why this player? section with the compact total and category stat plus authoritative signed contribution.
+    - Detail: Do not repeat chart z-scores, saved stances, or profile weights.
+    - No attempts: Preserve this state for FG%/FT% with no attempts.
     - Stance independence: Bar direction and height depend only on player strength; saved stance never changes the geometry or color.
     - Punt interpretation: A punted category can still have a negative strength bar, while its textual contribution is zero when its effective weight is zero.
-- [x] R6: In the text section, zero effective profile weights display Ignored · contributes 0, retaining Custom when applicable.
-    - Legacy weights: An explicit Punt label is shown as saved, but actual weight/contribution always follow ranker behavior, including legacy intensity precedence.
-    - Signed text: Positive/negative contributions remain distinguishable by text and sign, not color alone.
-- [x] R7: The Why this player? summary names the largest strictly positive contribution and most negative contribution when available; tie-break in CAT_KEYS order.
+- [x] R6: Category contributions reflect authoritative server values, including zero when an effective punt weight excludes that category; signed contributions remain distinguishable by text and sign.
+- [x] R7: The Why this player? summary stacks the largest strictly positive contribution and most negative contribution on separate rows when available; tie-break in CAT_KEYS order.
     - Missing directions: Omit absent positive/negative statements.
-    - Total and rounding: Display the composite below the chart in this text section; use two-decimal signed contribution text and explain rounding may affect visible sums.
+    - Total: Keep the compact total contribution and two-decimal signed values; omit the rounding disclaimer.
 - [x] R8: FG%/FT% with null raw rates display No attempts instead of a bar, while preserving any actual contribution in the text section.
-    - Explanations: Explain volume-adjusted percentages, ranked-player-pool comparison, better meaning fewer turnovers, and standardized zero-attempt impact below the chart.
+    - Explanations: Keep signed z-score details in the accessible chart description; omit the explanatory paragraph and repeated per-category z-score, stance, and weight details below it.
     - Missing values: Missing/nonfinite z displays Unavailable, never a fabricated value.
     - Accessibility: Accessible chart descriptions announce each category's strength and signed score despite the simple visual presentation.
-- [x] R9: For older responses missing a complete finite contribution map, retain the strength chart and textual stat/stance information but omit contribution amounts, contribution summary, and contribution total; do not recompute authoritative values client-side.
+- [x] R9: For older responses missing a complete finite contribution map, retain the strength chart and category stats but omit contribution amounts and summary; do not recompute authoritative values client-side.
     - Fallback copy: Show a short explanation below the chart that score breakdown is unavailable from this response.
 - [x] R10: Close selection when the saved profile changes.
     - Stale data: Disable detail triggers whenever rankQuery.isPlaceholderData is true so old-profile rows cannot be explained using new priorities.
@@ -522,80 +520,86 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 
 ### Self review
 
-- Status: complete; no blocking findings.
-- Reviewed revision: implementation commit `f7881cf` on `codex/player-visualizations`, based on `origin/main` at `79d38b5`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
-- Evidence: helper unit tests, full workspace test run, client TypeScript check, production client build, desktop and phone screenshots, browser accessibility inspection, source review, and formatting/diff checks recorded below.
+- Status: complete for the requested feedback revision; awaits human re-review.
+- Reviewed revision: feedback fixes in the working tree on `codex/player-visualizations`, based on implementation commit `f7881cf` and `origin/main` at `79d38b5`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
+- Evidence: fresh full workspace test run, client TypeScript check, production build, desktop/simple and phone screenshots, accessibility inspection, normal-motion close animation/focus restoration, source review, Prettier, and `git diff --check` recorded below.
 - Findings: the drawer consumes the existing ranked response and authoritative `contributions`; malformed or older response maps suppress the complete score breakdown without hiding the chart.
 - Readability gate: comments explain the new geometry/data types, chart, explanatory sections, selection/focus effects, fallback paths, and tests.
 
-| ID  | Check                                                                                                            | Actual result | Evidence                                                                                                                                                                                                         |
-| --- | ---------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| R1  | Demonstrate name-button entry in full/simple views, keyboard activation, and a visible focus state.              | Pass          | Browser AX shows player-name buttons in full and simple views; Return opens the drawer; focus styles are on the trigger.                                                                                         |
-| R2  | Verify responsive placement, dismissal, focus trapping/restoration, body scroll lock, and no additional request. | Pass          | Desktop right drawer and 390px phone bottom drawer screenshots in this review turn; Escape and backdrop close; focus returns to Kawhi; `data-scroll-locked=1`, body overflow hidden; drawer has no request code. |
-| R3  | Inspect header fields, enabled category order, and placement of all explanatory information below the chart.     | Pass          | AX tree shows team, position, rank, “Per game”, canonical categories, then “Why this player?” text.                                                                                                              |
-| R4  | Test signed bar direction, height, zero baseline, clipping, axis labels, and phone layout.                       | Pass          | Unit tests cover −3/−1.5/0/+1.5/+3 and clipping; desktop/phone screenshots show upward positives, downward TOV, zero baseline, signed ticks, and endpoint markers.                                               |
-| R5  | Inspect below-chart text, stance-independent geometry, and punt-zero contribution explanations.                  | Pass          | Source inspection confirms geometry reads only z; AX text places stance, resolved weight, and contribution below the chart.                                                                                      |
-| R6  | Test ignored/custom text, legacy intensity precedence, and signed contributions.                                 | Pass          | `profileWeight` drives labels; zero weight preserves saved “Custom” or “Punt” and adds “Ignored · contributes 0”; Phase 2.1 core tests cover resolved legacy priority.                                           |
-| R7  | Test positive/negative summaries, ties, missing directions, total display, and rounding explanation.             | Pass          | Helper tests cover canonical tie order, absent directions, complete contribution map, composite total, and signed rounding.                                                                                      |
-| R8  | Test no-attempt percentages and unavailable z; inspect explanatory copy and accessible chart descriptions.       | Pass          | Helper tests distinguish no-attempt from scored zero and unavailable z; AX chart description announces signed scores and clipping; copy explains pool, attempts, turnovers, and neutral no-attempt impact.       |
-| R9  | Test older-response fallback without fabricated client-side contributions.                                       | Pass          | Unit test rejects incomplete/nonfinite maps; source review confirms chart and stat/stance rows render while summary and all contribution amounts are omitted.                                                    |
-| R10 | Demonstrate profile-change dismissal, placeholder-data disabling, preserved search, and scroll position.         | Pass          | Source inspection confirms profile-identity dismissal/focus fallback and `isPlaceholderData` disabling; controlled modal keeps the board mounted and its query/search state intact.                              |
-| R11 | Inspect comments on every changed component, helper, data definition, effect, branch, and test.                  | Pass          | Reviewed all new and modified logical blocks; explanatory comments cover geometry, drawer sections, state transitions, and test groups.                                                                          |
-| C1  | Inspect onboarding review cards for unchanged player interactions.                                               | Pass          | Changes are limited to draft-board `PlayerTable` consumers; onboarding card code is untouched.                                                                                                                   |
-| C2  | Inspect scope for weight editing, comparisons, and build-card changes.                                           | Pass          | No weight editor, comparison UI, or build-card implementation was added in this phase.                                                                                                                           |
-| C3  | Inspect network activity, persistence, and dependencies.                                                         | Pass          | Drawer receives props only; no fetch/storage code or dependencies were added.                                                                                                                                    |
-| C4  | Inspect the UI for overlays, extra bar series, or inline explanatory panels.                                     | Pass          | Screenshot and component review show one signed strength series and all explanations below the chart.                                                                                                            |
-| C5  | Compare ink/paper styling and confirm existing nonnegative WeightChart semantics remain unchanged.               | Pass          | Uses the app’s foreground/card palette and rounded bars; `weight-chart.tsx` is untouched.                                                                                                                        |
-| C6  | Verify server-provided contributions and textual equivalents for all chart rows.                                 | Pass          | UI reads `RankedPlayer.contributions` and `composite`; chart image description enumerates enabled categories with signed values.                                                                                 |
+| ID  | Check                                                                                                         | Actual result | Evidence                                                                                                                                                                                                                     |
+| --- | ------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1  | Demonstrate readable name-button entry in full/simple views, keyboard activation, and a visible focus state.  | Pass          | Full and simple board names appear as foreground text on existing row fills; computed trigger background is transparent; browser AX exposes buttons; keyboard activation and focus styling were previously verified.         |
+| R2  | Verify responsive placement, close animation, content lifetime, focus restoration, and no additional request. | Pass          | Desktop right and 390px phone bottom drawers; close remains mounted during Vaul's 500ms exit, then clears and restores focus; Escape/backdrop tested. Reduced-motion code path is inspected but was not emulated in-browser. |
+| R3  | Inspect header fields, enabled category order, and placement of all explanatory information below the chart.  | Pass          | AX tree shows team, position, rank, “Per game”, canonical categories, then “Why this player?” text.                                                                                                                          |
+| R4  | Test signed bar direction, height, zero baseline, clipping, axis labels, and phone layout.                    | Pass          | Unit tests cover −3/−1.5/0/+1.5/+3 and clipping; desktop/phone screenshots show upward positives, downward TOV, zero baseline, signed ticks, and endpoint markers.                                                           |
+| R5  | Inspect concise below-chart stats and authoritative signed contributions.                                     | Pass          | Browser AX shows category and raw stat paired with signed contribution; explanatory paragraph and duplicate z/stance/weight lines are removed.                                                                               |
+| R6  | Verify zero-weight/punt values remain authoritative and signed.                                               | Pass          | Contributions continue to come from server response; zero-weight categories display the server's signed zero. No client-side weight recomputation was introduced.                                                            |
+| R7  | Test stacked positive/negative summaries, ties, missing directions, and total.                                | Pass          | Existing helper tests cover canonical tie order, absent directions, complete contribution map, and composite total; browser AX confirms separate boost/drag rows and compact total.                                          |
+| R8  | Test no-attempt percentages, unavailable z, and accessible chart descriptions.                                | Pass          | Helper tests distinguish no-attempt from scored zero and unavailable z; AX chart description announces signed scores and clipping; chart labels remain present.                                                              |
+| R9  | Test older-response fallback without fabricated client-side contributions.                                    | Pass          | Unit test rejects incomplete/nonfinite maps; source review confirms chart/stat rows render and unavailable copy appears while amounts and summary are omitted.                                                               |
+| R10 | Demonstrate profile-change dismissal, placeholder-data disabling, preserved search, and scroll position.      | Pass          | Source inspection confirms profile-identity dismissal/focus fallback and `isPlaceholderData` disabling; controlled modal keeps the board mounted and its query/search state intact.                                          |
+| R11 | Inspect comments on every changed component, helper, data definition, effect, branch, and test.               | Pass          | Reviewed changed selection, reduced-motion close, drawer animation, concise breakdown, and trigger-styling blocks; comments explain state transitions and intent.                                                            |
+| C1  | Inspect onboarding review cards for unchanged player interactions.                                            | Pass          | Changes are limited to draft-board `PlayerTable` consumers; onboarding card code is untouched.                                                                                                                               |
+| C2  | Inspect scope for weight editing, comparisons, and build-card changes.                                        | Pass          | No weight editor, comparison UI, or build-card implementation was added in this phase.                                                                                                                                       |
+| C3  | Inspect network activity, persistence, and dependencies.                                                      | Pass          | Drawer receives props only; no fetch/storage code or dependencies were added.                                                                                                                                                |
+| C4  | Inspect the UI for overlays, extra bar series, or inline explanatory panels.                                  | Pass          | Screenshot and component review show one signed strength series and all explanations below the chart.                                                                                                                        |
+| C5  | Compare ink/paper styling and confirm existing nonnegative WeightChart semantics remain unchanged.            | Pass          | Uses the app’s foreground/card palette and rounded bars; `weight-chart.tsx` is untouched.                                                                                                                                    |
+| C6  | Verify server-provided contributions and textual equivalents for all chart rows.                              | Pass          | UI reads `RankedPlayer.contributions` and `composite`; chart image description enumerates enabled categories with signed values.                                                                                             |
+| C7  | Verify reduced-motion close behavior without changing the host preference.                                    | Partial       | Reduced-motion branch disables Vaul animation and clears on dismissal by inspection; this in-app browser did not expose media emulation, so dynamic reduced-motion behavior was not exercised.                               |
 
 ### Human review
 
 | Field               | Record                                                                                                                           |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Status              | pending.                                                                                                                         |
-| Result and evidence | Phase 2.2 implementation, browser screenshots, and validation evidence in [PR #19](https://github.com/mlmar/draft-duck/pull/19). |
+| Status              | pending re-review after requested changes.                                                                                       |
+| Result and evidence | Feedback revision, browser checks, and fresh validation evidence in [PR #19](https://github.com/mlmar/draft-duck/pull/19).       |
 | Reviewer            | user.                                                                                                                            |
-| Review date         | pending.                                                                                                                         |
-| Reviewed revision   | pending human review of the Phase 2.2 revision.                                                                                  |
-| Decision            | pending; prior plan approval does not imply acceptance of future code.                                                           |
-| Requested changes   | not assessed.                                                                                                                    |
+| Review date         | 2026-10-02.                                                                                                                      |
+| Reviewed revision   | Phase 2.2 revision at PR #19 before the feedback fixes.                                                                          |
+| Decision            | Requested changes; user supplied feedback on the draft-board trigger, closing motion, and Why section.                           |
+| Requested changes   | Improve player-name contrast, restore exit animation, shorten explanatory content, stack boost/drag, remove rounding disclaimer. |
 | Code readability    | human assessment of comments and understandable code is pending.                                                                 |
 
 ### Documented misses, deviations
 
-- Assessment: Not assessed; human review is pending. Self-review found no blocking findings.
+- Assessment: User reported presentation issues on the prior Phase 2.2 revision; requested changes are implemented and await re-review. Self-review found no blocking findings; reduced-motion behavior remains dynamically unverified.
 - Finding record: document each discovered miss separately.
     - Impact: identify affected behavior or requirement.
     - Cause: record why the gap occurred.
     - Resolution: repair within this phase before acceptance.
     - Approval: obtain an explicit human decision for any scope change.
 - Deferral rule: deferred requirements need an accepted scope change linked to a future phase.
+- M5: Feedback review found unreadable player-name buttons, missing drawer exit motion, and an overly verbose contribution explanation.
+    - Impact: player entry and drawer dismissal were difficult to use, and repeated detail obscured the useful fit information.
+    - Cause: global button styling overrode the name trigger's intended foreground colors; selected-player state was cleared before Vaul finished its exit transition; the first explanation draft repeated chart and profile details.
+    - Resolution: use the shared ghost-button variant with explicit transparent/text styles; retain selection through Vaul's exit callback and restore focus afterward; show stacked boost/drag rows and compact stat/contribution rows, removing repeated explanations and the rounding disclaimer.
+    - Approval: user explicitly requested and authorized these fixes on 2026-10-02; re-review is pending.
 
 ### Validation plan and acceptance evidence
 
 - Signed geometry: test −3/−1.5/0/+1.5/+3 gives full-down/half-down/no-height/half-up/full-up bars from zero.
 - Clipping: test scores beyond ±3 clamp bar height and show an endpoint marker while exact text remains available.
-- Stance independence: identical player strengths yield identical signed bars under different stances.
-- Punt semantics: verify a negative strength in an effectively zero-weight category contributes zero to the build score.
+- Stance independence: identical player strengths yield identical signed bars under different stances; Phase 2.1 remains the source of authoritative zero-weight contributions.
 - Categories: verify canonical ordering and omission of disabled cats.
 - Text states: test ignored/custom weights, missing z, and no-attempt percentages.
 - Summary: test largest boost/drag, ties, and omitted absent directions.
 - Older responses: verify graceful omission of unavailable contribution details.
 - Chart layout: visually check upward/downward vertical bars, readable signed ticks/category labels, and all explanatory text below the whole chart.
 - Drawer entry: demonstrate full/simple triggers and no additional /rank request.
-- Accessibility: check keyboard dismissal, focus restoration, descriptions, and body scroll lock.
+- Accessibility: check keyboard dismissal, focus restoration, signed chart descriptions, and body scroll lock.
+- Reduced motion: inspect disabled Vaul panel/overlay motion and immediate close completion; dynamic media override was unavailable in the in-app browser.
 - Stale results: change the profile and verify drawer dismissal and placeholder-trigger disabling.
 - Edge layouts: check long names, 8-cat/custom cats, all-zero weights, and phone scrolling.
-- Checks: `npm test` passed (12 core files/93 tests; 5 client files/31 tests); `npx tsc --noEmit -p app/client/tsconfig.json` passed; `npm run build -w @draft-duck/client` passed and prerendered five pages; Prettier and `git diff --check` passed.
+- Checks: fresh `npm test` passed (12 core files/93 tests; 5 client files/31 tests); `npx tsc --noEmit -p app/client/tsconfig.json` passed; `npm run build -w @draft-duck/client` passed and prerendered five pages; Prettier and `git diff --check` passed.
 - Readability: inspect comments on every changed logical block.
-- Evidence: desktop right-side and 390px phone bottom-drawer screenshots are visible in this review turn; browser AX and interaction checks are summarized in Self review.
+- Evidence: desktop right-side and 390px phone bottom-drawer screenshots are visible in this review turn; board names were inspected in full and simple views, including computed transparent background and foreground text color; close animation, content lifetime, Escape, and focus restoration were tested on desktop and phone. Reduced-motion rendering remains a source-inspection result only.
 
 ### Decisions, assumptions, and questions
 
 - D1 — Entry: board-only player details; owner: user; source: preference answer in this chat.
 - D2 — Presentation: vertical strength bars rising/falling from zero, including negatives, with text below; owner: user; source: explicit request on 2026-10-02.
 - Superseded proposals: inline stance/contribution context and left-filled horizontal bars that encode weakness only through shorter length.
-- A1 — Mapping: fixed scale and other accessibility/presentation defaults await phase 1 acceptance.
+- A1 — Mapping: fixed scale and accessibility/presentation defaults were accepted with roadmap v5 on 2026-10-02.
 - Implementation owner: implementer preserves scoring semantics and prevents stale explanations.
 - Material questions: none after specification acceptance.
 
@@ -610,14 +614,14 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 ### Handoff checkpoint
 
 - Active phase: 2.2.
-- Status: awaiting-human-review.
-- Reviewed revision: implementation commit `f7881cf` on `codex/player-visualizations`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
-- Evidence: helper tests, 93 core and 31 client tests, client TypeScript check, production build, desktop/phone browser demonstrations, AX and interaction checks, comment review, Prettier and diff checks.
+- Status: awaiting-human-review after requested changes.
+- Reviewed revision: feedback fixes in the working tree on `codex/player-visualizations`, based on `f7881cf`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
+- Evidence: 93 core and 31 client tests, client TypeScript check, production build, desktop/simple and phone browser checks, AX and interaction inspection, comment review, Prettier and diff checks. Reduced-motion dynamic emulation is pending due to browser tooling limits.
 - Outstanding work: human acceptance of this leaf before Phase 2.3 begins.
 - Pending decision: user acceptance of this phase after concrete review.
-- Next action: review Phase 2.2 in [PR #19](https://github.com/mlmar/draft-duck/pull/19); after acceptance, begin Phase 2.3 on the same branch and PR.
+- Next action: review the Phase 2.2 feedback revision in [PR #19](https://github.com/mlmar/draft-duck/pull/19); after acceptance, begin Phase 2.3 on the same branch and PR.
 - Gate: advance only after requirements, constraints, self review, human acceptance, misses, and readability all pass.
-- Parent update: Phase 2.1 is accepted; Phase 2.2 awaits human acceptance; keep Phase 2.3 and parent integration in draft.
+- Parent update: Phase 2.1 is accepted; Phase 2.2 feedback revision awaits human acceptance; keep Phase 2.3 and parent integration in draft.
 
 ## Phase 2.3 — Mini charts on named build cards
 
