@@ -55,7 +55,7 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 - Accepted phases: 1; user accepted roadmap v5 with “approved” on 2026-10-02.
 - Reviewed revision: roadmap v5, working-tree document and existing index edits dated 2026-10-02.
 - Revision scope: v5 adds signed vertical bars; v4 added tables, v3 labelled lists, and v2 below-chart explanations.
-- Next action: review the Phase 2.1 implementation in the new PR; after acceptance, begin 2.2 on the same branch and PR.
+- Next action: review [PR #19](https://github.com/mlmar/draft-duck/pull/19) for Phase 2.1; after acceptance, begin 2.2 on the same branch and PR.
 - Authorization: user explicitly requested implementation and a new PR on 2026-10-02.
 - Evidence: Phase 2.1 test, type-check, and diff-review results are recorded below.
 - Outstanding work: human acceptance of 2.1, then phases 2.2 and 2.3 and parent integration review.
@@ -207,7 +207,7 @@ Provide a decision-complete handoff whose scope, math, interactions, evidence re
 
 - Active phase: 2.1.
 - Status: awaiting human review.
-- Reviewed revision: Phase 2.1 implementation diff on `codex/player-visualizations`, based on `origin/main` at `79d38b5`.
+- Reviewed revision: Phase 2.1 implementation commit `7c3c5cf` on `codex/player-visualizations`, based on `origin/main` at `79d38b5`; [PR #19](https://github.com/mlmar/draft-duck/pull/19).
 - Evidence: core/client suites, client TypeScript check, source review, and `git diff --check` recorded below.
 - Outstanding work: human acceptance of 2.1; the drawer, mini charts, and parent integration remain unimplemented.
 - Pending decision: user acceptance of the concrete Phase 2.1 implementation.
@@ -386,16 +386,16 @@ Give the UI an authoritative explanation that stays correct with operator overri
 
 ### Human review
 
-| Field               | Record                                                                         |
-| ------------------- | ------------------------------------------------------------------------------ |
-| Status              | pending.                                                                       |
-| Result and evidence | Phase 2.1 implementation diff and validation evidence are ready in the new PR. |
-| Reviewer            | user.                                                                          |
-| Review date         | pending.                                                                       |
-| Reviewed revision   | pending user review of the Phase 2.1 PR revision.                              |
-| Decision            | pending; prior plan approval does not imply acceptance of future code.         |
-| Requested changes   | not assessed.                                                                  |
-| Code readability    | human assessment of the comments and code is pending.                          |
+| Field               | Record                                                                                                               |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Status              | pending.                                                                                                             |
+| Result and evidence | Phase 2.1 implementation and validation evidence are ready in [PR #19](https://github.com/mlmar/draft-duck/pull/19). |
+| Reviewer            | user.                                                                                                                |
+| Review date         | pending.                                                                                                             |
+| Reviewed revision   | pending user review of the Phase 2.1 PR revision.                                                                    |
+| Decision            | pending; prior plan approval does not imply acceptance of future code.                                               |
+| Requested changes   | not assessed.                                                                                                        |
+| Code readability    | human assessment of the comments and code is pending.                                                                |
 
 ### Documented misses, deviations
 
@@ -440,12 +440,12 @@ Give the UI an authoritative explanation that stays correct with operator overri
 
 - Active phase: 2.1.
 - Status: awaiting-human-review.
-- Reviewed revision: Phase 2.1 implementation diff on `codex/player-visualizations`, based on `origin/main` `79d38b5`.
+- Reviewed revision: Phase 2.1 implementation commit `7c3c5cf` on `codex/player-visualizations`, based on `origin/main` `79d38b5`; [PR #19](https://github.com/mlmar/draft-duck/pull/19).
 - Evidence: tests, type checking, diff inspection, and comment review are recorded in Self review.
 - Outstanding work: user acceptance of this leaf before Phase 2.2 begins.
 - Authorization: received from the user's explicit implementation request on 2026-10-02.
 - Pending review: user acceptance of the concrete Phase 2.1 implementation.
-- Next action: review the new PR; after acceptance, implement and validate the player drawer on this same branch and PR.
+- Next action: review [PR #19](https://github.com/mlmar/draft-duck/pull/19); after acceptance, implement and validate the player drawer on this same branch and PR.
 - Gate: advance only after requirements, constraints, self review, human acceptance, misses, and readability all pass.
 - Parent update: refresh phase 2 and the global handoff in the same pass as acceptance records.
 
