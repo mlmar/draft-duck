@@ -1,4 +1,5 @@
 import { PlayerTable, type CatValueMode } from '@/components/draft/player-table';
+import { PlayerDetailDrawer } from '@/components/draft/player-detail-drawer';
 import { SettingsDrawer } from '@/components/draft/settings-drawer';
 import { WeightsDrawer } from '@/components/onboard/weights-drawer';
 import { WeightChart } from '@/components/onboard/weight-chart';
@@ -19,7 +20,8 @@ import {
     overallPicksForDraft,
     partitionByRound,
     profileHeadline,
-    stanceSummary
+    stanceSummary,
+    type RankedPlayer
 } from '@draft-duck/core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
@@ -88,7 +90,12 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
     const [weightsOpen, setWeightsOpen] = useState(false);
     const [showRest, setShowRest] = useState(false);
     const [simpleView, setSimpleView] = useState(() => readBoardView() === 'simple');
+    const [selectedDetails, setSelectedDetails] = useState<{
+        playerId: string;
+        profile: NonNullable<typeof profile>;
+    } | null>(null);
     const settingsButtonRef = useRef<HTMLButtonElement>(null);
+    const detailTriggerRef = useRef<HTMLButtonElement | null>(null);
 
     function persistDraft(next: QuizDraft) {
         if (!canPersist(next)) return;
@@ -120,6 +127,14 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
         placeholderData: keepPreviousData
     });
 
+    // Close immediately when the saved profile changes so previous rankings are never explained with new weights.
+    useEffect(() => {
+        if (!selectedDetails || selectedDetails.profile === profile) return;
+        setSelectedDetails(null);
+        const frame = window.requestAnimationFrame(restorePlayerDetailFocus);
+        return () => window.cancelAnimationFrame(frame);
+    }, [profile, selectedDetails]);
+
     function handleDiscreteChange(next: QuizDraft) {
         setDraft(next);
         persistDraft(next);
@@ -136,6 +151,10 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
     }
 
     const players = rankQuery.data ?? [];
+    const selectedPlayer =
+        selectedDetails?.profile === profile && !rankQuery.isPlaceholderData
+            ? (players.find((player) => player.playerId === selectedDetails.playerId) ?? null)
+            : null;
     const yourPicks = useMemo(() => (profile ? overallPicksForDraft(profile) : []), [profile]);
     const yourPickSet = useMemo(() => new Set(yourPicks), [yourPicks]);
 
@@ -181,6 +200,29 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
     const hasSlot = Boolean(profile.draftSlot);
     const showSimple = simpleView && hasSlot;
     const plusMinus = valueMode === 'plusMinus';
+
+    // Store the real name-button trigger so dismissal can restore focus after filtering or view changes.
+    function handlePlayerSelect(player: RankedPlayer, trigger: HTMLButtonElement) {
+        const activeProfile = profile;
+        if (rankQuery.isPlaceholderData || !activeProfile) return;
+        detailTriggerRef.current = trigger;
+        setSelectedDetails({ playerId: player.playerId, profile: activeProfile });
+    }
+
+    // Focus the original name when it still exists, or the persistent settings control if the row disappeared.
+    function restorePlayerDetailFocus() {
+        const trigger = detailTriggerRef.current;
+        if (trigger?.isConnected) trigger.focus();
+        else settingsButtonRef.current?.focus();
+        detailTriggerRef.current = null;
+    }
+
+    // Dismissal is controlled here so focus returns consistently for close, Escape, and backdrop actions.
+    function handlePlayerDrawerOpenChange(open: boolean) {
+        if (open) return;
+        setSelectedDetails(null);
+        window.requestAnimationFrame(restorePlayerDetailFocus);
+    }
 
     const settingsButton = (
         <ToolbarButton
@@ -244,6 +286,13 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                         onTableSettingsChange({ assist: settings.assist, valueMode: settings.valueMode });
                     }
                 }}
+            />
+
+            <PlayerDetailDrawer
+                open={selectedPlayer !== null}
+                player={selectedPlayer}
+                profile={profile}
+                onOpenChange={handlePlayerDrawerOpenChange}
             />
 
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
@@ -337,6 +386,8 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                                 // Raw / +/- is unmounted here. Keep the selected dataset's stats.
                                 valueMode='raw'
                                 yourOverallPicks={yourPickSet}
+                                onPlayerSelect={handlePlayerSelect}
+                                playerDetailsDisabled={rankQuery.isPlaceholderData}
                             />
                         )}
                     </>
@@ -350,6 +401,8 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                             highlight={highlight}
                             valueMode={valueMode}
                             yourOverallPicks={yourPickSet}
+                            onPlayerSelect={handlePlayerSelect}
+                            playerDetailsDisabled={rankQuery.isPlaceholderData}
                         />
                         {capped.hiddenCount > 0 ? (
                             <p className='mb-0'>
