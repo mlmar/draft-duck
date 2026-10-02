@@ -19,20 +19,35 @@ function DrawerClose({ ...props }: React.ComponentProps<typeof DrawerPrimitive.C
     return <DrawerPrimitive.Close data-slot='drawer-close' {...props} />;
 }
 
-function DrawerOverlay({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Overlay>) {
+// Allow callers with reduced-motion preferences to disable Vaul's injected overlay animation.
+type DrawerMotionProps = {
+    disableAnimation?: boolean;
+};
+
+function DrawerOverlay({
+    className,
+    disableAnimation,
+    ...props
+}: React.ComponentProps<typeof DrawerPrimitive.Overlay> & DrawerMotionProps) {
     return (
         <DrawerPrimitive.Overlay
             data-slot='drawer-overlay'
             className={cn('fixed inset-0 z-50 bg-foreground/20', className)}
+            {...(disableAnimation ? { 'data-vaul-animate': 'false' } : {})}
             {...props}
         />
     );
 }
 
-function DrawerContent({ className, children, ...props }: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+function DrawerContent({
+    className,
+    children,
+    disableAnimation,
+    ...props
+}: React.ComponentProps<typeof DrawerPrimitive.Content> & DrawerMotionProps) {
     return (
         <DrawerPortal>
-            <DrawerOverlay />
+            <DrawerOverlay disableAnimation={disableAnimation} />
             <DrawerPrimitive.Content
                 data-slot='drawer-content'
                 className={cn(
@@ -41,6 +56,7 @@ function DrawerContent({ className, children, ...props }: React.ComponentProps<t
                     'data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:h-full data-[vaul-drawer-direction=right]:w-[24rem] data-[vaul-drawer-direction=right]:max-w-[90vw] data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:border-border',
                     className
                 )}
+                {...(disableAnimation ? { 'data-vaul-animate': 'false' } : {})}
                 {...props}
             >
                 {children}
