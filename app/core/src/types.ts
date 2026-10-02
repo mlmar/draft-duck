@@ -67,6 +67,8 @@ export type DraftProfile = {
 // RankedPlayer.z only includes enabled cats. Disabled cats are omitted, not zeroed.
 export type RankedPlayer = PlayerSeason & {
     z: Partial<Record<CatKey, number>>;
+    /** Exact per-category terms used to build composite; omitted only for older responses. */
+    contributions?: Partial<Record<CatKey, number>>;
     /** Profile-weighted fit. Punt cats contribute 0. Rank equals this order while the availability floor is off. */
     composite: number;
     rank: number;

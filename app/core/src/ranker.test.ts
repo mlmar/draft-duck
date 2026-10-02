@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { CsvProvider } from './csv-provider.ts';
 import { stancesForArchetype } from './named-builds.ts';
 import { DEFAULT_OPERATOR_WEIGHTS } from './operator-weights.ts';
+import { profileWeight } from './profile.ts';
 import { rank } from './ranker.ts';
 import { identitySuggestionHook, type SuggestionHook } from './suggestion-hook.ts';
 import { CAT_KEYS, type DraftProfile, type PlayerSeason } from './types.ts';
@@ -52,7 +53,13 @@ function byId(players: ReturnType<typeof rank>, playerId: string) {
     return player;
 }
 
+// Sum only populated categories so disabled categories remain absent from the explanation.
+function contributionTotal(contributions: Partial<Record<(typeof CAT_KEYS)[number], number>>): number {
+    return Object.values(contributions).reduce((total, contribution) => total + (contribution ?? 0), 0);
+}
+
 describe('rank', () => {
+    // Neutral ranking remains unchanged while each enabled category now exposes its exact additive term.
     it('gives unique 1-based ranks and finite composites on an all-neutral 9-cat board', () => {
         const universe = [
             season({ playerId: 'aaa', pts: 20, trb: 4 }),
@@ -64,13 +71,78 @@ describe('rank', () => {
         expect(new Set(ranked.map((player) => player.playerId)).size).toBe(3);
         expect(ranked.every((player) => Number.isFinite(player.composite))).toBe(true);
         expect(ranked.every((player) => CAT_KEYS.every((cat) => typeof player.z[cat] === 'number'))).toBe(true);
+        expect(ranked.every((player) => CAT_KEYS.every((cat) => typeof player.contributions?.[cat] === 'number'))).toBe(
+            true
+        );
+        expect(ranked.every((player) => contributionTotal(player.contributions ?? {}) === player.composite)).toBe(true);
     });
 
+    // Exercise stance presets, complement weights, explicit custom tuners, punts, and zero weights together.
+    it.each([
+        ['neutral', {}],
+        ['need', { stances: { pts: 'need' } }],
+        ['complement', { stances: { fgPct: 'punt' } }],
+        ['custom', { stances: { pts: 'custom' }, intensity: { pts: 2.25 } }],
+        ['punt', { stances: { ast: 'punt' } }],
+        ['zero weight', { intensity: { trb: 0 } }]
+    ] as const)('reports additive contributions for %s weights', (_label, overrides) => {
+        const universe = [
+            season({ playerId: 'first', pts: 18, trb: 8, ast: 6 }),
+            season({ playerId: 'second', pts: 9, trb: 4, ast: 1 }),
+            season({ playerId: 'third', pts: 12, trb: 6, ast: 3 })
+        ];
+        const activeProfile = profile(overrides);
+        const ranked = rank(universe, activeProfile);
+
+        for (const player of ranked) {
+            expect(contributionTotal(player.contributions ?? {})).toBeCloseTo(player.composite, 12);
+            expect(Object.keys(player.contributions ?? {}).sort()).toEqual([...CAT_KEYS].sort());
+            for (const cat of CAT_KEYS) {
+                expect(player.contributions?.[cat]).toBeCloseTo(
+                    (DEFAULT_OPERATOR_WEIGHTS[cat] ?? 1) * profileWeight(activeProfile, cat) * (player.z[cat] ?? 0),
+                    12
+                );
+            }
+        }
+    });
+
+    // Operator weights are part of the authoritative term returned to the client.
+    it('includes operator overrides in each reported contribution', () => {
+        const universe = [season({ playerId: 'high-steals', stl: 3 }), season({ playerId: 'low-steals', stl: 0.5 })];
+        const operatorWeights = { ...DEFAULT_OPERATOR_WEIGHTS, stl: 2 };
+        const ranked = rank(universe, profile(), { operatorWeights });
+
+        for (const player of ranked) {
+            expect(player.contributions?.stl).toBeCloseTo(2 * (player.z.stl ?? 0), 12);
+            expect(contributionTotal(player.contributions ?? {})).toBeCloseTo(player.composite, 12);
+        }
+    });
+
+    // A zero-attempt percentage impact is standardized with the universe and can therefore remain nonzero.
+    it('preserves actual FG% and FT% contributions for players with no attempts', () => {
+        const universe = [
+            season({ playerId: 'no-attempts', fgPct: null, fga: 0, ftPct: null, fta: 0 }),
+            season({ playerId: 'low-rates', fgPct: 0.4, fga: 10, ftPct: 0.7, fta: 10 }),
+            season({ playerId: 'high-rates', fgPct: 0.6, fga: 20, ftPct: 0.9, fta: 20 })
+        ];
+        const ranked = rank(universe, profile({ enabledCats: ['fgPct', 'ftPct'] }));
+        const noAttempts = byId(ranked, 'no-attempts');
+
+        expect(noAttempts.z.fgPct).not.toBe(0);
+        expect(noAttempts.z.ftPct).not.toBe(0);
+        expect(noAttempts.contributions?.fgPct).toBe(noAttempts.z.fgPct);
+        expect(noAttempts.contributions?.ftPct).toBe(noAttempts.z.ftPct);
+        expect(contributionTotal(noAttempts.contributions ?? {})).toBeCloseTo(noAttempts.composite, 12);
+    });
+
+    // Disabled categories stay absent from both maps, while punted categories remain present at weight zero.
     it('omits disabled cats from z and keeps punted cats at weight 0', () => {
         const universe = [season({ playerId: 'aaa', tov: 4 }), season({ playerId: 'bbb', tov: 1 })];
         const omitted = rank(universe, profile({ enabledCats: CAT_KEYS.filter((cat) => cat !== 'tov') }));
         expect(omitted[0]?.z.tov).toBeUndefined();
         expect(omitted[1]?.z.tov).toBeUndefined();
+        expect(omitted[0]?.contributions?.tov).toBeUndefined();
+        expect(omitted[1]?.contributions?.tov).toBeUndefined();
 
         const punted = rank(universe, profile({ stances: { tov: 'punt' } }));
         expect(typeof punted[0]?.z.tov).toBe('number');
@@ -133,7 +205,8 @@ describe('rank', () => {
         expect(doubledThief?.composite).toBeCloseTo((baseThief?.composite ?? 0) + (baseThief?.z.stl ?? 0));
     });
 
-    it('keeps player order when the identity hook annotates', () => {
+    // Annotation must carry contribution details along with the ranking fields used by the board.
+    it('keeps player order and contributions when the identity hook annotates', () => {
         const universe = [
             season({ playerId: 'ccc', pts: 8 }),
             season({ playerId: 'aaa', pts: 20 }),
@@ -143,6 +216,7 @@ describe('rank', () => {
         const annotated = identitySuggestionHook.annotate(ranked);
         expect(annotated.map((player) => player.playerId)).toEqual(ranked.map((player) => player.playerId));
         expect(annotated.map((player) => player.composite)).toEqual(ranked.map((player) => player.composite));
+        expect(annotated.map((player) => player.contributions)).toEqual(ranked.map((player) => player.contributions));
         expect(annotated.map((player) => player.rank)).toEqual(ranked.map((player) => player.rank));
     });
 

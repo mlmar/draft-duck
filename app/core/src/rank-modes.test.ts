@@ -56,6 +56,23 @@ describe('rankWithDataModeSignals', () => {
         expect(rankWithDataModeSignals(players, totalsProfile)[0]?.playerId).toBe('b');
     });
 
+    // The selected ranking keeps exact contribution terms while adding its optional signal annotation.
+    it('preserves contributions through data-mode selection and signal annotation', () => {
+        const players = universes(
+            ['sleeper', 'a', 'b', 'c', 'd', 'e', 'f', 'dud'],
+            ['dud', 'a', 'b', 'c', 'sleeper', 'e', 'f', 'g'],
+            ['dud', 'a', 'b', 'c', 'sleeper', 'e', 'f', 'g']
+        );
+        const ranked = rankWithDataModeSignals(players, profile);
+
+        for (const player of ranked) {
+            expect(player.contributions?.pts).toBe(player.z.pts);
+            expect(Object.keys(player.contributions ?? {})).toEqual(['pts']);
+            expect(player.contributions?.pts).toBeCloseTo(player.composite, 12);
+        }
+        expect(ranked.find((player) => player.playerId === 'sleeper')?.upsideSignal).toBe('sleeper');
+    });
+
     it('flags sleeper and dud signals at the quarter and median boundaries', () => {
         const players = universes(
             ['sleeper', 'a', 'b', 'c', 'd', 'e', 'f', 'dud'],
