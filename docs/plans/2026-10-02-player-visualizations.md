@@ -481,7 +481,7 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 - [x] R3: Header shows name, team, position, board rank, and data mode (legacy default per-game).
     - Categories: Place enabled category labels on the x-axis in CAT_KEYS order, excluding disabled categories.
     - Text placement: Keep raw stats, signed contributions, and the compact total below the whole chart; keep signed z-scores in chart labels and its accessible description.
-- [x] R4: Render vertical bars from a central zero baseline labelled Average (0), using the stance chart's ink/paper styling and rounded bar treatment.
+- [x] R4: Render vertical bars from a central zero baseline labelled Avg (0), using the stance chart's ink/paper styling and rounded bar treatment.
     - Direction: Positive player.z values rise above zero; negative values fall below zero. Zero produces no bar height rather than a minimum-size fill.
     - Scale: Use a fixed symmetric y-axis from −3 to +3 z-score units, labelled Standardized strength (z-score), with signed ticks at −3, −1.5, 0, +1.5, and +3.
     - Height: Clamp z to ±3 for geometry; each bar uses abs(clamped z) / 3 of its half of the plot, anchored at the zero baseline.
@@ -490,7 +490,7 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
     - Clipping: Mark clipped bars at their endpoint and announce exact signed z values and clipping in the accessible chart description.
     - Phone layout: Keep equal-width category columns with readable abbreviated labels; allow horizontal chart scrolling if 1.75rem minimum columns do not fit.
 - [x] R5: Below the chart, show a concise Why this player? section with the compact total and category stat plus authoritative signed contribution.
-    - Detail: Do not repeat chart z-scores, saved stances, or profile weights.
+    - Detail: Do not repeat chart z-scores, saved stances, or profile weights; keep category rows flush without extra vertical padding.
     - No attempts: Preserve this state for FG%/FT% with no attempts.
     - Stance independence: Bar direction and height depend only on player strength; saved stance never changes the geometry or color.
     - Punt interpretation: A punted category can still have a negative strength bar, while its textual contribution is zero when its effective weight is zero.
@@ -521,7 +521,7 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 ### Self review
 
 - Status: complete for the requested feedback revision; awaits human re-review.
-- Reviewed revision: feedback fix commit `f4342b9` on `codex/player-visualizations`, based on Phase 2.2 commit `f7881cf` and `origin/main` at `79d38b5`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
+- Reviewed revision: feedback fix follow-up commit `05b9e52` on `codex/player-visualizations`, based on feedback fix commit `f4342b9` and `origin/main` at `79d38b5`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
 - Evidence: fresh full workspace test run, client TypeScript check, production build, desktop/simple and phone screenshots, accessibility inspection, normal-motion close animation/focus restoration, source review, Prettier, and `git diff --check` recorded below.
 - Findings: the drawer consumes the existing ranked response and authoritative `contributions`; malformed or older response maps suppress the complete score breakdown without hiding the chart.
 - Readability gate: comments explain the new geometry/data types, chart, explanatory sections, selection/focus effects, fallback paths, and tests.
@@ -531,8 +531,8 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 | R1  | Demonstrate readable name-button entry in full/simple views, keyboard activation, and a visible focus state.  | Pass          | Full and simple board names appear as foreground text on existing row fills; computed trigger background is transparent; browser AX exposes buttons; keyboard activation and focus styling were previously verified.         |
 | R2  | Verify responsive placement, close animation, content lifetime, focus restoration, and no additional request. | Pass          | Desktop right and 390px phone bottom drawers; close remains mounted during Vaul's 500ms exit, then clears and restores focus; Escape/backdrop tested. Reduced-motion code path is inspected but was not emulated in-browser. |
 | R3  | Inspect header fields, enabled category order, and placement of all explanatory information below the chart.  | Pass          | AX tree shows team, position, rank, “Per game”, canonical categories, then “Why this player?” text.                                                                                                                          |
-| R4  | Test signed bar direction, height, zero baseline, clipping, axis labels, and phone layout.                    | Pass          | Unit tests cover −3/−1.5/0/+1.5/+3 and clipping; desktop/phone screenshots show upward positives, downward TOV, zero baseline, signed ticks, and endpoint markers.                                                           |
-| R5  | Inspect concise below-chart stats and authoritative signed contributions.                                     | Pass          | Browser AX shows category and raw stat paired with signed contribution; explanatory paragraph and duplicate z/stance/weight lines are removed.                                                                               |
+| R4  | Test signed bar direction, height, zero baseline, clipping, axis labels, and phone layout.                    | Pass          | Unit tests cover −3/−1.5/0/+1.5/+3 and clipping; desktop/phone screenshots show upward positives, downward TOV, zero baseline, signed ticks, and endpoint markers; center label is Avg (0).                                  |
+| R5  | Inspect concise below-chart stats, spacing, and authoritative signed contributions.                           | Pass          | Browser AX shows category and raw stat paired with signed contribution; category rows have no vertical padding; explanatory paragraph and duplicate z/stance/weight lines are removed.                                       |
 | R6  | Verify zero-weight/punt values remain authoritative and signed.                                               | Pass          | Contributions continue to come from server response; zero-weight categories display the server's signed zero. No client-side weight recomputation was introduced.                                                            |
 | R7  | Test stacked positive/negative summaries, ties, missing directions, and total.                                | Pass          | Existing helper tests cover canonical tie order, absent directions, complete contribution map, and composite total; browser AX confirms separate boost/drag rows and compact total.                                          |
 | R8  | Test no-attempt percentages, unavailable z, and accessible chart descriptions.                                | Pass          | Helper tests distinguish no-attempt from scored zero and unavailable z; AX chart description announces signed scores and clipping; chart labels remain present.                                                              |
@@ -549,16 +549,16 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 
 ### Human review
 
-| Field               | Record                                                                                                                           |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Status              | pending re-review after requested changes.                                                                                       |
-| Result and evidence | Feedback revision, browser checks, and fresh validation evidence in [PR #19](https://github.com/mlmar/draft-duck/pull/19).       |
-| Reviewer            | user.                                                                                                                            |
-| Review date         | 2026-10-02.                                                                                                                      |
-| Reviewed revision   | Phase 2.2 revision at PR #19 before the feedback fixes.                                                                          |
-| Decision            | Requested changes; user supplied feedback on the draft-board trigger, closing motion, and Why section.                           |
-| Requested changes   | Improve player-name contrast, restore exit animation, shorten explanatory content, stack boost/drag, remove rounding disclaimer. |
-| Code readability    | human assessment of comments and understandable code is pending.                                                                 |
+| Field               | Record                                                                                                                                               |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Status              | pending re-review after requested changes.                                                                                                           |
+| Result and evidence | Feedback revision, browser checks, and fresh validation evidence in [PR #19](https://github.com/mlmar/draft-duck/pull/19).                           |
+| Reviewer            | user.                                                                                                                                                |
+| Review date         | 2026-10-02.                                                                                                                                          |
+| Reviewed revision   | Phase 2.2 revision at PR #19 before the feedback fixes.                                                                                              |
+| Decision            | Requested changes; user supplied feedback on the draft-board trigger, closing motion, and Why section.                                               |
+| Requested changes   | Improve player-name contrast and closing motion; shorten explanation; stack boost/drag; remove rounding note; shorten Avg label and tighten spacing. |
+| Code readability    | human assessment of comments and understandable code is pending.                                                                                     |
 
 ### Documented misses, deviations
 
@@ -574,6 +574,11 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
     - Cause: global button styling overrode the name trigger's intended foreground colors; selected-player state was cleared before Vaul finished its exit transition; the first explanation draft repeated chart and profile details.
     - Resolution: use the shared ghost-button variant with explicit transparent/text styles; retain selection through Vaul's exit callback and restore focus afterward; show stacked boost/drag rows and compact stat/contribution rows, removing repeated explanations and the rounding disclaimer.
     - Approval: user explicitly requested and authorized these fixes on 2026-10-02; re-review is pending.
+- M6: Follow-up review found excess whitespace in the Why section and requested a shorter zero-axis label.
+    - Impact: fit details used more vertical space than needed and the center tick was unnecessarily long.
+    - Cause: category rows had vertical padding and the center tick used the full “Average” label.
+    - Resolution: remove vertical padding from category rows, tighten section/row gaps, and abbreviate the zero tick to “Avg (0)”.
+    - Approval: user explicitly requested both adjustments on 2026-10-02; re-review is pending.
 
 ### Validation plan and acceptance evidence
 
@@ -591,6 +596,7 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 - Stale results: change the profile and verify drawer dismissal and placeholder-trigger disabling.
 - Edge layouts: check long names, 8-cat/custom cats, all-zero weights, and phone scrolling.
 - Checks: fresh `npm test` passed (12 core files/93 tests; 5 client files/31 tests); `npx tsc --noEmit -p app/client/tsconfig.json` passed; `npm run build -w @draft-duck/client` passed and prerendered five pages; Prettier and `git diff --check` passed.
+- Follow-up checks after the spacing and tick-label adjustments: client tests passed (5 files/31 tests), client TypeScript check passed, production build passed and prerendered five pages, Prettier and `git diff --check` passed.
 - Readability: inspect comments on every changed logical block.
 - Evidence: desktop right-side and 390px phone bottom-drawer screenshots are visible in this review turn; board names were inspected in full and simple views, including computed transparent background and foreground text color; close animation, content lifetime, Escape, and focus restoration were tested on desktop and phone. Reduced-motion rendering remains a source-inspection result only.
 
@@ -615,8 +621,8 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 
 - Active phase: 2.2.
 - Status: awaiting-human-review after requested changes.
-- Reviewed revision: feedback fix commit `f4342b9` on `codex/player-visualizations`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
-- Evidence: 93 core and 31 client tests, client TypeScript check, production build, desktop/simple and phone browser checks, AX and interaction inspection, comment review, Prettier and diff checks. Reduced-motion dynamic emulation is pending due to browser tooling limits.
+- Reviewed revision: feedback fix follow-up commit `05b9e52` on `codex/player-visualizations`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
+- Evidence: 93 core and 31 client tests, client TypeScript check, production build, desktop/simple and phone browser checks, AX and interaction inspection, comment review, Prettier and diff checks. The spacing/label follow-up also passes client tests, type checking, and production build. Reduced-motion dynamic emulation is pending due to browser tooling limits.
 - Outstanding work: human acceptance of this leaf before Phase 2.3 begins.
 - Pending decision: user acceptance of this phase after concrete review.
 - Next action: review the Phase 2.2 feedback revision in [PR #19](https://github.com/mlmar/draft-duck/pull/19); after acceptance, begin Phase 2.3 on the same branch and PR.
