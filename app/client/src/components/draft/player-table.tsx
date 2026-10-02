@@ -4,6 +4,7 @@ import { YourPickMark } from '@/components/draft/your-pick-mark';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import { Info } from 'lucide-react';
 import {
     CAT_LABELS,
     formatSignedScore,
@@ -164,7 +165,7 @@ export function PlayerTable({
                                             aria-haspopup='dialog'
                                             disabled={playerDetailsDisabled}
                                             onClick={(event) => onPlayerSelect(player, event.currentTarget)}
-                                            className='h-full min-h-10 w-full min-w-0 justify-start gap-2 rounded-none px-3 py-2 text-left font-medium text-foreground transition-colors duration-150 hover:bg-transparent hover:text-foreground hover:underline focus-visible:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-60'
+                                            className='h-full min-h-11 w-full min-w-0 justify-start gap-2 rounded-none px-3 py-2 text-left font-medium text-foreground transition-colors duration-150 hover:bg-transparent hover:text-foreground hover:underline focus-visible:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-60'
                                         >
                                             <span className='min-w-0 truncate'>{player.name}</span>
                                             {player.upsideSignal ? (
@@ -177,6 +178,11 @@ export function PlayerTable({
                                                         : 'Dud signal'}
                                                 </span>
                                             ) : null}
+                                            {/* Keep a visible drawer cue on touch devices where hover is unavailable. */}
+                                            <Info
+                                                aria-hidden='true'
+                                                className='size-4 shrink-0 text-muted-foreground'
+                                            />
                                         </Button>
                                     ) : (
                                         <span className='flex items-center gap-2 overflow-hidden'>

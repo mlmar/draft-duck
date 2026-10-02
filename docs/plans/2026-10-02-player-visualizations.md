@@ -597,6 +597,11 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
     - Cause: `md:table-column` conflicted with `md:table-cell` on team header and data cells.
     - Resolution: keep responsive visibility on header/data cells and remove the conflicting display utility from the shared width class.
     - Approval: user reported this bug on 2026-10-02; the fix is within the approved table presentation scope.
+- M10: Mobile-first review requested a clearer cue that player cells open details.
+    - Impact: the full-cell tap target was functional, but its drawer action was not obvious where hover is unavailable.
+    - Cause: the player button had no persistent visual affordance.
+    - Resolution: add a small, muted info icon after the player name and increase the button's minimum height to 44px; the icon is decorative because the button already has the player's accessible name.
+    - Approval: user explicitly requested this adjustment on 2026-10-02; re-review is pending.
 
 ### Validation plan and acceptance evidence
 
@@ -616,6 +621,7 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 - Checks: fresh `npm test` passed (12 core files/93 tests; 5 client files/31 tests); `npx tsc --noEmit -p app/client/tsconfig.json` passed; `npm run build -w @draft-duck/client` passed and prerendered five pages; Prettier and `git diff --check` passed.
 - Follow-up checks after the spacing and tick-label adjustments: client tests passed (5 files/31 tests), client TypeScript check passed, production build passed and prerendered five pages, Prettier and `git diff --check` passed.
 - Follow-up checks after the player-cell, weight-slider, and team-column fixes: workspace tests passed (12 core files/93 tests; 5 client files/31 tests), client TypeScript check passed, production build passed and prerendered five pages, Prettier and `git diff --check` passed. Browser testing confirmed the full player-name cell opens the drawer when clicking its blank area and weight-slider dragging changes its value without closing or moving the drawer; the team column and hover appearance still need a desktop-width visual check.
+- Follow-up checks after the persistent player-details cue: client tests passed (5 files/31 tests), client TypeScript check passed, Prettier and `git diff --check` passed. The client and server bundles compiled, but final prerender could not start Vite's preview server while port 3000 was occupied; rerun the production build when that port is available.
 - Readability: inspect comments on every changed logical block.
 - Evidence: desktop right-side and 390px phone bottom-drawer screenshots are visible in this review turn; board names were inspected in full and simple views, including computed transparent background and foreground text color; close animation, content lifetime, Escape, and focus restoration were tested on desktop and phone. Reduced-motion rendering remains a source-inspection result only.
 
