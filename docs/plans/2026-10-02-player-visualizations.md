@@ -521,7 +521,7 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 ### Self review
 
 - Status: complete for the requested feedback revision; awaits human re-review.
-- Reviewed revision: feedback fixes in the working tree on `codex/player-visualizations`, based on implementation commit `f7881cf` and `origin/main` at `79d38b5`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
+- Reviewed revision: feedback fix commit `f4342b9` on `codex/player-visualizations`, based on Phase 2.2 commit `f7881cf` and `origin/main` at `79d38b5`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
 - Evidence: fresh full workspace test run, client TypeScript check, production build, desktop/simple and phone screenshots, accessibility inspection, normal-motion close animation/focus restoration, source review, Prettier, and `git diff --check` recorded below.
 - Findings: the drawer consumes the existing ranked response and authoritative `contributions`; malformed or older response maps suppress the complete score breakdown without hiding the chart.
 - Readability gate: comments explain the new geometry/data types, chart, explanatory sections, selection/focus effects, fallback paths, and tests.
@@ -615,7 +615,7 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 
 - Active phase: 2.2.
 - Status: awaiting-human-review after requested changes.
-- Reviewed revision: feedback fixes in the working tree on `codex/player-visualizations`, based on `f7881cf`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
+- Reviewed revision: feedback fix commit `f4342b9` on `codex/player-visualizations`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
 - Evidence: 93 core and 31 client tests, client TypeScript check, production build, desktop/simple and phone browser checks, AX and interaction inspection, comment review, Prettier and diff checks. Reduced-motion dynamic emulation is pending due to browser tooling limits.
 - Outstanding work: human acceptance of this leaf before Phase 2.3 begins.
 - Pending decision: user acceptance of this phase after concrete review.
