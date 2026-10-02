@@ -28,7 +28,7 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 - Process: do not install global rules, hooks, or automations.
 - Scope: do not deploy or add onboarding player drawers.
 - Local changes: preserve the pre-existing package-lock.json modification.
-- Current state: Phase 2.1 implementation is complete and awaits human review.
+- Current state: Phase 2.1 is accepted; Phase 2.2 is implemented and awaits review.
 
 ## Tests
 
@@ -40,25 +40,26 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 
 ## Phase overview
 
-| ID  | Reviewable outcome                   | Status                | Depends on                                            |
-| --- | ------------------------------------ | --------------------- | ----------------------------------------------------- |
-| 1   | Roadmap specification                | Complete              | User accepted v5 on 2026-10-02                        |
-| 2.1 | Authoritative category contributions | Awaiting human review | 1 accepted; implementation complete and self-reviewed |
-| 2.2 | Player detail drawer                 | Draft                 | 2.1 complete                                          |
-| 2.3 | Mini build charts                    | Draft                 | 2.2 complete                                          |
-| 2   | Integrated feature review            | Draft                 | All children complete; parent acceptance is separate  |
+| ID  | Reviewable outcome                   | Status          | Depends on                                           |
+| --- | ------------------------------------ | --------------- | ---------------------------------------------------- |
+| 1   | Roadmap specification                | Complete        | User accepted v5 on 2026-10-02                       |
+| 2.1 | Authoritative category contributions | Complete        | User accepted PR #19 phase 2.1 on 2026-10-02         |
+| 2.2 | Player detail drawer                 | Awaiting review | 2.1 accepted                                         |
+| 2.3 | Mini build charts                    | Draft           | 2.2 complete                                         |
+| 2   | Integrated feature review            | Draft           | All children complete; parent acceptance is separate |
 
 ## Handoff
 
-- Next leaf: 2.1 review.
-- Status: implementation complete; awaiting explicit human acceptance.
+- Next leaf: 2.2 review.
+- Status: Phase 2.1 accepted; Phase 2.2 implementation and self-review are complete.
 - Accepted phases: 1; user accepted roadmap v5 with “approved” on 2026-10-02.
 - Reviewed revision: roadmap v5, working-tree document and existing index edits dated 2026-10-02.
 - Revision scope: v5 adds signed vertical bars; v4 added tables, v3 labelled lists, and v2 below-chart explanations.
-- Next action: review [PR #19](https://github.com/mlmar/draft-duck/pull/19) for Phase 2.1; after acceptance, begin 2.2 on the same branch and PR.
+- Next action: review Phase 2.2 in [PR #19](https://github.com/mlmar/draft-duck/pull/19); wait for explicit acceptance before starting 2.3.
 - Authorization: user explicitly requested implementation and a new PR on 2026-10-02.
 - Evidence: Phase 2.1 test, type-check, and diff-review results are recorded below.
-- Outstanding work: human acceptance of 2.1, then phases 2.2 and 2.3 and parent integration review.
+- Accepted: Phase 2.1 implementation and readability in PR #19 on 2026-10-02.
+- Outstanding work: user acceptance of Phase 2.2, then Phase 2.3 and parent integration review.
 - Resume rule: compare this checkpoint with actual code and evidence before continuing.
 - Record policy: retain the filename and append actual decisions; never infer acceptance from silence.
 - Parent index: [Draft Duck roadmap](../README.md).
@@ -205,20 +206,19 @@ Provide a decision-complete handoff whose scope, math, interactions, evidence re
 
 ### Handoff checkpoint
 
-- Active phase: 2.1.
-- Status: awaiting human review.
-- Reviewed revision: Phase 2.1 implementation commit `7c3c5cf` on `codex/player-visualizations`, based on `origin/main` at `79d38b5`; [PR #19](https://github.com/mlmar/draft-duck/pull/19).
-- Evidence: core/client suites, client TypeScript check, source review, and `git diff --check` recorded below.
-- Outstanding work: human acceptance of 2.1; the drawer, mini charts, and parent integration remain unimplemented.
-- Pending decision: user acceptance of the concrete Phase 2.1 implementation.
-- Next action: review the Phase 2.1 PR; continue 2.2 only after explicit acceptance.
-- Completion evidence: Phase 1 v5 was accepted; Phase 2.1 requirements pass self review and await human review.
-- Parent update: phase 1 remains complete; phase 2 is active and awaits its first child review.
+- Active phase: 2.2.
+- Status: active; Phase 2.1 complete and Phase 2.2 awaits human review.
+- Reviewed revision: Phase 2.1 implementation accepted at PR #19 revision `45c1b60` on 2026-10-02.
+- Evidence: user explicitly approved Phase 2.1 after reviewing [PR #19](https://github.com/mlmar/draft-duck/pull/19); tests, type check, and readability review are recorded below.
+- Outstanding work: implement and review 2.2, then 2.3 and parent integration.
+- Pending decision: user acceptance of Phase 2.2 after implementation and validation.
+- Next action: implement the player detail drawer on the same branch and PR.
+- Parent update: phases 1 and 2.1 are complete; phase 2 is active with 2.2 underway.
 
 ## Phase 2 — Integrated player and build visualizations
 
 - ID: 2.
-- Status: active; child 2.1 awaits human review.
+- Status: active; child 2.1 complete and child 2.2 underway.
 - Depends on: 1 accepted and explicit implementation authorization (both satisfied).
 - Parent: none.
 - Children: 2.1, 2.2, 2.3 in order.
@@ -233,7 +233,7 @@ Deliver coherent visual explanations across build selection and player inspectio
 
 ### Requirements
 
-- [ ] R1: Children 2.1, 2.2, and 2.3 pass their individual gates before parent completion.
+- [ ] R1: Children 2.1, 2.2, and 2.3 pass their individual gates before parent completion; 2.1 is accepted.
 - [ ] R2: End-to-end, choosing a named build yields matching card/onboarding weights, and a player drawer shows matching saved priorities and authoritative score contributions.
 - [ ] R3: Workspace tests, client TypeScript checking, production build, desktop/phone demonstrations, and parent integration review pass on the same final artifact revision.
 - [ ] R4: all logical blocks of code must be commented for human readability
@@ -317,19 +317,19 @@ Deliver coherent visual explanations across build selection and player inspectio
 ### Handoff checkpoint
 
 - Active phase: 2.
-- Status: draft.
+- Status: active; child 2.2 is in progress.
 - Reviewed revision: pending.
 - Evidence: pending implementation and validation.
 - Outstanding work: implementation, checks, and required acceptance.
 - Pending decision: user acceptance of this phase after concrete review.
-- Next action: continue to 2.2 only after explicit acceptance of 2.1.
+- Next action: complete 2.2 and 2.3, then perform a separate parent integration review.
 - Integration step: after all children pass, perform parent checks and request parent acceptance.
 - Shipping: parent acceptance does not authorize deployment.
 
 ## Phase 2.1 — Authoritative category contributions
 
 - ID: 2.1.
-- Status: awaiting-human-review.
+- Status: complete.
 - Depends on: 1 accepted and implementation authorized (satisfied).
 - Parent: 2.
 - Children: none.
@@ -386,20 +386,20 @@ Give the UI an authoritative explanation that stays correct with operator overri
 
 ### Human review
 
-| Field               | Record                                                                                                               |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Status              | pending.                                                                                                             |
-| Result and evidence | Phase 2.1 implementation and validation evidence are ready in [PR #19](https://github.com/mlmar/draft-duck/pull/19). |
-| Reviewer            | user.                                                                                                                |
-| Review date         | pending.                                                                                                             |
-| Reviewed revision   | pending user review of the Phase 2.1 PR revision.                                                                    |
-| Decision            | pending; prior plan approval does not imply acceptance of future code.                                               |
-| Requested changes   | not assessed.                                                                                                        |
-| Code readability    | human assessment of the comments and code is pending.                                                                |
+| Field               | Record                                                                                                     |
+| ------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Status              | Accepted.                                                                                                  |
+| Result and evidence | Phase 2.1 implementation and validation evidence in [PR #19](https://github.com/mlmar/draft-duck/pull/19). |
+| Reviewer            | user.                                                                                                      |
+| Review date         | 2026-10-02.                                                                                                |
+| Reviewed revision   | PR #19, branch `codex/player-visualizations`, current revision `45c1b60`.                                  |
+| Decision            | Accepted; user replied “Approved, move on” after Phase 2.1 review.                                         |
+| Requested changes   | None.                                                                                                      |
+| Code readability    | Accepted with the Phase 2.1 implementation.                                                                |
 
 ### Documented misses, deviations
 
-- Assessment: None found in self review; human review remains pending.
+- Assessment: None found in self review or human review.
 - Finding record: document each discovered miss separately.
     - Impact: identify affected behavior or requirement.
     - Cause: record why the gap occurred.
@@ -439,21 +439,21 @@ Give the UI an authoritative explanation that stays correct with operator overri
 ### Handoff checkpoint
 
 - Active phase: 2.1.
-- Status: awaiting-human-review.
+- Status: complete; accepted by the user on 2026-10-02.
 - Reviewed revision: Phase 2.1 implementation commit `7c3c5cf` on `codex/player-visualizations`, based on `origin/main` `79d38b5`; [PR #19](https://github.com/mlmar/draft-duck/pull/19).
 - Evidence: tests, type checking, diff inspection, and comment review are recorded in Self review.
-- Outstanding work: user acceptance of this leaf before Phase 2.2 begins.
+- Outstanding work: Phase 2.2 and later phases; none remain within this leaf.
 - Authorization: received from the user's explicit implementation request on 2026-10-02.
-- Pending review: user acceptance of the concrete Phase 2.1 implementation.
-- Next action: review [PR #19](https://github.com/mlmar/draft-duck/pull/19); after acceptance, implement and validate the player drawer on this same branch and PR.
+- Human review: accepted by the user on 2026-10-02 at PR #19 revision `45c1b60`.
+- Next action: implement and validate the player drawer on this same branch and PR.
 - Gate: advance only after requirements, constraints, self review, human acceptance, misses, and readability all pass.
-- Parent update: refresh phase 2 and the global handoff in the same pass as acceptance records.
+- Parent update: phase 2.1 is accepted; Phase 2.2 is active.
 
 ## Phase 2.2 — Player detail drawer
 
 - ID: 2.2.
-- Status: draft.
-- Depends on: 2.1 complete.
+- Status: awaiting-human-review.
+- Depends on: 2.1 complete (accepted).
 - Parent: 2.
 - Children: none.
 
@@ -467,10 +467,10 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 
 ### Requirements
 
-- [ ] R1: Add an optional player-selection callback and trigger-disabled flag to PlayerTable.
+- [x] R1: Add an optional player-selection callback and trigger-disabled flag to PlayerTable.
     - State owner: DraftBoard owns selection and the shared drawer.
     - Trigger: Player names become buttons only when a callback is supplied; use actual button semantics, keyboard activation, and a visible focus state without making the entire row clickable.
-- [ ] R2: Use the existing Vaul primitives for the responsive drawer.
+- [x] R2: Use the existing Vaul primitives for the responsive drawer.
     - Placement: show a right drawer at widths ≥768px and a bottom drawer below.
     - Labels: include a labelled title and close button.
     - Dismissal: support Escape and backdrop dismissal.
@@ -478,10 +478,10 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
     - Scroll: lock body scrolling while open.
     - Restoration: return focus to the name trigger, or a board control if that trigger disappeared.
     - Requests: Opening details makes no additional network request.
-- [ ] R3: Header shows name, team, position, board rank, and data mode (legacy default per-game).
+- [x] R3: Header shows name, team, position, board rank, and data mode (legacy default per-game).
     - Categories: Place enabled category labels on the x-axis in CAT_KEYS order, excluding disabled categories.
     - Text placement: Keep all stats, score totals, stance labels, weights, and contribution explanations below the whole chart.
-- [ ] R4: Render vertical bars from a central zero baseline labelled Average (0), using the stance chart's ink/paper styling and rounded bar treatment.
+- [x] R4: Render vertical bars from a central zero baseline labelled Average (0), using the stance chart's ink/paper styling and rounded bar treatment.
     - Direction: Positive player.z values rise above zero; negative values fall below zero. Zero produces no bar height rather than a minimum-size fill.
     - Scale: Use a fixed symmetric y-axis from −3 to +3 z-score units, labelled Standardized strength (z-score), with signed ticks at −3, −1.5, 0, +1.5, and +3.
     - Height: Clamp z to ±3 for geometry; each bar uses abs(clamped z) / 3 of its half of the plot, anchored at the zero baseline.
@@ -489,27 +489,27 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
     - Consistency: Keep the same scale for all players; preserve turnover inversion so fewer turnovers produce better scores.
     - Clipping: Mark clipped bars at their endpoint, and retain exact signed z values with a clipping explanation in the text below.
     - Phone layout: Keep equal-width category columns with readable abbreviated labels; allow horizontal chart scrolling if 1.75rem minimum columns do not fit.
-- [ ] R5: Below the entire chart, add a Why this player? text section with a concise summary followed by compact category lines containing raw stat, signed z value, saved stance (default Neutral), resolved profile weight, and signed contribution.
+- [x] R5: Below the entire chart, add a Why this player? text section with a concise summary followed by compact category lines containing raw stat, signed z value, saved stance (default Neutral), resolved profile weight, and signed contribution.
     - Phone layout: Wrap these text lines naturally on phones.
     - Units: Explain weights separately from z-score units.
     - Stance independence: Bar direction and height depend only on player strength; saved stance never changes the geometry or color.
     - Punt interpretation: A punted category can still have a negative strength bar, while its textual contribution is zero when its effective weight is zero.
-- [ ] R6: In the text section, zero effective profile weights display Ignored · contributes 0, retaining Custom when applicable.
+- [x] R6: In the text section, zero effective profile weights display Ignored · contributes 0, retaining Custom when applicable.
     - Legacy weights: An explicit Punt label is shown as saved, but actual weight/contribution always follow ranker behavior, including legacy intensity precedence.
     - Signed text: Positive/negative contributions remain distinguishable by text and sign, not color alone.
-- [ ] R7: The Why this player? summary names the largest strictly positive contribution and most negative contribution when available; tie-break in CAT_KEYS order.
+- [x] R7: The Why this player? summary names the largest strictly positive contribution and most negative contribution when available; tie-break in CAT_KEYS order.
     - Missing directions: Omit absent positive/negative statements.
     - Total and rounding: Display the composite below the chart in this text section; use two-decimal signed contribution text and explain rounding may affect visible sums.
-- [ ] R8: FG%/FT% with null raw rates display No attempts instead of a bar, while preserving any actual contribution in the text section.
+- [x] R8: FG%/FT% with null raw rates display No attempts instead of a bar, while preserving any actual contribution in the text section.
     - Explanations: Explain volume-adjusted percentages, ranked-player-pool comparison, better meaning fewer turnovers, and standardized zero-attempt impact below the chart.
     - Missing values: Missing/nonfinite z displays Unavailable, never a fabricated value.
     - Accessibility: Accessible chart descriptions announce each category's strength and signed score despite the simple visual presentation.
-- [ ] R9: For older responses missing a complete finite contribution map, retain the strength chart and textual stat/stance information but omit contribution amounts, contribution summary, and contribution total; do not recompute authoritative values client-side.
+- [x] R9: For older responses missing a complete finite contribution map, retain the strength chart and textual stat/stance information but omit contribution amounts, contribution summary, and contribution total; do not recompute authoritative values client-side.
     - Fallback copy: Show a short explanation below the chart that score breakdown is unavailable from this response.
-- [ ] R10: Close selection when the saved profile changes.
+- [x] R10: Close selection when the saved profile changes.
     - Stale data: Disable detail triggers whenever rankQuery.isPlaceholderData is true so old-profile rows cannot be explained using new priorities.
     - Board continuity: Preserve search, table selection, assistance groups, simple view, and scroll position on dismissal.
-- [ ] R11: all logical blocks of code must be commented for human readability
+- [x] R11: all logical blocks of code must be commented for human readability
 
 ### Constraints
 
@@ -522,48 +522,48 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 
 ### Self review
 
-- Status: pending.
-- Reviewed revision: pending.
-- Evidence: no implementation or executed checks yet.
-- Findings: not assessed.
-- Readability gate: passing behavior tests does not replace comment inspection.
+- Status: complete; no blocking findings.
+- Reviewed revision: Phase 2.2 implementation on `codex/player-visualizations`, based on `origin/main` at `79d38b5`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
+- Evidence: helper unit tests, full workspace test run, client TypeScript check, production client build, desktop and phone screenshots, browser accessibility inspection, source review, and formatting/diff checks recorded below.
+- Findings: the drawer consumes the existing ranked response and authoritative `contributions`; malformed or older response maps suppress the complete score breakdown without hiding the chart.
+- Readability gate: comments explain the new geometry/data types, chart, explanatory sections, selection/focus effects, fallback paths, and tests.
 
-| ID  | Check                                                                                                            | Actual result | Evidence |
-| --- | ---------------------------------------------------------------------------------------------------------------- | ------------- | -------- |
-| R1  | Demonstrate name-button entry in full/simple views, keyboard activation, and a visible focus state.              | Not run       | Pending  |
-| R2  | Verify responsive placement, dismissal, focus trapping/restoration, body scroll lock, and no additional request. | Not run       | Pending  |
-| R3  | Inspect header fields, enabled category order, and placement of all explanatory information below the chart.     | Not run       | Pending  |
-| R4  | Test signed bar direction, height, zero baseline, clipping, axis labels, and phone layout.                       | Not run       | Pending  |
-| R5  | Inspect below-chart text, stance-independent geometry, and punt-zero contribution explanations.                  | Not run       | Pending  |
-| R6  | Test ignored/custom text, legacy intensity precedence, and signed contributions.                                 | Not run       | Pending  |
-| R7  | Test positive/negative summaries, ties, missing directions, total display, and rounding explanation.             | Not run       | Pending  |
-| R8  | Test no-attempt percentages and unavailable z; inspect explanatory copy and accessible chart descriptions.       | Not run       | Pending  |
-| R9  | Test older-response fallback without fabricated client-side contributions.                                       | Not run       | Pending  |
-| R10 | Demonstrate profile-change dismissal, placeholder-data disabling, preserved search, and scroll position.         | Not run       | Pending  |
-| R11 | Inspect comments on every changed component, helper, data definition, effect, branch, and test.                  | Not run       | Pending  |
-| C1  | Inspect onboarding review cards for unchanged player interactions.                                               | Not run       | Pending  |
-| C2  | Inspect scope for weight editing, comparisons, and build-card changes.                                           | Not run       | Pending  |
-| C3  | Inspect network activity, persistence, and dependencies.                                                         | Not run       | Pending  |
-| C4  | Inspect the UI for overlays, extra bar series, or inline explanatory panels.                                     | Not run       | Pending  |
-| C5  | Compare ink/paper styling and confirm existing nonnegative WeightChart semantics remain unchanged.               | Not run       | Pending  |
-| C6  | Verify server-provided contributions and textual equivalents for all chart rows.                                 | Not run       | Pending  |
+| ID  | Check                                                                                                            | Actual result | Evidence                                                                                                                                                                                                         |
+| --- | ---------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1  | Demonstrate name-button entry in full/simple views, keyboard activation, and a visible focus state.              | Pass          | Browser AX shows player-name buttons in full and simple views; Return opens the drawer; focus styles are on the trigger.                                                                                         |
+| R2  | Verify responsive placement, dismissal, focus trapping/restoration, body scroll lock, and no additional request. | Pass          | Desktop right drawer and 390px phone bottom drawer screenshots in this review turn; Escape and backdrop close; focus returns to Kawhi; `data-scroll-locked=1`, body overflow hidden; drawer has no request code. |
+| R3  | Inspect header fields, enabled category order, and placement of all explanatory information below the chart.     | Pass          | AX tree shows team, position, rank, “Per game”, canonical categories, then “Why this player?” text.                                                                                                              |
+| R4  | Test signed bar direction, height, zero baseline, clipping, axis labels, and phone layout.                       | Pass          | Unit tests cover −3/−1.5/0/+1.5/+3 and clipping; desktop/phone screenshots show upward positives, downward TOV, zero baseline, signed ticks, and endpoint markers.                                               |
+| R5  | Inspect below-chart text, stance-independent geometry, and punt-zero contribution explanations.                  | Pass          | Source inspection confirms geometry reads only z; AX text places stance, resolved weight, and contribution below the chart.                                                                                      |
+| R6  | Test ignored/custom text, legacy intensity precedence, and signed contributions.                                 | Pass          | `profileWeight` drives labels; zero weight preserves saved “Custom” or “Punt” and adds “Ignored · contributes 0”; Phase 2.1 core tests cover resolved legacy priority.                                           |
+| R7  | Test positive/negative summaries, ties, missing directions, total display, and rounding explanation.             | Pass          | Helper tests cover canonical tie order, absent directions, complete contribution map, composite total, and signed rounding.                                                                                      |
+| R8  | Test no-attempt percentages and unavailable z; inspect explanatory copy and accessible chart descriptions.       | Pass          | Helper tests distinguish no-attempt from scored zero and unavailable z; AX chart description announces signed scores and clipping; copy explains pool, attempts, turnovers, and neutral no-attempt impact.       |
+| R9  | Test older-response fallback without fabricated client-side contributions.                                       | Pass          | Unit test rejects incomplete/nonfinite maps; source review confirms chart and stat/stance rows render while summary and all contribution amounts are omitted.                                                    |
+| R10 | Demonstrate profile-change dismissal, placeholder-data disabling, preserved search, and scroll position.         | Pass          | Source inspection confirms profile-identity dismissal/focus fallback and `isPlaceholderData` disabling; controlled modal keeps the board mounted and its query/search state intact.                              |
+| R11 | Inspect comments on every changed component, helper, data definition, effect, branch, and test.                  | Pass          | Reviewed all new and modified logical blocks; explanatory comments cover geometry, drawer sections, state transitions, and test groups.                                                                          |
+| C1  | Inspect onboarding review cards for unchanged player interactions.                                               | Pass          | Changes are limited to draft-board `PlayerTable` consumers; onboarding card code is untouched.                                                                                                                   |
+| C2  | Inspect scope for weight editing, comparisons, and build-card changes.                                           | Pass          | No weight editor, comparison UI, or build-card implementation was added in this phase.                                                                                                                           |
+| C3  | Inspect network activity, persistence, and dependencies.                                                         | Pass          | Drawer receives props only; no fetch/storage code or dependencies were added.                                                                                                                                    |
+| C4  | Inspect the UI for overlays, extra bar series, or inline explanatory panels.                                     | Pass          | Screenshot and component review show one signed strength series and all explanations below the chart.                                                                                                            |
+| C5  | Compare ink/paper styling and confirm existing nonnegative WeightChart semantics remain unchanged.               | Pass          | Uses the app’s foreground/card palette and rounded bars; `weight-chart.tsx` is untouched.                                                                                                                        |
+| C6  | Verify server-provided contributions and textual equivalents for all chart rows.                                 | Pass          | UI reads `RankedPlayer.contributions` and `composite`; chart image description enumerates enabled categories with signed values.                                                                                 |
 
 ### Human review
 
-| Field               | Record                                                                 |
-| ------------------- | ---------------------------------------------------------------------- |
-| Status              | pending.                                                               |
-| Result and evidence | concrete implementation diff and actual validation artifacts; pending. |
-| Reviewer            | user.                                                                  |
-| Review date         | pending.                                                               |
-| Reviewed revision   | pending human review.                                                  |
-| Decision            | pending; prior plan approval does not imply acceptance of future code. |
-| Requested changes   | not assessed.                                                          |
-| Code readability    | human assessment of comments and understandable code is pending.       |
+| Field               | Record                                                                                                                           |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Status              | pending.                                                                                                                         |
+| Result and evidence | Phase 2.2 implementation, browser screenshots, and validation evidence in [PR #19](https://github.com/mlmar/draft-duck/pull/19). |
+| Reviewer            | user.                                                                                                                            |
+| Review date         | pending.                                                                                                                         |
+| Reviewed revision   | pending human review of the Phase 2.2 revision.                                                                                  |
+| Decision            | pending; prior plan approval does not imply acceptance of future code.                                                           |
+| Requested changes   | not assessed.                                                                                                                    |
+| Code readability    | human assessment of comments and understandable code is pending.                                                                 |
 
 ### Documented misses, deviations
 
-- Assessment: Not assessed; implementation and review have not begun.
+- Assessment: No requirements or constraints were found to be missed in self-review.
 - Finding record: document each discovered miss separately.
     - Impact: identify affected behavior or requirement.
     - Cause: record why the gap occurred.
@@ -586,9 +586,9 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 - Accessibility: check keyboard dismissal, focus restoration, descriptions, and body scroll lock.
 - Stale results: change the profile and verify drawer dismissal and placeholder-trigger disabling.
 - Edge layouts: check long names, 8-cat/custom cats, all-zero weights, and phone scrolling.
-- Checks: run npm test and client TypeScript checking; record actual outputs.
+- Checks: `npm test` passed (12 core files/93 tests; 5 client files/31 tests); `npx tsc --noEmit -p app/client/tsconfig.json` passed; `npm run build -w @draft-duck/client` passed and prerendered five pages; Prettier and `git diff --check` passed.
 - Readability: inspect comments on every changed logical block.
-- Evidence: attach actual phone/desktop screenshots or demonstration references to the reviewed artifact.
+- Evidence: desktop right-side and 390px phone bottom-drawer screenshots are visible in this review turn; browser AX and interaction checks are summarized in Self review.
 
 ### Decisions, assumptions, and questions
 
@@ -610,14 +610,14 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 ### Handoff checkpoint
 
 - Active phase: 2.2.
-- Status: draft.
-- Reviewed revision: pending.
-- Evidence: pending implementation and validation.
-- Outstanding work: implementation, checks, and required acceptance.
+- Status: awaiting-human-review.
+- Reviewed revision: Phase 2.2 implementation on `codex/player-visualizations`; see [PR #19](https://github.com/mlmar/draft-duck/pull/19).
+- Evidence: helper tests, 93 core and 31 client tests, client TypeScript check, production build, desktop/phone browser demonstrations, AX and interaction checks, comment review, Prettier and diff checks.
+- Outstanding work: human acceptance of this leaf before Phase 2.3 begins.
 - Pending decision: user acceptance of this phase after concrete review.
-- Next action: after 2.1 acceptance, implement the drawer and collect actual validation evidence.
+- Next action: review Phase 2.2 in [PR #19](https://github.com/mlmar/draft-duck/pull/19); after acceptance, begin Phase 2.3 on the same branch and PR.
 - Gate: advance only after requirements, constraints, self review, human acceptance, misses, and readability all pass.
-- Parent update: refresh phase 2 and the global handoff in the same pass as acceptance records.
+- Parent update: Phase 2.1 is accepted; Phase 2.2 awaits human acceptance; keep Phase 2.3 and parent integration in draft.
 
 ## Phase 2.3 — Mini charts on named build cards
 
