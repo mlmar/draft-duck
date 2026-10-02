@@ -92,7 +92,7 @@ function SignedStrengthChart({ player, enabledCats }: { player: RankedPlayer; en
                 aria-label={`Category strength chart for ${player.name}. ${description}`}
                 className='flex items-stretch gap-2 overflow-hidden'
             >
-                <div className='relative h-56 w-[3.5rem] shrink-0 text-right text-[0.65rem] text-muted-foreground'>
+                <div className='relative h-56 w-[2.5rem] shrink-0 text-right text-[0.65rem] text-muted-foreground'>
                     {Z_TICKS.map((tick) => (
                         <span
                             key={tick.label}
