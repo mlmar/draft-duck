@@ -88,6 +88,7 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
     const debouncedNameQuery = useDebouncedValue(nameQuery, SEARCH_DEBOUNCE_MS);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [weightsOpen, setWeightsOpen] = useState(false);
+    const [playerDetailsOpen, setPlayerDetailsOpen] = useState(false);
     const [showRest, setShowRest] = useState(false);
     const [simpleView, setSimpleView] = useState(() => readBoardView() === 'simple');
     const [selectedDetails, setSelectedDetails] = useState<{
@@ -130,6 +131,7 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
     // Close immediately when the saved profile changes so previous rankings are never explained with new weights.
     useEffect(() => {
         if (!selectedDetails || selectedDetails.profile === profile) return;
+        setPlayerDetailsOpen(false);
         setSelectedDetails(null);
         const frame = window.requestAnimationFrame(restorePlayerDetailFocus);
         return () => window.cancelAnimationFrame(frame);
@@ -207,6 +209,7 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
         if (rankQuery.isPlaceholderData || !activeProfile) return;
         detailTriggerRef.current = trigger;
         setSelectedDetails({ playerId: player.playerId, profile: activeProfile });
+        setPlayerDetailsOpen(true);
     }
 
     // Focus the original name when it still exists, or the persistent settings control if the row disappeared.
@@ -217,9 +220,14 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
         detailTriggerRef.current = null;
     }
 
-    // Dismissal is controlled here so focus returns consistently for close, Escape, and backdrop actions.
+    // Keep the player selected until Vaul finishes closing so its exit animation can remain mounted.
     function handlePlayerDrawerOpenChange(open: boolean) {
-        if (open) return;
+        setPlayerDetailsOpen(open);
+    }
+
+    // Clear closed content and restore focus only after Vaul's exit animation completes.
+    function handlePlayerDrawerAnimationEnd(open: boolean) {
+        if (open || !selectedDetails) return;
         setSelectedDetails(null);
         window.requestAnimationFrame(restorePlayerDetailFocus);
     }
@@ -289,10 +297,11 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
             />
 
             <PlayerDetailDrawer
-                open={selectedPlayer !== null}
+                open={playerDetailsOpen}
                 player={selectedPlayer}
                 profile={profile}
                 onOpenChange={handlePlayerDrawerOpenChange}
+                onAnimationEnd={handlePlayerDrawerAnimationEnd}
             />
 
             {rankError ? <p className='mb-0 text-destructive'>{rankError}</p> : null}
