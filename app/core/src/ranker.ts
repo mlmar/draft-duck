@@ -22,6 +22,8 @@ const ATTEMPTS_FOR: Record<'fgPct' | 'ftPct', 'fga' | 'fta'> = {
 
 type ScoredPlayer = PlayerSeason & {
     z: Partial<Record<CatKey, number>>;
+    // These are the per-category fit terms that must sum to composite.
+    contributions: Partial<Record<CatKey, number>>;
     composite: number;
     consensusComposite: number;
 };
@@ -40,6 +42,8 @@ export function rank(universe: PlayerSeason[], profile: DraftProfile, options: R
 
     const scored: ScoredPlayer[] = universe.map((player, index) => {
         const z: Partial<Record<CatKey, number>> = {};
+        // Keep each category's fit term so the response can explain the exact score calculation.
+        const contributions: Partial<Record<CatKey, number>> = {};
         // composite = Σ operator_w[c] * profile_w[c] * z[c] over enabled cats only.
         let composite = 0;
         let consensusComposite = 0;
@@ -47,10 +51,13 @@ export function rank(universe: PlayerSeason[], profile: DraftProfile, options: R
             const cat = enabledCats[catIndex]!;
             const catZ = zByIndex[catIndex]![index]!;
             z[cat] = catZ;
-            composite += (operatorWeights[cat] ?? 1) * profileWeight(profile, cat) * catZ;
+            // Reuse the displayed term in the fit sum to preserve its exact arithmetic and order.
+            const contribution = (operatorWeights[cat] ?? 1) * profileWeight(profile, cat) * catZ;
+            contributions[cat] = contribution;
+            composite += contribution;
             consensusComposite += (operatorWeights[cat] ?? 1) * profileWeight(consensusProfile, cat) * catZ;
         }
-        return { ...player, z, composite, consensusComposite };
+        return { ...player, z, contributions, composite, consensusComposite };
     });
 
     const fitOrder = sortByScore(scored, (player) => player.composite);
