@@ -185,7 +185,7 @@ What would change, and what would not:
 ### Remaining ranking gaps (not this pass)
 
 - Replacement-level / VORP / positional scarcity (later, not M2).
-- Minutes floor for low-MP specialists.
+- Historical MP is not a standalone rank adjustment or a basis for changing Sleeper/Dud labels. The minutes experiment found no consistent benefit from direct MPG blends; a future projection layer could use projected MPG to scale per-36 rates and expected games to estimate season totals. The current data provides historical minutes, not validated future-minute projections.
 - Null FG%/FT% treated as impact 0 (neutral, not missing).
 - Need default is tuner 1.5. 3 is the top of the slider. The floor does not cover star-sink while it is off.
 - Taken list / remaining-pool re-z.

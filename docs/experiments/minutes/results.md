@@ -13,6 +13,11 @@ After controlling for source composite, games, and age, adding MPG has effective
 Neither direct MPG blend meets the fixed ranking criterion. The minutes-adjusted per-36 blend does (4/4 transitions), with a mean primary-score gain of 0.086 over its parent; three of the four gains are below 0.01.
 The MP-adjusted Sleeper signal has 0 to 3 tags per season, versus 11 to 14 original Sleeper tags. Its tiny cohorts limit precision and recall estimates.
 
+## Implication for the app
+
+Do not add historical MP as a standalone adjustment to current per-game or totals rankings, or change Sleeper/Dud labels based on this experiment. Per-game rates already describe production independent of playing time, while season totals already reflect minutes and games played. The small retrospective gains from the minutes-adjusted per-36 blend are not enough to justify changing production rankings.
+The most promising future use is a projection layer: scale per-36 counting-stat rates by projected minutes, and use expected games to estimate season totals. The available data here contains historical minutes, not a validated forecast of future minutes; this experiment did not evaluate such a forecast.
+
 ## Ranking results
 
 | Transition | Candidate | Primary | vs parent | Top-156 hits | Missing outcomes |
