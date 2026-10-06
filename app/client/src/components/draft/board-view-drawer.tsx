@@ -23,7 +23,9 @@ export function BoardViewDrawer({ children }: { children: ReactNode }) {
                     <DrawerTitle>Board view</DrawerTitle>
                     <DrawerDescription>Choose which players and statistics to show.</DrawerDescription>
                 </div>
-                <div className='min-h-0 overflow-y-auto px-5 py-6'>{children}</div>
+                <div className='min-h-0 overflow-y-auto px-5 py-6 [&>div]:grid [&>div]:w-full [&_button]:w-full [&_select]:w-full [&_[role=group]]:grid [&_[role=group]]:grid-cols-2 [&_[role=group]]:w-full'>
+                    {children}
+                </div>
                 <div className='border-t border-border px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]'>
                     <DrawerClose asChild>
                         <Button type='button' className='w-full'>

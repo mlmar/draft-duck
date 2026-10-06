@@ -39,11 +39,7 @@ export function SettingsDrawer({ open, onOpenChange, value, updating, onApply }:
                     ) : null}
                 </div>
                 <div className='min-h-0 flex-1 overflow-y-auto px-5 py-6'>
-                    <ProfileSettings
-                        value={workingValue}
-                        onChange={setWorkingValue}
-                        onIntensityChange={setWorkingValue}
-                    />
+                    <ProfileSettings value={workingValue} onChange={setWorkingValue} />
                 </div>
                 <div className='flex shrink-0 gap-3 border-t border-border px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]'>
                     <DrawerClose asChild>

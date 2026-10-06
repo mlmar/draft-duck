@@ -135,7 +135,7 @@ export function WeightChartPanel({ draft, tuners, editable, caption, onChange, c
     if (!editable) {
         return (
             <aside aria-label='Build priorities' className={cn('grid gap-3', className)}>
-                <h2 className='mb-0 text-base'>{caption || 'Your priorities so far'}</h2>
+                {caption ? <h2 className='mb-0 text-base'>{caption}</h2> : null}
                 <WeightChart enabledCats={draft.enabledCats} tuners={tuners} variant='mini' />
             </aside>
         );
