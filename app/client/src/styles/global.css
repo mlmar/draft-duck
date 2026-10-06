@@ -50,46 +50,43 @@
 }
 
 :root {
-    /* Warm paper, not zinc-50. Ink sits on it; brand blue is accent only. */
-    --background: oklch(0.975 0.012 85);
-    --foreground: oklch(0.274 0.006 286.033);
-    /* Slight lift off paper. Same hue so cards do not look like a second theme. */
-    --card: oklch(0.99 0.008 85);
-    --card-foreground: oklch(0.274 0.006 286.033);
-    --popover: oklch(0.99 0.008 85);
-    --popover-foreground: oklch(0.274 0.006 286.033);
-    /* Ink buttons. Brand wash is --brand for progress, links, and your-pick. */
-    --primary: oklch(0.274 0.006 286.033);
-    --primary-foreground: oklch(0.985 0.012 85);
-    --brand: #78a3cf;
-    --secondary: oklch(0.95 0.01 85);
-    --secondary-foreground: oklch(0.21 0.006 285.885);
-    --muted: oklch(0.95 0.01 85);
-    --muted-foreground: oklch(0.442 0.017 285.786);
-    --accent: oklch(0.95 0.01 85);
-    --accent-foreground: oklch(0.21 0.006 285.885);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.91 0.012 85);
-    --input: oklch(0.91 0.012 85);
-    --ring: #78a3cf;
-    --chart-1: oklch(0.871 0.006 286.286);
-    --chart-2: oklch(0.552 0.016 285.938);
-    --chart-3: oklch(0.442 0.017 285.786);
-    --chart-4: oklch(0.37 0.013 285.805);
-    --chart-5: oklch(0.274 0.006 286.033);
-    /* Radius stays in px. Rem would scale with type and look mushy. */
+    --background: #f4f6f9;
+    --foreground: #172331;
+    --card: #ffffff;
+    --card-foreground: #172331;
+    --popover: #ffffff;
+    --popover-foreground: #172331;
+    --primary: #2455d6;
+    --primary-foreground: #ffffff;
+    --brand: #2455d6;
+    --secondary: #eaf0ff;
+    --secondary-foreground: #2046a3;
+    --muted: #edf0f5;
+    --muted-foreground: #526176;
+    --accent: #eaf0ff;
+    --accent-foreground: #2046a3;
+    --destructive: #af3548;
+    --border: #dce2ea;
+    --input: #c4cdd9;
+    --ring: #2455d6;
+    --chart-1: #2455d6;
+    --chart-2: #172331;
+    --chart-3: #526176;
+    --chart-4: #227a5b;
+    --chart-5: #af4351;
     --radius: 8px;
-    --sidebar: oklch(0.975 0.012 85);
-    --sidebar-foreground: oklch(0.274 0.006 286.033);
-    --sidebar-primary: oklch(0.274 0.006 286.033);
-    --sidebar-primary-foreground: oklch(0.985 0.012 85);
-    --sidebar-accent: oklch(0.95 0.01 85);
-    --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-    --sidebar-border: oklch(0.91 0.012 85);
-    --sidebar-ring: #78a3cf;
-    /* Low-chroma sage/rose for cat heat. Mix toward transparent by |z|. Not neon. */
-    --heat-good: oklch(0.88 0.07 145);
-    --heat-bad: oklch(0.88 0.07 25);
+    --sidebar: #edf0f5;
+    --sidebar-foreground: #172331;
+    --sidebar-primary: #2455d6;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #eaf0ff;
+    --sidebar-accent-foreground: #2046a3;
+    --sidebar-border: #dce2ea;
+    --sidebar-ring: #2455d6;
+    --heat-good: #d8eee5;
+    --heat-bad: #f4dfe3;
+    --strength-good: #227a5b;
+    --strength-bad: #af4351;
 }
 
 @layer base {
@@ -101,6 +98,43 @@
     }
     html {
         @apply font-sans;
+        color-scheme: light;
+        scroll-padding-top: 2rem;
+        scrollbar-color: var(--input) var(--background);
+    }
+    ::selection {
+        background: var(--secondary);
+        color: var(--foreground);
+    }
+    input,
+    textarea {
+        caret-color: var(--primary);
+    }
+    a {
+        text-underline-offset: 0.25em;
+    }
+    a:focus-visible,
+    summary:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 4px;
+        border-radius: 4px;
+    }
+    input::placeholder {
+        color: var(--muted-foreground);
+        opacity: 1;
+    }
+    select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23526176' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1rem;
+    }
+    @media (forced-colors: active) {
+        select {
+            appearance: auto;
+            background-image: none;
+        }
     }
 }
 

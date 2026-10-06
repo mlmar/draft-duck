@@ -33,7 +33,7 @@ function DraftPage() {
     const valueMode: CatValueMode = search.values === 'raw' ? 'raw' : 'plusMinus';
 
     return (
-        <PageShell wide>
+        <PageShell wide className='py-3 md:py-6'>
             <DraftBoard
                 assist={assist}
                 valueMode={valueMode}
