@@ -4,6 +4,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerTitle } from '@/components/ui
 import { useMediaQuery } from '@/hooks/use-media-query';
 import type { QuizDraft } from '@/lib/quiz';
 import type { CatValueMode } from '@/components/draft/player-table';
+import { DATA_MODES, type DataMode } from '@draft-duck/core';
 import { Eye, Layers, Table2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -16,7 +17,11 @@ type SettingsDrawerProps = {
     simpleView: boolean;
     assist: boolean;
     valueMode: CatValueMode;
-    onApply: (value: QuizDraft, settings: { simpleView: boolean; assist: boolean; valueMode: CatValueMode }) => void;
+    displayStatsMode: DataMode;
+    onApply: (
+        value: QuizDraft,
+        settings: { simpleView: boolean; assist: boolean; valueMode: CatValueMode; displayStatsMode: DataMode }
+    ) => void;
 };
 
 // Phone is a bottom sheet. Desktop is a side sheet so the grid stays visible.
@@ -29,6 +34,7 @@ export function SettingsDrawer({
     simpleView,
     assist,
     valueMode,
+    displayStatsMode,
     onApply
 }: SettingsDrawerProps) {
     const isDesktop = useMediaQuery('(min-width: 768px)');
@@ -36,6 +42,7 @@ export function SettingsDrawer({
     const [workingSimpleView, setWorkingSimpleView] = useState(simpleView);
     const [workingAssist, setWorkingAssist] = useState(assist);
     const [workingValueMode, setWorkingValueMode] = useState(valueMode);
+    const [workingDisplayStatsMode, setWorkingDisplayStatsMode] = useState<DataMode>(displayStatsMode);
     const showSimple = workingSimpleView && hasSlot;
 
     useEffect(() => {
@@ -44,7 +51,8 @@ export function SettingsDrawer({
         setWorkingSimpleView(simpleView);
         setWorkingAssist(assist);
         setWorkingValueMode(valueMode);
-    }, [open, value, simpleView, assist, valueMode]);
+        setWorkingDisplayStatsMode(displayStatsMode);
+    }, [open, value, simpleView, assist, valueMode, displayStatsMode]);
 
     return (
         <Drawer open={open} onOpenChange={onOpenChange} direction={isDesktop ? 'right' : 'bottom'}>
@@ -133,7 +141,11 @@ export function SettingsDrawer({
                     </div>
                     <ProfileSettings
                         value={workingValue}
+                        displayStatsMode={workingDisplayStatsMode}
                         onChange={setWorkingValue}
+                        onDisplayStatsModeChange={(mode) => {
+                            if (DATA_MODES.includes(mode)) setWorkingDisplayStatsMode(mode);
+                        }}
                         onIntensityChange={setWorkingValue}
                     />
                 </div>
@@ -150,7 +162,8 @@ export function SettingsDrawer({
                             onApply(workingValue, {
                                 simpleView: workingSimpleView,
                                 assist: workingAssist,
-                                valueMode: workingValueMode
+                                valueMode: workingValueMode,
+                                displayStatsMode: workingDisplayStatsMode
                             });
                             onOpenChange(false);
                         }}
