@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Drawer as DrawerPrimitive } from 'vaul';
 
-// Vaul drawer. Draft Settings is the only overlay in the app. Quiz must not import this.
+// Shared Vaul surface for build settings, optional numeric weights, and player details.
 
 function Drawer({ ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) {
     return <DrawerPrimitive.Root data-slot='drawer' shouldScaleBackground={false} {...props} />;
@@ -53,7 +53,7 @@ function DrawerContent({
                 className={cn(
                     'fixed z-50 flex flex-col bg-card text-card-foreground',
                     'data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-16 data-[vaul-drawer-direction=bottom]:h-[90dvh] data-[vaul-drawer-direction=bottom]:max-h-[90dvh] data-[vaul-drawer-direction=bottom]:rounded-t-xl data-[vaul-drawer-direction=bottom]:border-t data-[vaul-drawer-direction=bottom]:border-border',
-                    'data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:h-full data-[vaul-drawer-direction=right]:w-[24rem] data-[vaul-drawer-direction=right]:max-w-[90vw] data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:border-border',
+                    'data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:h-full data-[vaul-drawer-direction=right]:w-[28rem] data-[vaul-drawer-direction=right]:max-w-[90vw] data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:border-border',
                     className
                 )}
                 {...(disableAnimation ? { 'data-vaul-animate': 'false' } : {})}

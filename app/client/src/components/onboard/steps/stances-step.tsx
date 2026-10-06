@@ -4,9 +4,9 @@ import { CAT_LABELS, type CatStance } from '@draft-duck/core';
 import { cn } from '@/lib/utils';
 
 const STANCES: { value: Exclude<CatStance, 'custom'>; label: string }[] = [
-    { value: 'need', label: 'Need' },
+    { value: 'punt', label: 'Punt' },
     { value: 'neutral', label: 'Neutral' },
-    { value: 'punt', label: 'Punt' }
+    { value: 'need', label: 'Need' }
 ];
 
 // Three-segment bar. Custom is empty selection plus a label, not a fourth radio.

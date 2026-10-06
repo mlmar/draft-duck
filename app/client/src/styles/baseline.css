@@ -3,7 +3,7 @@
 section,
 article {
     /* Page shells keep max-width. Padding is enough for a bare section to breathe. */
-    @apply w-full px-4 py-6 md:py-10;
+    @apply w-full;
 }
 
 h1,
@@ -16,11 +16,11 @@ h5 {
 
 h1 {
     /* Phone titles stay short. md: is size only, not a second layout. */
-    @apply mb-1 text-2xl font-semibold tracking-tight md:text-4xl;
+    @apply mb-1 text-3xl font-semibold tracking-tight md:text-4xl;
 }
 
 h2 {
-    @apply mb-4 text-xl font-semibold tracking-tight md:text-3xl;
+    @apply mb-4 text-xl font-semibold tracking-tight md:text-2xl;
 }
 
 h3 {

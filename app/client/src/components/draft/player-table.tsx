@@ -54,7 +54,7 @@ const stickyName = `z-10 ${colName} md:sticky md:left-[4.5rem]`;
 const stickyRankHead = `sticky left-0 z-30 ${colRank} bg-background`;
 const stickyNameHead = `z-30 ${colName} bg-background md:sticky md:left-[4.5rem]`;
 
-// Mix in srgb so #78A3CF stays pale blue. oklch interpolation landed in pink.
+// Selected picks use the same restrained cobalt wash as the board controls.
 const yourPickFill =
     'bg-[color-mix(in_srgb,var(--brand)_15%,var(--background))] hover:bg-[color-mix(in_srgb,var(--brand)_20%,var(--background))] group-hover:bg-[color-mix(in_srgb,var(--brand)_20%,var(--background))]';
 
@@ -97,7 +97,7 @@ export function PlayerTable({
     return (
         <Table
             className='table-fixed min-w-[56rem] border-separate border-spacing-0'
-            containerClassName='overflow-x-auto'
+            containerClassName='overflow-x-auto rounded-lg border border-border bg-card'
         >
             <colgroup>
                 <col className={colRank} />
@@ -141,12 +141,7 @@ export function PlayerTable({
                         return (
                             <TableRow key={player.playerId} className={cn('group', fill)}>
                                 <TableCell
-                                    className={cn(
-                                        stickyRank,
-                                        fill,
-                                        'tabular-nums transition-colors duration-150',
-                                        isYourPick && 'border-l-2 border-l-brand'
-                                    )}
+                                    className={cn(stickyRank, fill, 'tabular-nums transition-colors duration-150')}
                                 >
                                     <span className='inline-flex items-center gap-1'>
                                         {player.rank}
@@ -174,7 +169,7 @@ export function PlayerTable({
                                             {player.upsideSignal ? (
                                                 <span
                                                     className={cn(
-                                                        'inline-flex shrink-0 items-center gap-1 text-xs font-medium',
+                                                        'inline-flex shrink-0 items-center gap-1 text-sm font-medium',
                                                         player.upsideSignal === 'sleeper'
                                                             ? 'text-sky-800'
                                                             : 'text-amber-800'
@@ -210,7 +205,7 @@ export function PlayerTable({
                                             {player.upsideSignal ? (
                                                 <span
                                                     className={cn(
-                                                        'inline-flex shrink-0 items-center gap-1 text-xs font-medium',
+                                                        'inline-flex shrink-0 items-center gap-1 text-sm font-medium',
                                                         player.upsideSignal === 'sleeper'
                                                             ? 'text-sky-800'
                                                             : 'text-amber-800'

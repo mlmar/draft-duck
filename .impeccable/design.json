@@ -1,0 +1,463 @@
+{
+    "schemaVersion": 2,
+    "generatedAt": "2026-10-06T05:50:26.055968+00:00",
+    "title": "Design System: Draft Duck",
+    "extensions": {
+        "colorMeta": {
+            "background": {
+                "role": "neutral",
+                "displayName": "Cool Ground",
+                "token": "{colors.background}",
+                "tonalRamp": [
+                    "oklch(15% 0.00454 258.32)",
+                    "oklch(26% 0.00454 258.32)",
+                    "oklch(38% 0.00454 258.32)",
+                    "oklch(49% 0.00454 258.32)",
+                    "oklch(61% 0.00454 258.32)",
+                    "oklch(72% 0.00454 258.32)",
+                    "oklch(84% 0.00454 258.32)",
+                    "oklch(95% 0.00454 258.32)"
+                ]
+            },
+            "foreground": {
+                "role": "neutral",
+                "displayName": "Graphite",
+                "token": "{colors.foreground}",
+                "tonalRamp": [
+                    "oklch(15% 0.03160 252.82)",
+                    "oklch(26% 0.03160 252.82)",
+                    "oklch(38% 0.03160 252.82)",
+                    "oklch(49% 0.03160 252.82)",
+                    "oklch(61% 0.03160 252.82)",
+                    "oklch(72% 0.03160 252.82)",
+                    "oklch(84% 0.03160 252.82)",
+                    "oklch(95% 0.03160 252.82)"
+                ]
+            },
+            "card": {
+                "role": "neutral",
+                "displayName": "White Surface",
+                "token": "{colors.card}",
+                "tonalRamp": [
+                    "oklch(15% 0.00000 0.00)",
+                    "oklch(26% 0.00000 0.00)",
+                    "oklch(38% 0.00000 0.00)",
+                    "oklch(49% 0.00000 0.00)",
+                    "oklch(61% 0.00000 0.00)",
+                    "oklch(72% 0.00000 0.00)",
+                    "oklch(84% 0.00000 0.00)",
+                    "oklch(95% 0.00000 0.00)"
+                ]
+            },
+            "primary": {
+                "role": "primary",
+                "displayName": "Action Cobalt",
+                "token": "{colors.primary}",
+                "tonalRamp": [
+                    "oklch(15% 0.20514 264.25)",
+                    "oklch(26% 0.20514 264.25)",
+                    "oklch(38% 0.20514 264.25)",
+                    "oklch(49% 0.20514 264.25)",
+                    "oklch(61% 0.20514 264.25)",
+                    "oklch(72% 0.20514 264.25)",
+                    "oklch(84% 0.20514 264.25)",
+                    "oklch(95% 0.20514 264.25)"
+                ]
+            },
+            "primary-foreground": {
+                "role": "neutral",
+                "displayName": "Reversed White",
+                "token": "{colors.primary-foreground}",
+                "tonalRamp": [
+                    "oklch(15% 0.00000 0.00)",
+                    "oklch(26% 0.00000 0.00)",
+                    "oklch(38% 0.00000 0.00)",
+                    "oklch(49% 0.00000 0.00)",
+                    "oklch(61% 0.00000 0.00)",
+                    "oklch(72% 0.00000 0.00)",
+                    "oklch(84% 0.00000 0.00)",
+                    "oklch(95% 0.00000 0.00)"
+                ]
+            },
+            "secondary": {
+                "role": "primary",
+                "displayName": "Cobalt Wash",
+                "token": "{colors.secondary}",
+                "tonalRamp": [
+                    "oklch(15% 0.02117 268.43)",
+                    "oklch(26% 0.02117 268.43)",
+                    "oklch(38% 0.02117 268.43)",
+                    "oklch(49% 0.02117 268.43)",
+                    "oklch(61% 0.02117 268.43)",
+                    "oklch(72% 0.02117 268.43)",
+                    "oklch(84% 0.02117 268.43)",
+                    "oklch(95% 0.02117 268.43)"
+                ]
+            },
+            "secondary-foreground": {
+                "role": "primary",
+                "displayName": "Deep Cobalt",
+                "token": "{colors.secondary-foreground}",
+                "tonalRamp": [
+                    "oklch(15% 0.15684 264.04)",
+                    "oklch(26% 0.15684 264.04)",
+                    "oklch(38% 0.15684 264.04)",
+                    "oklch(49% 0.15684 264.04)",
+                    "oklch(61% 0.15684 264.04)",
+                    "oklch(72% 0.15684 264.04)",
+                    "oklch(84% 0.15684 264.04)",
+                    "oklch(95% 0.15684 264.04)"
+                ]
+            },
+            "muted": {
+                "role": "neutral",
+                "displayName": "Quiet Fill",
+                "token": "{colors.muted}",
+                "tonalRamp": [
+                    "oklch(15% 0.00744 260.73)",
+                    "oklch(26% 0.00744 260.73)",
+                    "oklch(38% 0.00744 260.73)",
+                    "oklch(49% 0.00744 260.73)",
+                    "oklch(61% 0.00744 260.73)",
+                    "oklch(72% 0.00744 260.73)",
+                    "oklch(84% 0.00744 260.73)",
+                    "oklch(95% 0.00744 260.73)"
+                ]
+            },
+            "muted-foreground": {
+                "role": "neutral",
+                "displayName": "Slate",
+                "token": "{colors.muted-foreground}",
+                "tonalRamp": [
+                    "oklch(15% 0.03860 256.82)",
+                    "oklch(26% 0.03860 256.82)",
+                    "oklch(38% 0.03860 256.82)",
+                    "oklch(49% 0.03860 256.82)",
+                    "oklch(61% 0.03860 256.82)",
+                    "oklch(72% 0.03860 256.82)",
+                    "oklch(84% 0.03860 256.82)",
+                    "oklch(95% 0.03860 256.82)"
+                ]
+            },
+            "destructive": {
+                "role": "secondary",
+                "displayName": "Error Rose",
+                "token": "{colors.destructive}",
+                "tonalRamp": [
+                    "oklch(15% 0.15734 15.76)",
+                    "oklch(26% 0.15734 15.76)",
+                    "oklch(38% 0.15734 15.76)",
+                    "oklch(49% 0.15734 15.76)",
+                    "oklch(61% 0.15734 15.76)",
+                    "oklch(72% 0.15734 15.76)",
+                    "oklch(84% 0.15734 15.76)",
+                    "oklch(95% 0.15734 15.76)"
+                ]
+            },
+            "border": {
+                "role": "neutral",
+                "displayName": "Hairline",
+                "token": "{colors.border}",
+                "tonalRamp": [
+                    "oklch(15% 0.01268 255.51)",
+                    "oklch(26% 0.01268 255.51)",
+                    "oklch(38% 0.01268 255.51)",
+                    "oklch(49% 0.01268 255.51)",
+                    "oklch(61% 0.01268 255.51)",
+                    "oklch(72% 0.01268 255.51)",
+                    "oklch(84% 0.01268 255.51)",
+                    "oklch(95% 0.01268 255.51)"
+                ]
+            },
+            "input": {
+                "role": "neutral",
+                "displayName": "Field Stroke",
+                "token": "{colors.input}",
+                "tonalRamp": [
+                    "oklch(15% 0.01940 255.55)",
+                    "oklch(26% 0.01940 255.55)",
+                    "oklch(38% 0.01940 255.55)",
+                    "oklch(49% 0.01940 255.55)",
+                    "oklch(61% 0.01940 255.55)",
+                    "oklch(72% 0.01940 255.55)",
+                    "oklch(84% 0.01940 255.55)",
+                    "oklch(95% 0.01940 255.55)"
+                ]
+            },
+            "heat-good": {
+                "role": "secondary",
+                "displayName": "Green Heat",
+                "token": "{colors.heat-good}",
+                "tonalRamp": [
+                    "oklch(15% 0.02613 169.28)",
+                    "oklch(26% 0.02613 169.28)",
+                    "oklch(38% 0.02613 169.28)",
+                    "oklch(49% 0.02613 169.28)",
+                    "oklch(61% 0.02613 169.28)",
+                    "oklch(72% 0.02613 169.28)",
+                    "oklch(84% 0.02613 169.28)",
+                    "oklch(95% 0.02613 169.28)"
+                ]
+            },
+            "heat-bad": {
+                "role": "secondary",
+                "displayName": "Rose Heat",
+                "token": "{colors.heat-bad}",
+                "tonalRamp": [
+                    "oklch(15% 0.02364 4.51)",
+                    "oklch(26% 0.02364 4.51)",
+                    "oklch(38% 0.02364 4.51)",
+                    "oklch(49% 0.02364 4.51)",
+                    "oklch(61% 0.02364 4.51)",
+                    "oklch(72% 0.02364 4.51)",
+                    "oklch(84% 0.02364 4.51)",
+                    "oklch(95% 0.02364 4.51)"
+                ]
+            },
+            "strength-good": {
+                "role": "secondary",
+                "displayName": "Strength Green",
+                "token": "{colors.strength-good}",
+                "tonalRamp": [
+                    "oklch(15% 0.09600 165.14)",
+                    "oklch(26% 0.09600 165.14)",
+                    "oklch(38% 0.09600 165.14)",
+                    "oklch(49% 0.09600 165.14)",
+                    "oklch(61% 0.09600 165.14)",
+                    "oklch(72% 0.09600 165.14)",
+                    "oklch(84% 0.09600 165.14)",
+                    "oklch(95% 0.09600 165.14)"
+                ]
+            },
+            "strength-bad": {
+                "role": "secondary",
+                "displayName": "Strength Rose",
+                "token": "{colors.strength-bad}",
+                "tonalRamp": [
+                    "oklch(15% 0.14105 15.50)",
+                    "oklch(26% 0.14105 15.50)",
+                    "oklch(38% 0.14105 15.50)",
+                    "oklch(49% 0.14105 15.50)",
+                    "oklch(61% 0.14105 15.50)",
+                    "oklch(72% 0.14105 15.50)",
+                    "oklch(84% 0.14105 15.50)",
+                    "oklch(95% 0.14105 15.50)"
+                ]
+            }
+        },
+        "typographyMeta": {
+            "display": {
+                "displayName": "Home display",
+                "purpose": "Desktop home headline; smaller at phone width.",
+                "token": "{typography.display}"
+            },
+            "headline": {
+                "displayName": "Page headline",
+                "purpose": "Baseline page title; compact board and quiz overrides are described in DESIGN.md.",
+                "token": "{typography.headline}"
+            },
+            "title": {
+                "displayName": "Panel title",
+                "purpose": "Compact panel hierarchy.",
+                "token": "{typography.title}"
+            },
+            "body": {
+                "displayName": "Body",
+                "purpose": "Relaxed paragraphs; body-sized controls use tighter leading.",
+                "token": "{typography.body}"
+            },
+            "label": {
+                "displayName": "Metadata",
+                "purpose": "Supporting copy and numerical labels.",
+                "token": "{typography.label}"
+            }
+        },
+        "shadows": [
+            {
+                "name": "card-ring",
+                "value": "0 0 0 1px color-mix(in oklch,var(--foreground,#172331) 10%,transparent)",
+                "purpose": "Shared Card boundary; references {colors.foreground}."
+            },
+            {
+                "name": "control-focus",
+                "value": "0 0 0 3px color-mix(in oklch,var(--primary,#2455d6) 50%,transparent)",
+                "purpose": "Button/input keyboard focus with primary border; references {colors.primary}."
+            },
+            {
+                "name": "slider-thumb",
+                "value": "0 0 0 1px var(--foreground,#172331)",
+                "purpose": "Structural slider thumb ring; references {colors.foreground}."
+            }
+        ],
+        "motion": [
+            {
+                "name": "state-duration",
+                "value": "150ms",
+                "purpose": "Shared control transitions and table color states."
+            },
+            {
+                "name": "chart-duration",
+                "value": "300ms",
+                "purpose": "Horizontal weight width and quiz progress transform."
+            },
+            {
+                "name": "state-ease",
+                "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+                "purpose": "Tailwind default state easing."
+            },
+            {
+                "name": "chart-ease",
+                "value": "cubic-bezier(0, 0, 0.2, 1)",
+                "purpose": "Ease-out for weight/progress changes."
+            },
+            {
+                "name": "reduced-motion",
+                "value": "prefers-reduced-motion: reduce",
+                "purpose": "Weight/progress transitions disabled; loading pulse is motion-safe; player detail drawer disables Vaul animation. This is not a global override."
+            }
+        ],
+        "breakpoints": [
+            {
+                "name": "sm",
+                "value": "640px",
+                "purpose": "Described choice rows can wrap horizontally."
+            },
+            {
+                "name": "md",
+                "value": "768px",
+                "purpose": "Board table/toolbar, page gutters, and right-side drawers."
+            },
+            {
+                "name": "lg",
+                "value": "1024px",
+                "purpose": "Quiz vertical chart height, horizontal answer pair, and desktop priority layout."
+            }
+        ],
+        "notes": [
+            "Frontmatter is normative. The sidecar adds metadata and self-contained previews, not duplicate primitive arrays.",
+            "Tonal ramps are synthesized OKLCH swatch exploration metadata; the application uses the frontmatter colors, not these ramp steps.",
+            "Snippets use project custom properties with literal fallbacks and scoped ds- classes. Lucide paths are inline SVG; no runtime, icon font, or external images are required.",
+            "The drawer overlay is foreground at 20% opacity. Native select arrows are inset 12px; ordinary link focus uses a 2px outline at 4px offset. Table name focus is inset.",
+            "The base radius token is 8px; derived small/medium/extra-large radii are real CSS theme values, not drift to replace.",
+            "Priority and numerical controls remain separate in existing settings. The proposed consolidated editor is not shipped."
+        ]
+    },
+    "components": [
+        {
+            "name": "Continue button",
+            "kind": "button",
+            "refersTo": "button-primary",
+            "description": "Main action in cobalt.",
+            "html": "<button type=\"button\" class=\"ds-btn-primary\">Continue<svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14m-6-6 6 6-6 6\"/></svg></button>",
+            "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px;border:1px solid transparent;border-radius:var(--radius,8px);font-size:16px;font-weight:500;line-height:1.5;white-space:nowrap;cursor:pointer;outline:none;transition:all 150ms cubic-bezier(.4,0,.2,1);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);background:var(--primary,#2455d6);color:var(--primary-foreground,#ffffff);border-color:transparent;}.ds-btn-primary:hover{background:color-mix(in oklch,var(--primary,#2455d6) 80%,transparent);}.ds-btn-primary:focus-visible{border-color:var(--primary,#2455d6);box-shadow:0 0 0 3px color-mix(in oklch,var(--primary,#2455d6) 50%,transparent);}.ds-btn-primary:active:not([aria-haspopup]){transform:translateY(1px);}.ds-btn-primary:disabled{opacity:.5;pointer-events:none;}.ds-btn-primary[aria-invalid=\"true\"]{border-color:var(--destructive,#af3548);box-shadow:0 0 0 3px color-mix(in oklch,var(--destructive,#af3548) 20%,transparent);}"
+        },
+        {
+            "name": "Edit weights button",
+            "kind": "button",
+            "refersTo": "button-outline",
+            "description": "Quiet bordered action.",
+            "html": "<button type=\"button\" class=\"ds-btn-outline\">Edit weights</button>",
+            "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px;border:1px solid transparent;border-radius:var(--radius,8px);font-size:16px;font-weight:500;line-height:1.5;white-space:nowrap;cursor:pointer;outline:none;transition:all 150ms cubic-bezier(.4,0,.2,1);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);background:var(--background,#f4f6f9);color:var(--foreground,#172331);border-color:var(--border,#dce2ea);}.ds-btn-outline:hover{background:var(--muted,#edf0f5);}.ds-btn-outline:focus-visible{border-color:var(--primary,#2455d6);box-shadow:0 0 0 3px color-mix(in oklch,var(--primary,#2455d6) 50%,transparent);}.ds-btn-outline:active:not([aria-haspopup]){transform:translateY(1px);}.ds-btn-outline:disabled{opacity:.5;pointer-events:none;}.ds-btn-outline[aria-invalid=\"true\"]{border-color:var(--destructive,#af3548);box-shadow:0 0 0 3px color-mix(in oklch,var(--destructive,#af3548) 20%,transparent);}"
+        },
+        {
+            "name": "All players button",
+            "kind": "button",
+            "refersTo": "button-secondary",
+            "description": "Selected presentation control.",
+            "html": "<button type=\"button\" class=\"ds-btn-secondary\">All players</button>",
+            "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px;border:1px solid transparent;border-radius:var(--radius,8px);font-size:16px;font-weight:500;line-height:1.5;white-space:nowrap;cursor:pointer;outline:none;transition:all 150ms cubic-bezier(.4,0,.2,1);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);background:var(--secondary,#eaf0ff);color:var(--secondary-foreground,#2046a3);border-color:transparent;}.ds-btn-secondary:hover{background:color-mix(in oklch,var(--secondary,#eaf0ff),var(--foreground,#172331) 5%);}.ds-btn-secondary:focus-visible{border-color:var(--primary,#2455d6);box-shadow:0 0 0 3px color-mix(in oklch,var(--primary,#2455d6) 50%,transparent);}.ds-btn-secondary:active:not([aria-haspopup]){transform:translateY(1px);}.ds-btn-secondary:disabled{opacity:.5;pointer-events:none;}.ds-btn-secondary[aria-invalid=\"true\"]{border-color:var(--destructive,#af3548);box-shadow:0 0 0 3px color-mix(in oklch,var(--destructive,#af3548) 20%,transparent);}"
+        },
+        {
+            "name": "Pick your punt button",
+            "kind": "button",
+            "refersTo": "button-ghost",
+            "description": "Low-emphasis action.",
+            "html": "<button type=\"button\" class=\"ds-btn-ghost\">Pick your punt</button>",
+            "css": ".ds-btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px;border:1px solid transparent;border-radius:var(--radius,8px);font-size:16px;font-weight:500;line-height:1.5;white-space:nowrap;cursor:pointer;outline:none;transition:all 150ms cubic-bezier(.4,0,.2,1);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);background:transparent;color:var(--foreground,#172331);border-color:transparent;}.ds-btn-ghost:hover{background:var(--muted,#edf0f5);}.ds-btn-ghost:focus-visible{border-color:var(--primary,#2455d6);box-shadow:0 0 0 3px color-mix(in oklch,var(--primary,#2455d6) 50%,transparent);}.ds-btn-ghost:active:not([aria-haspopup]){transform:translateY(1px);}.ds-btn-ghost:disabled{opacity:.5;pointer-events:none;}.ds-btn-ghost[aria-invalid=\"true\"]{border-color:var(--destructive,#af3548);box-shadow:0 0 0 3px color-mix(in oklch,var(--destructive,#af3548) 20%,transparent);}"
+        },
+        {
+            "name": "Player search",
+            "kind": "input",
+            "refersTo": "input",
+            "description": "Shared field with the board search white fill.",
+            "html": "<input class=\"ds-search\" type=\"search\" aria-label=\"Search players\" placeholder=\"Search players\"/>",
+            "css": ".ds-search{width:100%;min-width:0;height:44px;padding:8px 12px;border:1px solid var(--input,#c4cdd9);border-radius:var(--radius,8px);background:var(--card,#ffffff);color:var(--foreground,#172331);font-size:16px;line-height:1.5;outline:none;caret-color:var(--primary,#2455d6);transition:color 150ms,border-color 150ms,box-shadow 150ms;font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);}.ds-search::placeholder{color:var(--muted-foreground,#526176);opacity:1;}.ds-search:focus-visible{border-color:var(--primary,#2455d6);box-shadow:0 0 0 3px color-mix(in oklch,var(--primary,#2455d6) 50%,transparent);}.ds-search:disabled{pointer-events:none;cursor:not-allowed;opacity:.5;background:color-mix(in oklch,var(--input,#c4cdd9) 50%,transparent);}.ds-search[aria-invalid=\"true\"]{border-color:var(--destructive,#af3548);box-shadow:0 0 0 3px color-mix(in oklch,var(--destructive,#af3548) 20%,transparent);}"
+        },
+        {
+            "name": "Header navigation",
+            "kind": "nav",
+            "refersTo": "navigation",
+            "description": "Text wordmark and quiet links, wrapping at narrow widths.",
+            "html": "<header class=\"ds-header\"><a class=\"ds-wordmark\" href=\"#\" aria-label=\"Draft Duck home\">draft duck</a><nav class=\"ds-nav\" aria-label=\"Main navigation\"><a class=\"ds-nav-link\" href=\"#\" aria-current=\"page\">Home</a><a class=\"ds-nav-link\" href=\"#\">Board</a><a class=\"ds-nav-link\" href=\"#\">Scoring</a></nav></header>",
+            "css": ".ds-header{display:flex;min-height:72px;flex-wrap:wrap;align-items:center;justify-content:space-between;column-gap:20px;padding:8px 16px;border-bottom:1px solid var(--border,#dce2ea);background:var(--card,#ffffff);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);}.ds-wordmark{display:flex;align-items:center;min-height:44px;color:var(--foreground,#172331);font-size:20px;font-weight:600;letter-spacing:-.025em;text-decoration:none;}.ds-nav{display:flex;align-items:center;gap:16px;font-size:14px;}.ds-nav-link{display:flex;min-height:44px;align-items:center;text-decoration:none;color:var(--muted-foreground,#526176);}.ds-nav-link:hover{color:var(--foreground,#172331);}.ds-nav-link[aria-current=\"page\"]{color:var(--primary,#2455d6);font-weight:500;}.ds-nav-link:focus-visible,.ds-wordmark:focus-visible{outline:2px solid var(--primary,#2455d6);outline-offset:4px;border-radius:4px;}@media(min-width:768px){.ds-header{padding-inline:32px;}.ds-nav{gap:24px;}}"
+        },
+        {
+            "name": "Priority segments",
+            "kind": "chip",
+            "refersTo": "stance",
+            "description": "Existing order and selected states; Custom has no selected segment.",
+            "html": "<div class=\"ds-stance-field\"><p class=\"ds-stance-label\">PTS</p><div class=\"ds-stance\" role=\"radiogroup\" aria-label=\"PTS stance\"><button type=\"button\" class=\"ds-segment ds-punt\" role=\"radio\" aria-checked=\"false\">Punt</button><button type=\"button\" class=\"ds-segment\" role=\"radio\" aria-checked=\"true\">Neutral</button><button type=\"button\" class=\"ds-segment\" role=\"radio\" aria-checked=\"false\">Need</button></div></div>",
+            "css": ".ds-stance-field{display:grid;gap:8px;color:var(--foreground,#172331);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);}.ds-stance-label{margin:0;font-size:16px;font-weight:500;}.ds-stance{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--border,#dce2ea);border-radius:var(--radius,8px);padding:2px;}.ds-segment{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 16px;border:1px solid transparent;border-radius:var(--radius,8px);font-size:16px;font-weight:500;line-height:1.5;white-space:nowrap;cursor:pointer;outline:none;transition:all 150ms cubic-bezier(.4,0,.2,1);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);padding:0;border-radius:calc(var(--radius,8px)*.8);color:var(--muted-foreground,#526176);background:transparent;}.ds-segment:hover{background:color-mix(in oklch,var(--muted,#edf0f5) 60%,transparent);}.ds-segment[aria-checked=\"true\"]{color:var(--primary-foreground,#ffffff);background:var(--primary,#2455d6);}.ds-punt[aria-checked=\"true\"]{background:var(--muted,#edf0f5);color:var(--muted-foreground,#526176);}.ds-segment:focus-visible{border-color:var(--primary,#2455d6);box-shadow:0 0 0 3px color-mix(in oklch,var(--primary,#2455d6) 50%,transparent);}.ds-segment:disabled{opacity:.5;pointer-events:none;}"
+        },
+        {
+            "name": "Shared card",
+            "kind": "card",
+            "refersTo": "card",
+            "description": "White shared container with a hairline ring and derived larger corner.",
+            "html": "<div class=\"ds-card\"><div class=\"ds-card-header\"><div class=\"ds-card-title\">Your category priorities</div><div class=\"ds-card-description\">Need counts more. Neutral stays in play.</div></div><div class=\"ds-card-content\">Punt counts as zero.</div></div>",
+            "css": ".ds-card{display:flex;flex-direction:column;gap:16px;overflow:hidden;border-radius:calc(var(--radius,8px)*1.4);background:var(--card,#ffffff);color:var(--foreground,#172331);padding-block:16px;font-size:16px;box-shadow:0 0 0 1px color-mix(in oklch,var(--foreground,#172331) 10%,transparent);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);}.ds-card-header{display:grid;gap:4px;padding-inline:16px;}.ds-card-title{font-size:16px;font-weight:500;line-height:1.375;}.ds-card-description{font-size:14px;line-height:20px;color:var(--muted-foreground,#526176);}.ds-card-content{padding-inline:16px;}"
+        },
+        {
+            "name": "Compact player row",
+            "kind": "custom",
+            "refersTo": "player-row",
+            "description": "Phone identity and fit evidence with a drawer cue. Sample names and values are illustrative.",
+            "html": "<div class=\"ds-player-list\"><button type=\"button\" class=\"ds-player-row\" aria-haspopup=\"dialog\"><span class=\"ds-rank\"><span class=\"ds-sr\">Rank </span>12</span><span class=\"ds-player-copy\"><span class=\"ds-player-head\"><span class=\"ds-player-name\">Player name</span><svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 7h10v10M7 17 17 7\"/></svg></span><span class=\"ds-player-meta\">TEAM \u00b7 G \u00b7 PTS +1.2 \u00b7 AST +0.9</span></span></button></div>",
+            "css": ".ds-player-list{overflow:hidden;border:1px solid var(--border,#dce2ea);border-radius:var(--radius,8px);background:var(--card,#ffffff);}.ds-player-row{display:flex;align-items:center;justify-content:flex-start;gap:8px;width:100%;height:auto;min-height:64px;padding:12px;border:1px solid transparent;border-radius:0;background:transparent;color:var(--foreground,#172331);text-align:left;font-size:16px;line-height:1.5;cursor:pointer;outline:none;transition:all 150ms cubic-bezier(.4,0,.2,1);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);}.ds-player-row:hover{background:var(--muted,#edf0f5);}.ds-player-row:focus-visible{border-color:var(--primary,#2455d6);box-shadow:0 0 0 3px color-mix(in oklch,var(--primary,#2455d6) 50%,transparent);}.ds-player-row:disabled{opacity:.5;pointer-events:none;}.ds-rank{width:24px;flex-shrink:0;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted-foreground,#526176);}.ds-player-copy{display:grid;gap:2px;min-width:0;flex:1;}.ds-player-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}.ds-player-head svg{flex-shrink:0;margin-top:4px;color:var(--muted-foreground,#526176);}.ds-player-name{min-width:0;overflow-wrap:break-word;font-weight:600;}.ds-player-meta{font-size:14px;font-weight:400;color:var(--muted-foreground,#526176);}.ds-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}"
+        },
+        {
+            "name": "Responsive walkthrough chart",
+            "kind": "custom",
+            "refersTo": "weight-chart",
+            "description": "Always-expanded mini chart: compact phone bars grow at the quiz large breakpoint. Sample weights are illustrative.",
+            "html": "<div class=\"ds-weights\" role=\"img\" aria-label=\"Category weights: PTS 3, REB 2, AST 4, STL 3, BLK 2, 3PM 3, FG percentage 2, FT percentage 3, TO 1\"><div class=\"ds-weight-col\"><div class=\"ds-weight-track\"><span class=\"ds-weight-fill\" style=\"height:60%\"></span></div><span class=\"ds-weight-label\">PTS</span></div><div class=\"ds-weight-col\"><div class=\"ds-weight-track\"><span class=\"ds-weight-fill\" style=\"height:40%\"></span></div><span class=\"ds-weight-label\">REB</span></div><div class=\"ds-weight-col\"><div class=\"ds-weight-track\"><span class=\"ds-weight-fill\" style=\"height:80%\"></span></div><span class=\"ds-weight-label\">AST</span></div><div class=\"ds-weight-col\"><div class=\"ds-weight-track\"><span class=\"ds-weight-fill\" style=\"height:60%\"></span></div><span class=\"ds-weight-label\">STL</span></div><div class=\"ds-weight-col\"><div class=\"ds-weight-track\"><span class=\"ds-weight-fill\" style=\"height:40%\"></span></div><span class=\"ds-weight-label\">BLK</span></div><div class=\"ds-weight-col\"><div class=\"ds-weight-track\"><span class=\"ds-weight-fill\" style=\"height:60%\"></span></div><span class=\"ds-weight-label\">3PM</span></div><div class=\"ds-weight-col\"><div class=\"ds-weight-track\"><span class=\"ds-weight-fill\" style=\"height:40%\"></span></div><span class=\"ds-weight-label\">FG%</span></div><div class=\"ds-weight-col\"><div class=\"ds-weight-track\"><span class=\"ds-weight-fill\" style=\"height:60%\"></span></div><span class=\"ds-weight-label\">FT%</span></div><div class=\"ds-weight-col\"><div class=\"ds-weight-track\"><span class=\"ds-weight-fill\" style=\"height:20%\"></span></div><span class=\"ds-weight-label\">TO</span></div></div>",
+            "css": ".ds-weights{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));column-gap:4px;height:80px;font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);}.ds-weight-col{display:flex;min-width:0;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;}.ds-weight-track{position:relative;height:48px;width:100%;overflow:hidden;border-radius:calc(var(--radius,8px)*.6);background:var(--muted,#edf0f5);}.ds-weight-fill{position:absolute;left:0;right:0;bottom:0;border-radius:calc(var(--radius,8px)*.6);background:var(--primary,#2455d6);}.ds-weight-label{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;line-height:1;color:var(--muted-foreground,#526176);}@media(min-width:1024px){.ds-weights{height:192px;column-gap:12px;}.ds-weight-track{height:160px;}}"
+        }
+    ],
+    "narrative": {
+        "northStar": "Analysis Desk",
+        "overview": "A light, precise workspace where category priorities and player evidence are easy to read. Cool off-white ground, white surfaces, graphite text, and cobalt actions give dense information a calm hierarchy. Duck personality comes through occasional familiar copy and the lowercase text wordmark, while statistical labels remain literal.\n\nThe interface uses Public Sans throughout, restrained corners, borders, and tonal changes. Controls stay readable and touchable as the composition becomes compact on phones. The implemented system is light-only; it uses Lucide icons and no generated logos or illustrations.",
+        "keyCharacteristics": [
+            "Light surfaces with clear graphite text and selective cobalt emphasis.",
+            "Compact data presentation with readable controls and optional numerical detail.",
+            "Plain statistical language, labelled charts, and visible keyboard focus.",
+            "Responsive composition that keeps the current decision accessible."
+        ],
+        "rules": [
+            {
+                "name": "The Evidence Color Rule",
+                "body": "Color reinforces the stated value or state; signs, labels, and selection semantics carry the meaning independently.",
+                "section": "colors"
+            },
+            {
+                "name": "The Quiet Surface Rule",
+                "body": "Separate information with borders, spacing, and tonal fills; reserve stronger rings for interactive focus.",
+                "section": "elevation"
+            }
+        ],
+        "dos": [
+            "Do use the light palette, Public Sans, and restrained radius scale for new shared UI.",
+            "Do preserve visible focus, labelled charts, numerical signs, and explicit missing-data states.",
+            "Do keep primary controls body-sized and touchable while making data rows compact.",
+            "Do preserve access to full statistics and numerical priorities across screen sizes.",
+            "Do keep page-specific compositions in the direction brief and record implemented reusable behavior here."
+        ],
+        "donts": [
+            "Don't replace the text wordmark with a generated logo or add decorative raster assets.",
+            "Don't use color alone to communicate strength, selection, or errors.",
+            "Don't hide always-expanded quiz weights behind a disclosure.",
+            "Don't describe a settings proposal as shipped or conflate raw-stat display with ranking basis.",
+            "Don't add decorative drop shadows to resting surfaces."
+        ]
+    }
+}
