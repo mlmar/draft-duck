@@ -7,6 +7,7 @@ import {
     WALK_QUESTIONS,
     lerpTuners,
     nearestNamedBuild,
+    buildFromWalkAnswers,
     pickWalkQuestions,
     previewFromAnswers,
     tunerVector,
@@ -110,5 +111,38 @@ describe('walk lerp and nearest', () => {
         expect(vector.tov).toBeUndefined();
         expect(vector.ftPct).toBe(0);
         expect(nearestNamedBuild(vector, EIGHT_CAT)).toBe('puntFt');
+    });
+});
+
+describe('walk recommendation considers every answer', () => {
+    it('does not always return Balanced for the Jokic/Shai question set', () => {
+        const ids = pickWalkQuestions(CAT_KEYS, 7);
+        expect(ids.at(-1)).toBe('jokic-or-shai');
+        const results = new Set();
+        for (let mask = 0; mask < 2 ** ids.length; mask++) {
+            const answers = ids.map((_, index) => (mask & (1 << index) ? ('left' as const) : ('right' as const)));
+            results.add(buildFromWalkAnswers(ids, answers, CAT_KEYS));
+        }
+        expect(results).toContain('puntFt');
+        expect(results).toContain('guards');
+        expect(results.size).toBeGreaterThan(2);
+    });
+    it('keeps repeated Fortress choices despite a final Balanced answer', () => {
+        expect(
+            buildFromWalkAnswers(
+                ['bigs-or-guards', 'dunks-or-free-throws', 'jokic-or-shai'],
+                ['left', 'left', 'left'],
+                CAT_KEYS
+            )
+        ).toBe('puntFt');
+    });
+    it('returns Balanced when answers explicitly favor Balanced', () => {
+        expect(
+            buildFromWalkAnswers(
+                ['inside-or-roaming', 'lock-down-or-all-around', 'jokic-or-shai'],
+                ['right', 'right', 'left'],
+                CAT_KEYS
+            )
+        ).toBe('balanced');
     });
 });

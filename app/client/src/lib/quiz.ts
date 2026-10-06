@@ -7,9 +7,8 @@ import {
     hasCustomCat,
     isNamedBuildId,
     isNamedBuildVisible,
-    nearestNamedBuild,
+    buildFromWalkAnswers,
     pickWalkQuestions,
-    previewFromAnswers,
     stancesForArchetype,
     stancesMatchNamed,
     tunersForStances,
@@ -186,8 +185,7 @@ export function appendWalkAnswer(draft: QuizDraft, side: WalkChoiceId, q: number
         return { ...draft, walkAnswers: nextAnswers, snappedFromWalk: false };
     }
 
-    const preview = previewFromAnswers(ids, nextAnswers, draft.enabledCats);
-    const nearest = nearestNamedBuild(preview, draft.enabledCats);
+    const nearest = buildFromWalkAnswers(ids, nextAnswers, draft.enabledCats);
     return {
         ...applyArchetype({ ...draft, walkAnswers: nextAnswers }, nearest),
         walkSeed: draft.walkSeed,

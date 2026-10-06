@@ -24,9 +24,10 @@ const OTHER_DEFAULT_SIZE = 16;
 type LeagueStepProps = QuizStepProps & {
     // Quiz keeps a seat strip so first-run scan stays visual. Drawer uses a select so 20 chips do not wrap.
     slotControl?: 'chips' | 'select';
+    fullWidth?: boolean;
 };
 
-export function LeagueStep({ value, onChange, slotControl = 'chips' }: LeagueStepProps) {
+export function LeagueStep({ value, onChange, slotControl = 'chips', fullWidth = false }: LeagueStepProps) {
     const isOtherSize = !(STANDARD_LEAGUE_SIZES as readonly number[]).includes(value.leagueSize);
     const slotOptions = Array.from({ length: value.leagueSize }, (_, index) => {
         const slot = index + 1;
@@ -38,7 +39,7 @@ export function LeagueStep({ value, onChange, slotControl = 'chips' }: LeagueSte
         <div className='grid gap-8'>
             <div className='grid gap-2'>
                 <p className='mb-0 font-medium'>League size</p>
-                <div className='flex flex-wrap gap-2'>
+                <div className={fullWidth ? 'grid grid-cols-2 gap-2 [&_button]:w-full' : 'flex flex-wrap gap-2'}>
                     <ChoiceRow
                         className='contents'
                         value={isOtherSize ? undefined : value.leagueSize}
@@ -49,6 +50,7 @@ export function LeagueStep({ value, onChange, slotControl = 'chips' }: LeagueSte
                         type='button'
                         variant={isOtherSize ? 'default' : 'outline'}
                         aria-pressed={isOtherSize}
+                        className={fullWidth ? 'col-span-2' : undefined}
                         onClick={() => {
                             if (isOtherSize) return;
                             onChange(setLeagueSize(value, OTHER_DEFAULT_SIZE));
@@ -58,7 +60,7 @@ export function LeagueStep({ value, onChange, slotControl = 'chips' }: LeagueSte
                     </Button>
                 </div>
                 {isOtherSize ? (
-                    <div className='grid max-w-40 gap-2'>
+                    <div className={fullWidth ? 'grid gap-2' : 'grid max-w-40 gap-2'}>
                         <Label htmlFor='league-size-other'>Teams</Label>
                         <Input
                             id='league-size-other'
@@ -77,7 +79,7 @@ export function LeagueStep({ value, onChange, slotControl = 'chips' }: LeagueSte
                     </div>
                 ) : null}
             </div>
-            <div className='grid max-w-40 gap-2'>
+            <div className={fullWidth ? 'grid gap-2' : 'grid max-w-40 gap-2'}>
                 <Label htmlFor='draft-rounds'>Rounds</Label>
                 <Input
                     id='draft-rounds'
@@ -94,6 +96,7 @@ export function LeagueStep({ value, onChange, slotControl = 'chips' }: LeagueSte
             <div className='grid gap-2'>
                 <p className='mb-0 font-medium'>Draft type</p>
                 <ChoiceRow
+                    className={fullWidth ? '[&]:grid [&]:grid-cols-1 [&>button]:w-full' : undefined}
                     value={value.draftType}
                     options={DRAFT_TYPES}
                     onChange={(draftType) => onChange({ ...value, draftType })}
@@ -104,7 +107,7 @@ export function LeagueStep({ value, onChange, slotControl = 'chips' }: LeagueSte
                 {slotControl === 'select' ? (
                     <select
                         id='draft-slot'
-                        className='h-11 w-full max-w-40 rounded-lg border border-input bg-transparent pl-3 pr-10 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
+                        className='h-11 w-full rounded-lg border border-input bg-transparent pl-3 pr-10 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
                         value={value.draftSlot ?? ''}
                         onChange={(event) =>
                             onChange(setDraftSlot(value, Number.parseInt(event.target.value, 10) || 0))

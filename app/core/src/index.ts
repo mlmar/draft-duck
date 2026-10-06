@@ -52,6 +52,7 @@ export {
     isWalkQuestionEligible,
     lerpTuners,
     nearestNamedBuild,
+    buildFromWalkAnswers,
     pickWalkQuestions,
     previewFromAnswers,
     tunerVector,
