@@ -1,18 +1,17 @@
 import { EntryCtas } from '@/components/entry-ctas';
 import { PageShell } from '@/components/page-shell';
+import { seoMeta } from '@/lib/seo';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/about')({
     component: AboutPage,
-    head: () => ({
-        meta: [
-            { title: 'About - Draft Duck' },
-            {
-                name: 'description',
-                content: 'Draft Duck is a no-account category-league fantasy basketball helper.'
-            }
-        ]
-    })
+    head: () =>
+        seoMeta({
+            title: 'About Draft Duck | Fantasy Basketball Category Rankings',
+            description:
+                'Draft Duck helps fantasy basketball managers shape a category build and rank players for their league. Your saved profile stays on your device.',
+            path: '/about'
+        })
 });
 
 function AboutPage() {
