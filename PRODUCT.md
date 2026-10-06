@@ -27,7 +27,7 @@ Draft Duck. Light but memorable duck personality through “Get your ducks in a 
 - Guide first-time users; keep direct paths for experienced users.
 - Explain category tradeoffs with actual ranking data.
 - Reveal numerical controls when requested.
-- Make phone scanning easy without hiding access to the full table.
+- Keep statistics directly accessible on every screen size.
 
 ## Accessibility & Inclusion
 

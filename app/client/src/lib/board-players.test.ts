@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { boardPlayerGroups, playerPreviewMarks } from './board-players';
+import { boardPlayerGroups } from './board-players';
 import { overallPicksForDraft, type DraftProfile, type RankedPlayer } from '@draft-duck/core';
 
 const profile: DraftProfile = {
@@ -65,28 +65,5 @@ describe('shared board player selection', () => {
         expect(boardPlayerGroups(players, profile, { ...options, assist: true, query: 'Missing name' }).groups).toEqual(
             []
         );
-    });
-});
-
-describe('compact player category previews', () => {
-    const player = { z: { pts: -0.4, ast: 2.1, trb: 1.3, tov: Number.NaN } } as RankedPlayer;
-    const neutral: DraftProfile = { ...profile, enabledCats: ['pts', 'ast', 'trb', 'tov'] };
-    it('shows strongest available categories without recomputing weighted rankings', () => {
-        expect(playerPreviewMarks(player, neutral)).toEqual(['AST +2.10', 'REB +1.30']);
-    });
-    it('keeps explicit priorities and punts ahead of generic strengths', () => {
-        expect(playerPreviewMarks(player, { ...neutral, stances: { pts: 'need', ast: 'punt' } })).toEqual([
-            'PTS -0.40',
-            'AST ignored'
-        ]);
-    });
-    it('does not invent scores for unavailable categories', () => {
-        expect(playerPreviewMarks({ z: {} } as RankedPlayer, neutral)).toEqual([]);
-    });
-    it('excludes percentages with no attempts from category strengths', () => {
-        const noAttempts = { fgPct: null, ftPct: null, z: { fgPct: 0, ftPct: 0, pts: -0.4 } } as RankedPlayer;
-        expect(playerPreviewMarks(noAttempts, { ...neutral, enabledCats: ['fgPct', 'ftPct', 'pts'] })).toEqual([
-            'PTS -0.40'
-        ]);
     });
 });

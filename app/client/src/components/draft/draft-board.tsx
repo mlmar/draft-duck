@@ -1,5 +1,4 @@
 import { PlayerTable, type CatValueMode } from '@/components/draft/player-table';
-import { PlayerList } from '@/components/draft/player-list';
 import { BoardViewDrawer } from '@/components/draft/board-view-drawer';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { boardPlayerGroups } from '@/lib/board-players';
@@ -28,7 +27,7 @@ import {
 } from '@draft-duck/core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { Layers, Pencil, Settings, Table2 } from 'lucide-react';
+import { Layers, Pencil, Settings } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 const SEARCH_DEBOUNCE_MS = 200;
@@ -43,7 +42,6 @@ type DraftBoardProps = {
 export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBoardProps) {
     const navigate = useNavigate();
     const isDesktop = useMediaQuery('(min-width: 768px)');
-    const [mobileStats, setMobileStats] = useState(false);
     const profile = useDraftProfileStore((state) => state.profile);
     const setProfile = useDraftProfileStore((state) => state.setProfile);
     const [draft, setDraft] = useState<QuizDraft | null>(null);
@@ -144,7 +142,6 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
     const headline = archetypeLabel(profile.archetypeId) ?? 'Your draft board';
     const summary = stanceSummary(profile);
     const plusMinus = valueMode === 'plusMinus';
-    const showTable = isDesktop || mobileStats;
     const modeLabels: Record<DataMode, string> = {
         perGame: 'Per game',
         per36: 'Per 36 minutes',
@@ -230,51 +227,40 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                     <Layers aria-hidden='true' /> Group by round
                 </Button>
             ) : null}
-            <Button
-                type='button'
-                variant={mobileStats ? 'secondary' : 'outline'}
-                aria-pressed={mobileStats}
-                onClick={() => setMobileStats((current) => !current)}
-                className='md:hidden'
-            >
-                <Table2 aria-hidden='true' /> Stats table
-            </Button>
-            {showTable ? (
-                <>
-                    {!showSimple ? (
-                        <select
-                            aria-label='Category values'
-                            value={valueMode}
-                            onChange={(event) =>
-                                onTableSettingsChange({
-                                    assist,
-                                    valueMode: event.target.value === 'raw' ? 'raw' : 'plusMinus'
-                                })
-                            }
-                            className='h-11 max-w-full rounded-lg border border-input bg-card pl-3 pr-10 text-base'
-                        >
-                            <option value='plusMinus'>Category scores</option>
-                            <option value='raw'>Raw stats</option>
-                        </select>
-                    ) : null}
-                    {showSimple || !plusMinus ? (
-                        <select
-                            aria-label='Display stats'
-                            value={displayStatsMode}
-                            onChange={(event) => {
-                                const mode = event.target.value as DataMode;
-                                setDisplayStatsMode(mode);
-                                writeDisplayStatsMode(mode);
-                            }}
-                            className='h-11 max-w-full rounded-lg border border-input bg-card pl-3 pr-10 text-base'
-                        >
-                            <option value='perGame'>Per game</option>
-                            <option value='per36'>Per 36 minutes</option>
-                            <option value='totals'>Season totals</option>
-                        </select>
-                    ) : null}
-                </>
-            ) : null}
+            <>
+                {!showSimple ? (
+                    <select
+                        aria-label='Category values'
+                        value={valueMode}
+                        onChange={(event) =>
+                            onTableSettingsChange({
+                                assist,
+                                valueMode: event.target.value === 'raw' ? 'raw' : 'plusMinus'
+                            })
+                        }
+                        className='h-11 max-w-full rounded-lg border border-input bg-card pl-3 pr-10 text-base'
+                    >
+                        <option value='plusMinus'>Category scores</option>
+                        <option value='raw'>Raw stats</option>
+                    </select>
+                ) : null}
+                {showSimple || !plusMinus ? (
+                    <select
+                        aria-label='Display stats'
+                        value={displayStatsMode}
+                        onChange={(event) => {
+                            const mode = event.target.value as DataMode;
+                            setDisplayStatsMode(mode);
+                            writeDisplayStatsMode(mode);
+                        }}
+                        className='h-11 max-w-full rounded-lg border border-input bg-card pl-3 pr-10 text-base'
+                    >
+                        <option value='perGame'>Per game</option>
+                        <option value='per36'>Per 36 minutes</option>
+                        <option value='totals'>Season totals</option>
+                    </select>
+                ) : null}
+            </>
         </div>
     );
 
@@ -342,14 +328,12 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                     not a prediction of availability.
                 </p>
             ) : null}
-            {showTable ? (
-                <p className='mb-0 text-sm text-muted-foreground'>
-                    {showSimple || !plusMinus
-                        ? `${modeLabels[displayStatsMode]} raw stats. Changing this display does not change rankings.`
-                        : 'Category scores show standardized strength. Punted categories are excluded; weights affect ranking.'}{' '}
-                    Select a player to explore their fit.
-                </p>
-            ) : null}
+            <p className='mb-0 text-sm text-muted-foreground'>
+                {showSimple || !plusMinus
+                    ? `${modeLabels[displayStatsMode]} raw stats. Changing this display does not change rankings.`
+                    : 'Category scores show standardized strength. Punted categories are excluded; weights affect ranking.'}{' '}
+                Select a player to explore their fit.
+            </p>
             {rankError ? (
                 <div
                     role='alert'
@@ -395,28 +379,18 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                         </Button>
                     </div>
                 ) : hasRows ? (
-                    showTable ? (
-                        <PlayerTable
-                            groups={capped.groups}
-                            enabledCats={profile.enabledCats}
-                            emptyLabel='No players on this board.'
-                            profile={profile}
-                            highlight={highlight}
-                            valueMode={showSimple ? 'raw' : valueMode}
-                            displayStatsMode={displayStatsMode}
-                            yourOverallPicks={yourPickSet}
-                            onPlayerSelect={handlePlayerSelect}
-                            playerDetailsDisabled={rankQuery.isPlaceholderData}
-                        />
-                    ) : (
-                        <PlayerList
-                            groups={capped.groups}
-                            profile={profile}
-                            yourOverallPicks={yourPickSet}
-                            disabled={rankQuery.isPlaceholderData}
-                            onPlayerSelect={handlePlayerSelect}
-                        />
-                    )
+                    <PlayerTable
+                        groups={capped.groups}
+                        enabledCats={profile.enabledCats}
+                        emptyLabel='No players on this board.'
+                        profile={profile}
+                        highlight={highlight}
+                        valueMode={showSimple ? 'raw' : valueMode}
+                        displayStatsMode={displayStatsMode}
+                        yourOverallPicks={yourPickSet}
+                        onPlayerSelect={handlePlayerSelect}
+                        playerDetailsDisabled={rankQuery.isPlaceholderData}
+                    />
                 ) : null}
             </div>
             {capped.hiddenCount > 0 ? (
