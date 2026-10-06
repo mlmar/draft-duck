@@ -54,6 +54,7 @@ export {
     nearestNamedBuild,
     pickWalkQuestions,
     previewFromAnswers,
+    buildFromWalkAnswers,
     tunerVector,
     walkQuestion
 } from './walk-questions.ts';

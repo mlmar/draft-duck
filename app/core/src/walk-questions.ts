@@ -27,20 +27,17 @@ function question(id: string, prompt: string, left: WalkChoice, right: WalkChoic
     return { id, prompt, left, right };
 }
 
+// Keep legacy questions in the bank, but only offer concrete specialist comparisons.
 export const STATIC_WALK_IDS = [
     'bigs-or-guards',
     'points-or-stocks',
     'dunks-or-free-throws',
-    'and-ones-or-post-ups',
-    'inside-or-roaming',
-    'lock-down-or-all-around'
+    'and-ones-or-post-ups'
 ] as const;
 
 export const PLAYER_WALK_IDS = [
-    'jokic-or-shai',
     'giannis-or-embiid',
     'ad-or-draymond',
-    'jokic-or-ad',
     'embiid-or-shai',
     'giannis-or-draymond'
 ] as const;
@@ -143,23 +140,22 @@ export function lerpTuners(
     return next;
 }
 
-function balancedTuners(enabledCats: readonly CatKey[]): Partial<Record<CatKey, number>> {
-    return tunerVector('balanced', enabledCats);
-}
-
-// Fold from Balanced every time so Back is exact, not an inverse lerp.
+// Replay answers so Back restores the exact preview. No build is selected initially.
 export function previewFromAnswers(
     questionIds: readonly string[],
     answers: readonly WalkChoiceId[],
     enabledCats: readonly CatKey[]
 ): Partial<Record<CatKey, number>> {
-    let preview = balancedTuners(enabledCats);
+    let preview: Partial<Record<CatKey, number>> = Object.fromEntries(enabledCats.map((cat) => [cat, 0]));
+    let hasAnswer = false;
     const count = Math.min(questionIds.length, answers.length);
     for (let index = 0; index < count; index++) {
         const question = walkQuestion(questionIds[index]!);
         const side = answers[index];
         if (!question || (side !== 'left' && side !== 'right')) continue;
-        preview = lerpTuners(preview, tunerVector(question[side].toward, enabledCats), WALK_LERP_ALPHA, enabledCats);
+        const target = tunerVector(question[side].toward, enabledCats);
+        preview = hasAnswer ? lerpTuners(preview, target, WALK_LERP_ALPHA, enabledCats) : target;
+        hasAnswer = true;
     }
     return preview;
 }
@@ -192,6 +188,39 @@ export function nearestNamedBuild(
         const dist = distanceSq(preview, tunerVector(id, enabledCats), enabledCats);
         if (dist + NEAREST_TIE_EPS < bestDist) {
             best = id;
+            bestDist = dist;
+        }
+    }
+    return best;
+}
+
+// Every choice contributes equally to the recommendation. The animated preview
+// remains a recency-weighted blend, which otherwise lets a final Balanced choice
+// erase the specialist preferences expressed in earlier answers.
+export function buildFromWalkAnswers(
+    questionIds: readonly string[],
+    answers: readonly WalkChoiceId[],
+    enabledCats: readonly CatKey[]
+): NamedBuildId {
+    const votes = new Map<NamedBuildId, number>();
+    for (let index = 0; index < Math.min(questionIds.length, answers.length); index++) {
+        const question = walkQuestion(questionIds[index]!);
+        const side = answers[index];
+        if (!question || (side !== 'left' && side !== 'right')) continue;
+        const build = question[side].toward;
+        if (isNamedBuildVisible(build, enabledCats)) votes.set(build, (votes.get(build) ?? 0) + 1);
+    }
+    const preview = previewFromAnswers(questionIds, answers, enabledCats);
+    let best: NamedBuildId = 'balanced';
+    let bestVotes = 0;
+    let bestDist = Number.POSITIVE_INFINITY;
+    for (const id of NAMED_BUILD_IDS) {
+        const count = votes.get(id) ?? 0;
+        if (!count) continue;
+        const dist = distanceSq(preview, tunerVector(id, enabledCats), enabledCats);
+        if (count > bestVotes || (count === bestVotes && dist + NEAREST_TIE_EPS < bestDist)) {
+            best = id;
+            bestVotes = count;
             bestDist = dist;
         }
     }
