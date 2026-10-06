@@ -5,10 +5,17 @@ import * as React from 'react';
 function Table({
     className,
     containerClassName,
+    containerLabel,
     ...props
-}: React.ComponentProps<'table'> & { containerClassName?: string }) {
+}: React.ComponentProps<'table'> & { containerClassName?: string; containerLabel?: string }) {
     return (
-        <div data-slot='table-container' className={cn('relative w-full overflow-auto', containerClassName)}>
+        <div
+            role={containerLabel ? 'region' : undefined}
+            aria-label={containerLabel}
+            tabIndex={containerLabel ? 0 : undefined}
+            data-slot='table-container'
+            className={cn('relative w-full overflow-auto', containerClassName)}
+        >
             <table data-slot='table' className={cn('w-full caption-bottom text-base', className)} {...props} />
         </div>
     );
