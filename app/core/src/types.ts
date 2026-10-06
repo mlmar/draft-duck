@@ -66,6 +66,8 @@ export type DraftProfile = {
 
 // RankedPlayer.z only includes enabled cats. Disabled cats are omitted, not zeroed.
 export type RankedPlayer = PlayerSeason & {
+    /** Raw category values for display, independent of the dataset used to rank. */
+    rawStatsByMode?: Partial<Record<DataMode, Pick<PlayerSeason, CatKey>>>;
     z: Partial<Record<CatKey, number>>;
     /** Exact per-category terms used to build composite; omitted only for older responses. */
     contributions?: Partial<Record<CatKey, number>>;
