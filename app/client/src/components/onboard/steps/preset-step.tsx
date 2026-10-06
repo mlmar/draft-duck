@@ -11,10 +11,11 @@ const PRESETS: { value: CatPreset; label: string; description: string }[] = [
     { value: 'custom', label: 'Custom', description: 'Pick which cats count' }
 ];
 
-export function PresetStep({ value, onChange }: QuizStepProps) {
+export function PresetStep({ value, onChange, fullWidth = false }: QuizStepProps & { fullWidth?: boolean }) {
     return (
         <div className='grid gap-6'>
             <ChoiceRow
+                className={fullWidth ? '[&]:grid [&]:grid-cols-1 [&>button]:w-full' : undefined}
                 value={value.preset}
                 options={PRESETS}
                 onChange={(preset) => onChange(applyPreset(value, preset))}
@@ -23,6 +24,7 @@ export function PresetStep({ value, onChange }: QuizStepProps) {
                 <div className='grid gap-2'>
                     <p className='mb-0 font-medium'>Categories</p>
                     <ChoiceRow
+                        className={fullWidth ? '[&]:grid [&]:grid-cols-3 [&>button]:w-full' : undefined}
                         value={undefined}
                         options={CAT_KEYS.map((cat) => ({ value: cat, label: CAT_LABELS[cat] }))}
                         selected={(cat) => value.enabledCats.includes(cat)}

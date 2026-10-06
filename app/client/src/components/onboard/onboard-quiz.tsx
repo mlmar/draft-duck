@@ -24,8 +24,8 @@ import {
 import { useDraftProfileStore } from '@/stores/draft-profile';
 import {
     ARCHETYPE_LABELS,
-    draftProfileSchema,
     isNamedBuildId,
+    draftProfileSchema,
     previewFromAnswers,
     restoreSummary,
     tunersForStances,
@@ -191,6 +191,7 @@ export function OnboardQuiz() {
         ? previewFromAnswers(draft.walkQuestionIds ?? [], draft.walkAnswers ?? [], draft.enabledCats)
         : null;
     const chartTuners = walkTuners ?? tunersForStances(draft.stances, draft.enabledCats, draft.intensity);
+
     const snapCaption =
         draft.snappedFromWalk && draft.archetypeId && isNamedBuildId(draft.archetypeId)
             ? `Closest build: ${ARCHETYPE_LABELS[draft.archetypeId]}`
@@ -213,7 +214,7 @@ export function OnboardQuiz() {
             draft={{ ...draft, intensity: chartTuners }}
             tuners={chartTuners}
             editable={!isWalk}
-            caption={isWalk ? 'Your priorities so far' : snapCaption}
+            caption={isWalk ? null : snapCaption}
             onChange={(next) => {
                 setDraft(next);
                 setParseError(null);
