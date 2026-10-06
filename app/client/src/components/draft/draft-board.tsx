@@ -28,7 +28,7 @@ import {
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { Layers, Pencil, Settings } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 
 const SEARCH_DEBOUNCE_MS = 200;
 const CAT_HIGHLIGHT_MODE = DEFAULT_CAT_HIGHLIGHT_MODE;
@@ -41,11 +41,22 @@ type DraftBoardProps = {
 
 export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBoardProps) {
     const navigate = useNavigate();
+    const boardHeader = useRef<HTMLDivElement>(null);
+    const [headerHeight, setHeaderHeight] = useState(192);
     const isDesktop = useMediaQuery('(min-width: 768px)');
     const profile = useDraftProfileStore((state) => state.profile);
+
     const setProfile = useDraftProfileStore((state) => state.setProfile);
     const [draft, setDraft] = useState<QuizDraft | null>(null);
     const [hydrated, setHydrated] = useState(false);
+    useEffect(() => {
+        const node = boardHeader.current;
+        if (!node) return;
+        const observer = new ResizeObserver(() => setHeaderHeight(node.getBoundingClientRect().height));
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, [profile, hydrated, draft]);
+
     const [nameQuery, setNameQuery] = useState('');
     // Input stays live. The table filters after the pause so each key is not a full rebuild.
     const debouncedNameQuery = useDebouncedValue(nameQuery, SEARCH_DEBOUNCE_MS);
@@ -265,8 +276,14 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
     );
 
     return (
-        <div className='grid gap-3 md:gap-5'>
-            <div className='sticky top-[env(safe-area-inset-top,0px)] z-40 -mx-4 grid gap-3 border-b border-border bg-background px-4 py-3 md:mx-0 md:px-0'>
+        <div
+            className='min-w-0 grid gap-3 md:gap-5'
+            style={{ '--board-header-height': `${headerHeight}px` } as CSSProperties}
+        >
+            <div
+                ref={boardHeader}
+                className='sticky top-[env(safe-area-inset-top,0px)] z-40 -mx-4 grid gap-3 border-b border-border bg-background px-4 py-3 md:mx-0 md:px-0'
+            >
                 <header className='flex items-start justify-between gap-3'>
                     <div className='min-w-0 grid gap-1'>
                         <h1 className='mb-0 text-2xl md:text-3xl'>{headline}</h1>
@@ -380,6 +397,7 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                     </div>
                 ) : hasRows ? (
                     <PlayerTable
+                        stickyTop={headerHeight}
                         groups={capped.groups}
                         enabledCats={profile.enabledCats}
                         emptyLabel='No players on this board.'

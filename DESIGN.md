@@ -171,9 +171,9 @@ Use a four-pixel spacing rhythm with common gaps and insets drawn from the front
 
 The medium breakpoint (768px) changes board control placement, pinned identity columns, and drawer direction. The large breakpoint (1024px) changes quiz composition. Described choice rows begin wrapping horizontally at the small breakpoint (640px). Do not equate every desktop adaptation with one shared cutoff.
 
-The board's build header and search share a sticky block at the safe-area top. The full statistics table is always shown on phones and desktop. Phones use a **Board view** bottom sheet for presentation controls, while desktop shows the toolbar inline. There is no alternate compact player view or Stats table toggle. The table pans horizontally in its own container while the page scrolls vertically: rank pins at the left, and name joins it from medium width. Column headings travel with the page.
+The board's build header and search share a sticky block at the safe-area top. The full statistics table is always shown on phones and desktop. Phones use a **Board view** bottom sheet for presentation controls, while desktop shows the toolbar inline. There is no alternate compact player view or Stats table toggle. The table pans horizontally in its own container while the page scrolls vertically: rank pins at the left, and name joins it from medium width. Column headings pin below the measured sticky board header using an aria-hidden visual overlay that follows horizontal table scroll; the real semantic header stays in the table and page scrolling remains vertical. Team cells and their column track disappear on phones, without an empty gap.
 
-Quiz category weights stay expanded at every step, including **Closest build**. Walkthrough charts precede answers at every size: compact vertical bars and stacked answers on phones, taller vertical bars and side-by-side answers at large width. Editable priorities use horizontal rows below large width and vertical bars above it. The quiz action footer is fixed with reserved content space and safe-area padding.
+Quiz category weights stay expanded at every step. **Closest build** remains in the league-stage priorities panel, rather than a separate quiz step. The walkthrough chart has no extra visible heading; its accessible summary remains. Walkthrough charts precede answers at every size: compact vertical bars and stacked answers on phones, taller vertical bars and side-by-side answers at large width. Editable priorities use horizontal rows below large width and vertical bars above it. The quiz action footer is fixed with reserved content space and safe-area padding.
 
 These are observed responsive patterns; page persuasion strategy and first-viewport copy remain in `.impeccable/direction.md`.
 
@@ -197,7 +197,7 @@ Primary cobalt buttons have white text; outline buttons use a field-like border 
 
 ### Chips
 
-Choice controls reuse button treatments. Priority segments read **Punt → Neutral → Need**. Selected Punt is muted; selected Neutral or Need is cobalt. A custom numeric weight leaves the three segments unselected and adds a Custom label. Badge primitives use the smaller derived corner and compact height (28px), rather than a pill silhouette.
+Choice controls reuse button treatments. The quiz stance bar reads **Punt → Neutral → Need**: selected Punt is muted, selected Neutral or Need is cobalt, and a custom numeric weight leaves the segments unselected with a Custom label. The shared category editor uses separate full-width preset buttons in the same order, with cobalt for any selected preset and outline for the others. Badge primitives use the smaller derived corner and compact height (28px), rather than a pill silhouette.
 
 ### Cards / Containers
 
@@ -205,7 +205,11 @@ Shared cards use white fill, the larger derived radius, a thin ring, and regular
 
 ### Inputs / Fields
 
-Fields share body-sized text, the base radius, input stroke, and comfortable height (44px). Search adds white fill. Placeholder text stays slate; focus changes the border and adds the cobalt ring. Invalid states use error rose; disabled inputs receive a subdued fill and reduced opacity. Numerical editing remains available in the separate weights drawer and existing settings controls.
+Fields share body-sized text, the base radius, input stroke, and comfortable height (44px). Search adds white fill. Placeholder text stays slate; focus changes the border and adds the cobalt ring. Invalid states use error rose; disabled inputs receive a subdued fill and reduced opacity. The same category-priority editor supplies preset and numerical editing in both build settings and the weights drawer.
+
+### Category priorities
+
+The shared editor shows each resolved weight once beneath the category title, with an inline **Fine-tune** heading action that includes the category name. **Fine-tune** replaces the **Punt / Neutral / Need** preset row with an inline slider; **Use presets** replaces that action in the same heading. Saved Custom weights open in the precise state. The slider retains a screen-reader label without repeating a visible category/weight heading or value. **Use presets** reveals the choices without changing the weight; only choosing a preset changes its stance. A Neutral weight boosted to complement punted categories (1.25) has an explicit explanation. Precise sliders cover the weight range (0–3, in 0.05 steps), use a graphite fill/thumb, and retain keyboard focus. The editor is shared by ProfileSettings and WeightsDrawer rather than maintaining separate priority and numerical sections.
 
 ### Navigation
 
@@ -215,7 +219,7 @@ The white header carries a lowercase text wordmark and quiet navigation links wi
 
 The full player table serves every screen size, using tabular numerals, restrained row fills, score heat, and horizontally pinned identity columns. Player-name buttons carry a Lucide cue for the explanation drawer. Player explanations pair signed strengths and exact values with explicit **No attempts** / **Unavailable** states and weighted contribution text.
 
-Settings, numerical weights, and player explanations use white Vaul drawers: a bottom sheet on phones and a right-side panel from medium width (28rem, capped at 90vw). **Board view** is a content-height bottom sheet. Preserve labelled dialogs and dismissal focus behavior. Existing settings still expose separate priority and numerical controls; the proposed consolidation in `docs/plans/settings-ux.md` is not implemented.
+Settings, numerical weights, and player explanations use white Vaul drawers: a bottom sheet on phones and a right-side panel from medium width (28rem, capped at 90vw). **Board view** is a content-height bottom sheet. Preserve labelled dialogs and dismissal focus behavior. On phones, Settings and Board view controls fill the available width; settings choice groups share that width across their columns. Settings and the weights drawer keep edits local until Apply; Cancel discards them.
 
 Weight/progress changes use an ease-out transition (300ms), disabled for reduced motion. Table state colors use short transitions (150ms); loading pulse is motion-safe. Player-detail drawer motion explicitly honors reduced motion. Do not infer a universal animation treatment from these local patterns.
 
@@ -234,5 +238,5 @@ Weight/progress changes use an ease-out transition (300ms), disabled for reduced
 - **Don't** replace the text wordmark with a generated logo or add decorative raster assets.
 - **Don't** use color alone to communicate strength, selection, or errors.
 - **Don't** hide always-expanded quiz weights behind a disclosure.
-- **Don't** describe a settings proposal as shipped or conflate raw-stat display with ranking basis.
+- **Don't** conflate raw-stat display with ranking basis.
 - **Don't** add decorative drop shadows to resting surfaces.

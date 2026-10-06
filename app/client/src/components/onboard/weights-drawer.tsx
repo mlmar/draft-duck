@@ -1,4 +1,4 @@
-import { IntensityStep } from '@/components/onboard/steps/intensity-step';
+import { CategoryPriorityEditor } from '@/components/onboard/category-priority-editor';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -27,7 +27,7 @@ export function WeightsDrawer({ open, onOpenChange, value, onApply }: WeightsDra
                     <DrawerTitle id='onboard-weights-title'>Edit weights</DrawerTitle>
                 </div>
                 <div className='min-h-0 flex-1 overflow-y-auto px-4 py-6'>
-                    <IntensityStep value={workingValue} onChange={setWorkingValue} idPrefix='onboard-weight' />
+                    <CategoryPriorityEditor value={workingValue} onChange={setWorkingValue} />
                 </div>
                 <div className='flex shrink-0 gap-3 border-t border-border px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]'>
                     <Button type='button' variant='outline' className='flex-1' onClick={() => onOpenChange(false)}>
