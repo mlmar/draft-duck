@@ -56,6 +56,20 @@ describe('rankWithDataModeSignals', () => {
         expect(rankWithDataModeSignals(players, totalsProfile)[0]?.playerId).toBe('b');
     });
 
+    it('attaches each mode raw stats by player id without changing the selected ranking', () => {
+        const players = universes(['a', 'b', 'c', 'd'], ['d', 'c', 'b', 'a'], ['b', 'c', 'a', 'd']);
+        players.per36 = players.per36.filter((player) => player.playerId !== 'd');
+        const ranked = rankWithDataModeSignals(players, profile);
+        const first = ranked[0]!;
+
+        expect(ranked.map((player) => player.playerId)).toEqual(['d', 'c', 'b', 'a']);
+        expect(first.rawStatsByMode?.perGame?.pts).toBe(4);
+        expect(first.rawStatsByMode?.per36?.pts).toBeUndefined();
+        expect(first.rawStatsByMode?.totals?.pts).toBe(1);
+        expect(first.rank).toBe(1);
+        expect(first.composite).toBeDefined();
+    });
+
     // The selected ranking keeps exact contribution terms while adding its optional signal annotation.
     it('preserves contributions through data-mode selection and signal annotation', () => {
         const players = universes(

@@ -1,5 +1,5 @@
 import { catHeatStyle } from '@/lib/cat-heat';
-import { formatCatStat } from '@/lib/format-stats';
+import { formatDisplayedCatStat } from '@/lib/format-stats';
 import { YourPickMark } from '@/components/draft/your-pick-mark';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -10,6 +10,7 @@ import {
     formatSignedScore,
     type CatHighlightStrategy,
     type CatKey,
+    type DataMode,
     type DraftProfile,
     type RankedPlayer
 } from '@draft-duck/core';
@@ -30,6 +31,7 @@ type PlayerTableProps = {
     profile: DraftProfile;
     highlight: CatHighlightStrategy;
     valueMode: CatValueMode;
+    displayStatsMode: DataMode;
     yourOverallPicks?: ReadonlySet<number>;
     // Optional so non-board PlayerTable consumers keep their existing static name presentation.
     onPlayerSelect?: (player: RankedPlayer, trigger: HTMLButtonElement) => void;
@@ -80,6 +82,7 @@ export function PlayerTable({
     profile,
     highlight,
     valueMode,
+    displayStatsMode,
     yourOverallPicks,
     onPlayerSelect,
     playerDetailsDisabled = false
@@ -249,7 +252,12 @@ export function PlayerTable({
                                     const value =
                                         valueMode === 'plusMinus'
                                             ? formatSignedScore(heat.score)
-                                            : formatCatStat(player, cat);
+                                            : formatDisplayedCatStat(
+                                                  player,
+                                                  cat,
+                                                  displayStatsMode,
+                                                  profile.dataMode ?? 'perGame'
+                                              );
                                     return (
                                         <TableCell
                                             key={cat}
