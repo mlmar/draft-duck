@@ -1,6 +1,6 @@
 {
     "schemaVersion": 2,
-    "generatedAt": "2026-10-06T05:50:26.055968+00:00",
+    "generatedAt": "2026-10-06T06:09:19.280601+00:00",
     "title": "Design System: Draft Duck",
     "extensions": {
         "colorMeta": {
@@ -325,7 +325,7 @@
             {
                 "name": "md",
                 "value": "768px",
-                "purpose": "Board table/toolbar, page gutters, and right-side drawers."
+                "purpose": "Board control placement, pinned identity columns, page gutters, and right-side drawers; the player table is shown at every width."
             },
             {
                 "name": "lg",
@@ -406,14 +406,6 @@
             "description": "White shared container with a hairline ring and derived larger corner.",
             "html": "<div class=\"ds-card\"><div class=\"ds-card-header\"><div class=\"ds-card-title\">Your category priorities</div><div class=\"ds-card-description\">Need counts more. Neutral stays in play.</div></div><div class=\"ds-card-content\">Punt counts as zero.</div></div>",
             "css": ".ds-card{display:flex;flex-direction:column;gap:16px;overflow:hidden;border-radius:calc(var(--radius,8px)*1.4);background:var(--card,#ffffff);color:var(--foreground,#172331);padding-block:16px;font-size:16px;box-shadow:0 0 0 1px color-mix(in oklch,var(--foreground,#172331) 10%,transparent);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);}.ds-card-header{display:grid;gap:4px;padding-inline:16px;}.ds-card-title{font-size:16px;font-weight:500;line-height:1.375;}.ds-card-description{font-size:14px;line-height:20px;color:var(--muted-foreground,#526176);}.ds-card-content{padding-inline:16px;}"
-        },
-        {
-            "name": "Compact player row",
-            "kind": "custom",
-            "refersTo": "player-row",
-            "description": "Phone identity and fit evidence with a drawer cue. Sample names and values are illustrative.",
-            "html": "<div class=\"ds-player-list\"><button type=\"button\" class=\"ds-player-row\" aria-haspopup=\"dialog\"><span class=\"ds-rank\"><span class=\"ds-sr\">Rank </span>12</span><span class=\"ds-player-copy\"><span class=\"ds-player-head\"><span class=\"ds-player-name\">Player name</span><svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 7h10v10M7 17 17 7\"/></svg></span><span class=\"ds-player-meta\">TEAM \u00b7 G \u00b7 PTS +1.2 \u00b7 AST +0.9</span></span></button></div>",
-            "css": ".ds-player-list{overflow:hidden;border:1px solid var(--border,#dce2ea);border-radius:var(--radius,8px);background:var(--card,#ffffff);}.ds-player-row{display:flex;align-items:center;justify-content:flex-start;gap:8px;width:100%;height:auto;min-height:64px;padding:12px;border:1px solid transparent;border-radius:0;background:transparent;color:var(--foreground,#172331);text-align:left;font-size:16px;line-height:1.5;cursor:pointer;outline:none;transition:all 150ms cubic-bezier(.4,0,.2,1);font-family:var(--font-sans,'Public Sans Variable',ui-sans-serif,system-ui,sans-serif);}.ds-player-row:hover{background:var(--muted,#edf0f5);}.ds-player-row:focus-visible{border-color:var(--primary,#2455d6);box-shadow:0 0 0 3px color-mix(in oklch,var(--primary,#2455d6) 50%,transparent);}.ds-player-row:disabled{opacity:.5;pointer-events:none;}.ds-rank{width:24px;flex-shrink:0;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted-foreground,#526176);}.ds-player-copy{display:grid;gap:2px;min-width:0;flex:1;}.ds-player-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}.ds-player-head svg{flex-shrink:0;margin-top:4px;color:var(--muted-foreground,#526176);}.ds-player-name{min-width:0;overflow-wrap:break-word;font-weight:600;}.ds-player-meta{font-size:14px;font-weight:400;color:var(--muted-foreground,#526176);}.ds-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}"
         },
         {
             "name": "Responsive walkthrough chart",
