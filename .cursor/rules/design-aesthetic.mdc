@@ -26,16 +26,18 @@ alwaysApply: false
 
 ## Execution workflow
 
-- Treat initial UI generations as rough wireframes. Focus subsequent refinement passes purely on typography scale, color token discipline, and spacing rhythm rather than structural layout changes.
+- Follow the confirmed UI plan and DESIGN.md. Inspect desktop and mobile together; batch corrections rather than repeatedly polishing.
 
 ## Project locks
 
-- Font is Public Sans. Map it as `--font-sans`. Do not add a second display face.
-- Light theme only. No `.dark` block, no theme toggle, no dark-mode first drafts.
-- Buttons use ink `--primary` (dark zinc) with light `--primary-foreground`. `#78A3CF` is `--brand` / `--ring` only: progress, links, your-pick fill. Do not fill default buttons with the brand wash.
-- Body, buttons, and labels are `1rem` (`text-base`) or larger. `text-sm` is for secondary meta only. Avoid `text-xs` for anything a user needs to read.
-- Use rem for type, padding, margin, gap, width, height, and max-width. Use px only for border-radius (`--radius: 8px`). No rem radius. No `rounded-full` pills.
-- No `uppercase` or wide letter-spacing kickers. No colored eyebrows. Hierarchy comes from weight and size.
-- Use shadcn tokens (`bg-background`, `text-foreground`, `text-primary`, `text-brand`, `text-muted-foreground`) instead of one-off hex.
-- Mobile-first. Stack with rem spacing. `md:` is for extra width and heading size, not a second layout.
-- Local src imports use `@/`. Cross-package imports stay `@draft-duck/core`.
+- Analysis Desk: cool off-white surfaces, graphite text, cobalt actions and selection. Use the tokens in global.css.
+- Public Sans is the only typeface. Light theme only.
+- Use a text wordmark. Do not generate logos. Duck personality belongs in selected copy: “Get your ducks in a row,” “Pick your punt,” and occasional quack loading copy.
+- Body, actions, and form labels are at least 1rem. Secondary metadata may use 0.875rem. Important chart labels must remain legible.
+- Use rem for type and spacing; use px for border widths and radii. Main radius is 8px. Avoid pills.
+- No uppercase kickers, colored eyebrows, gradients, or ornamental charts.
+- Use semantic tokens instead of one-off component colors. Positive/negative colors encode actual category strength, never brand decoration.
+- Mobile defaults to compact player rows; desktop uses a dense table. Responsive layout may change structure to serve each screen.
+- Detailed weight editing opens on demand. Quiz category charts stay visible, above walkthrough answers and expanded in the Closest build panel.
+- Use the existing Lucide React icons for action buttons; keep visible text labels.
+- Local imports use @/. Cross-package imports use @draft-duck/core.

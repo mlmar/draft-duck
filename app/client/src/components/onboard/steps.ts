@@ -27,7 +27,8 @@ export function isOnboardStepId(value: string | undefined): value is (typeof ONB
 
 const LEAGUE_STEP: QuizStepDef = {
     id: 'league',
-    title: 'League',
+    title: 'Set your league',
+    description: 'Tell us the format. Add your pick to see a round-by-round reference.',
     Component: LeagueStep
 };
 
@@ -42,8 +43,8 @@ const REVIEW_STEP: QuizStepDef = {
 
 const STANCES_STEP: QuizStepDef = {
     id: 'stances',
-    title: 'Need and Punt',
-    description: 'Presets write the weights. Edit weights to fine-tune them.',
+    title: 'Pick your punt',
+    description: 'Punting is optional. Choose what to prioritize, keep neutral, or leave out of the ranking.',
     Component: StancesStep
 };
 

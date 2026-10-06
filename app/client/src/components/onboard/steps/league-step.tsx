@@ -104,7 +104,7 @@ export function LeagueStep({ value, onChange, slotControl = 'chips' }: LeagueSte
                 {slotControl === 'select' ? (
                     <select
                         id='draft-slot'
-                        className='h-11 w-full max-w-40 rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
+                        className='h-11 w-full max-w-40 rounded-lg border border-input bg-transparent pl-3 pr-10 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
                         value={value.draftSlot ?? ''}
                         onChange={(event) =>
                             onChange(setDraftSlot(value, Number.parseInt(event.target.value, 10) || 0))

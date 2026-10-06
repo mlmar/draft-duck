@@ -196,6 +196,31 @@ export function OnboardQuiz() {
             ? `Closest build: ${ARCHETYPE_LABELS[draft.archetypeId]}`
             : null;
 
+    const question = (
+        <StepComponent
+            value={draft}
+            onChange={(next) => {
+                setDraft(next);
+                setParseError(null);
+            }}
+            parseError={parseError}
+            questionId={isWalk ? currentWalkQuestionId(draft, q) : undefined}
+            onWalkAnswer={handleWalkAnswer}
+        />
+    );
+    const chart = (
+        <WeightChartPanel
+            draft={{ ...draft, intensity: chartTuners }}
+            tuners={chartTuners}
+            editable={!isWalk}
+            caption={isWalk ? 'Your priorities so far' : snapCaption}
+            onChange={(next) => {
+                setDraft(next);
+                setParseError(null);
+            }}
+        />
+    );
+
     return (
         <QuizShell
             title={step.title}
@@ -208,28 +233,20 @@ export function OnboardQuiz() {
             continueDisabled={!canContinue(step.id, draft)}
             banner={restoreBanner}
         >
-            <div className='grid gap-8 lg:grid-cols-2 lg:items-start'>
-                <WeightChartPanel
-                    className='lg:sticky lg:top-4'
-                    draft={{ ...draft, intensity: chartTuners }}
-                    tuners={chartTuners}
-                    editable={!isWalk}
-                    caption={isWalk ? null : snapCaption}
-                    onChange={(next) => {
-                        setDraft(next);
-                        setParseError(null);
-                    }}
-                />
-                <StepComponent
-                    value={draft}
-                    onChange={(next) => {
-                        setDraft(next);
-                        setParseError(null);
-                    }}
-                    parseError={parseError}
-                    questionId={isWalk ? currentWalkQuestionId(draft, q) : undefined}
-                    onWalkAnswer={handleWalkAnswer}
-                />
+            <div
+                className={`mt-6 grid gap-6 lg:items-start lg:gap-8 ${isWalk ? 'lg:grid-cols-1' : 'lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]'}`}
+            >
+                {isWalk ? (
+                    <>
+                        {chart}
+                        {question}
+                    </>
+                ) : (
+                    <>
+                        {question}
+                        {chart}
+                    </>
+                )}
             </div>
         </QuizShell>
     );

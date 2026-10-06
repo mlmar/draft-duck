@@ -9,14 +9,14 @@ type PageShellProps = {
     inset?: 'default' | 'quiz';
 };
 
-// Default is the reading column. wide unlocks full width from md up. Mobile stays max-w-lg.
+// Reading pages stay constrained; workspace pages use the available width.
 export function PageShell({ children, className, wide = false, inset = 'default' }: PageShellProps) {
     return (
         <main
             className={cn(
-                'mx-auto w-full flex-1 px-4',
-                inset === 'quiz' ? 'py-4' : 'py-6 md:py-8',
-                wide ? 'max-w-lg md:max-w-none' : 'flex max-w-lg flex-col md:max-w-2xl',
+                'mx-auto w-full min-w-0 flex-1 px-4 md:px-8',
+                inset === 'quiz' ? 'py-6 md:py-10' : 'py-8 md:py-12',
+                wide ? (inset === 'quiz' ? 'max-w-6xl' : 'max-w-[88rem]') : 'flex max-w-3xl flex-col',
                 className
             )}
         >

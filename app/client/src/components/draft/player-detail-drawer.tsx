@@ -3,7 +3,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } fr
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { formatCatStat } from '@/lib/format-stats';
 import { contributionSummary, formatSignedValue, strengthDatum } from '@/lib/player-strength-chart';
-import { CAT_KEYS, CAT_LABELS, type CatKey, type DraftProfile, type RankedPlayer } from '@draft-duck/core';
+import { CAT_KEYS, CAT_LABELS, type CatKey, type DraftProfile, type RankedPlayer, whyCopy } from '@draft-duck/core';
 import { X } from 'lucide-react';
 
 type PlayerDetailDrawerProps = {
@@ -13,15 +13,6 @@ type PlayerDetailDrawerProps = {
     onOpenChange: (open: boolean) => void;
     onAnimationEnd: (open: boolean) => void;
 };
-
-// Match signed geometry to an uncluttered five-tick symmetric zero-centered scale.
-const Z_TICKS = [
-    { value: 3, top: 0, label: '+3' },
-    { value: 1.5, top: 25, label: '+1.5' },
-    { value: 0, top: 50, label: 'Avg (0)' },
-    { value: -1.5, top: 75, label: '−1.5' },
-    { value: -3, top: 100, label: '−3' }
-] as const;
 
 // Keep the drawer mounted for reliable dialog dismissal while rendering its content only for a selected player.
 export function PlayerDetailDrawer({ open, player, profile, onOpenChange, onAnimationEnd }: PlayerDetailDrawerProps) {
@@ -66,6 +57,10 @@ export function PlayerDetailDrawer({ open, player, profile, onOpenChange, onAnim
                         </DrawerClose>
                     </div>
                     <div className='min-h-0 flex-1 overflow-y-auto px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]'>
+                        <div className='mb-6 grid gap-2'>
+                            <h2 className='mb-0 text-lg'>Why this player?</h2>
+                            <p className='mb-0 text-muted-foreground'>{whyCopy(player, profile)}</p>
+                        </div>
                         <SignedStrengthChart player={player} enabledCats={profile.enabledCats} />
                         <PlayerFitExplanation player={player} profile={profile} />
                     </div>
@@ -75,102 +70,69 @@ export function PlayerDetailDrawer({ open, player, profile, onOpenChange, onAnim
     );
 }
 
-// Put chart labels and a text-only score description together so screen readers can understand every signed bar.
+// Keep a shared ±3 scale and exact text while giving each category a readable horizontal row.
 function SignedStrengthChart({ player, enabledCats }: { player: RankedPlayer; enabledCats: CatKey[] }) {
     const cats = CAT_KEYS.filter((cat) => enabledCats.includes(cat));
     const description = cats.map((cat) => chartDescription(player, cat)).join('. ');
-    const chartWidth = `${cats.length * 1.75}rem`;
-
     return (
-        <figure className='mb-6 grid gap-2'>
+        <figure className='mb-8 grid gap-4'>
             <figcaption className='grid gap-1'>
-                <span className='font-medium'>Category strength</span>
-                <span className='text-xs text-muted-foreground'>Standardized strength (z-score)</span>
+                <span className='font-semibold'>Category strength</span>
+                <span className='text-sm text-muted-foreground'>Standardized strength before build weights.</span>
             </figcaption>
-            <div
-                role='img'
-                aria-label={`Category strength chart for ${player.name}. ${description}`}
-                className='flex items-stretch gap-2 overflow-hidden'
-            >
-                <div className='relative h-56 w-[2.5rem] shrink-0 text-right text-[0.65rem] text-muted-foreground'>
-                    {Z_TICKS.map((tick) => (
-                        <span
-                            key={tick.label}
-                            className={`absolute right-0 whitespace-nowrap bg-card px-0.5 ${tick.top === 0 ? '' : tick.top === 100 ? '-translate-y-full' : '-translate-y-1/2'}`}
-                            style={{ top: `${tick.top}%` }}
-                        >
-                            {tick.label}
-                        </span>
-                    ))}
-                </div>
-                <div className='min-w-0 flex-1 overflow-x-auto pb-1' aria-hidden='true'>
-                    <div className='relative h-56' style={{ minWidth: chartWidth }}>
-                        {Z_TICKS.map((tick) => (
-                            <div
-                                key={tick.label}
-                                className={`absolute inset-x-0 border-t ${tick.value === 0 ? 'border-foreground/60' : 'border-border/70'}`}
-                                style={{ top: `${tick.top}%` }}
-                            />
-                        ))}
-                        <div
-                            className='absolute inset-0 grid'
-                            style={{ gridTemplateColumns: `repeat(${cats.length}, minmax(1.75rem, 1fr))` }}
-                        >
-                            {cats.map((cat) => (
-                                <StrengthColumn key={cat} player={player} cat={cat} />
-                            ))}
+            <div role='img' aria-label={`Category strength chart for ${player.name}. ${description}`}>
+                <div aria-hidden='true' className='grid gap-3'>
+                    <div className='grid grid-cols-[2.5rem_minmax(0,1fr)_3rem] gap-3 text-sm text-muted-foreground'>
+                        <span />
+                        <div className='flex justify-between'>
+                            <span>−3</span>
+                            <span>Avg (0)</span>
+                            <span>+3</span>
                         </div>
+                        <span />
                     </div>
-                    <div
-                        className='grid pt-2 text-center text-[0.65rem] font-medium text-muted-foreground'
-                        style={{
-                            gridTemplateColumns: `repeat(${cats.length}, minmax(1.75rem, 1fr))`,
-                            minWidth: chartWidth
-                        }}
-                    >
-                        {cats.map((cat) => (
-                            <span key={cat}>{CAT_LABELS[cat]}</span>
-                        ))}
-                    </div>
+                    {cats.map((cat) => {
+                        const datum = strengthDatum(player, cat);
+                        const geometry = datum.state === 'scored' ? datum.geometry : null;
+                        return (
+                            <div key={cat} className='grid grid-cols-[2.5rem_minmax(0,1fr)_3rem] items-center gap-3'>
+                                <span className='text-sm font-medium'>{CAT_LABELS[cat]}</span>
+                                {datum.state === 'scored' && geometry ? (
+                                    <>
+                                        <div className='relative h-6 rounded-sm bg-muted'>
+                                            <span className='absolute inset-y-0 left-1/2 border-l border-foreground/40' />
+                                            <span
+                                                className='absolute inset-y-1 rounded-sm'
+                                                style={{
+                                                    left: `${geometry.direction === 'negative' ? 50 - geometry.halfHeightPercent : 50}%`,
+                                                    width: `${geometry.halfHeightPercent}%`,
+                                                    backgroundColor:
+                                                        geometry.direction === 'negative'
+                                                            ? 'var(--strength-bad)'
+                                                            : 'var(--strength-good)'
+                                                }}
+                                            />
+                                            {geometry.clipped ? (
+                                                <span
+                                                    className={`absolute inset-y-0 border-l-2 border-foreground ${geometry.direction === 'positive' ? 'right-0' : 'left-0'}`}
+                                                />
+                                            ) : null}
+                                        </div>
+                                        <span className='text-right text-sm tabular-nums'>
+                                            {formatSignedValue(datum.z)}
+                                        </span>
+                                    </>
+                                ) : (
+                                    <span className='col-span-2 text-sm text-muted-foreground'>
+                                        {datum.state === 'no-attempts' ? 'No attempts' : 'Unavailable'}
+                                    </span>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </figure>
-    );
-}
-
-// Draw strengths from the zero line; profile stance and weight never affect bar direction, size, or color.
-function StrengthColumn({ player, cat }: { player: RankedPlayer; cat: CatKey }) {
-    const datum = strengthDatum(player, cat);
-    const geometry = datum.state === 'scored' ? datum.geometry : null;
-    const positive = geometry?.direction === 'positive';
-    const negative = geometry?.direction === 'negative';
-
-    return (
-        <div className='relative h-full'>
-            {positive ? (
-                <div
-                    className='absolute left-1/2 bottom-1/2 w-3 -translate-x-1/2 rounded-t-md bg-foreground'
-                    style={{ height: `${geometry.halfHeightPercent}%` }}
-                />
-            ) : null}
-            {negative ? (
-                <div
-                    className='absolute left-1/2 top-1/2 w-3 -translate-x-1/2 rounded-b-md bg-foreground'
-                    style={{ height: `${geometry.halfHeightPercent}%` }}
-                />
-            ) : null}
-            {geometry?.clipped ? <ClippedEndpoint positive={positive} /> : null}
-        </div>
-    );
-}
-
-// Mark scores beyond ±3 at the chart edge without changing the exact value announced to assistive technology.
-function ClippedEndpoint({ positive }: { positive: boolean }) {
-    return (
-        <span
-            className='absolute left-1/2 size-2 -translate-x-1/2 rounded-full bg-foreground ring-2 ring-card'
-            style={positive ? { top: 0 } : { bottom: 0 }}
-        />
     );
 }
 
@@ -182,8 +144,12 @@ function PlayerFitExplanation({ player, profile }: { player: RankedPlayer; profi
     return (
         <section aria-labelledby='why-player-title' className='grid gap-3 p-0'>
             <h2 id='why-player-title' className='mb-0 text-base font-semibold'>
-                Why this player?
+                Score breakdown
             </h2>
+            <p className='mb-0 text-sm text-muted-foreground'>
+                {dataModeLabel(profile)} ranking stats and their weighted contributions. Punted categories contribute
+                zero.
+            </p>
             {summary ? <ContributionSummaryText summary={summary} /> : null}
             {!summary ? (
                 <p className='mb-0 rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground'>
