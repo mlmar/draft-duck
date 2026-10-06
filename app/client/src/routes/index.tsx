@@ -3,22 +3,20 @@ import { PageShell } from '@/components/page-shell';
 import { EntryCtas } from '@/components/entry-ctas';
 import { useHydratedProfile } from '@/hooks/use-hydrated-profile';
 import { LinkButton } from '@/components/link-button';
+import { seoMeta } from '@/lib/seo';
 import { CAT_KEYS, NAMED_BUILD_IDS } from '@draft-duck/core';
 import { createFileRoute } from '@tanstack/react-router';
 import { ArrowRight, Compass, SlidersHorizontal } from 'lucide-react';
 
 export const Route = createFileRoute('/')({
     component: HomePage,
-    head: () => ({
-        meta: [
-            { title: 'Draft Duck — Get your ducks in a row' },
-            {
-                name: 'description',
-                content:
-                    'Fantasy basketball rankings for your build. Find your category priorities, set your league, and explore your board.'
-            }
-        ]
-    })
+    head: () =>
+        seoMeta({
+            title: 'Fantasy Basketball Rankings for Category Leagues | Draft Duck',
+            description:
+                'Build fantasy basketball rankings around your category priorities. Explore 8-cat and 9-cat builds, choose punts, and find your draft board.',
+            path: '/'
+        })
 });
 
 function HomePage() {

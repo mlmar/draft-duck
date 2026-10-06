@@ -1,6 +1,7 @@
 import { DraftBoard } from '@/components/draft/draft-board';
 import type { CatValueMode } from '@/components/draft/player-table';
 import { PageShell } from '@/components/page-shell';
+import { seoMeta } from '@/lib/seo';
 import { searchString } from '@/lib/search';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 
@@ -21,9 +22,13 @@ export const Route = createFileRoute('/draft')({
         };
     },
     component: DraftPage,
-    head: () => ({
-        meta: [{ title: 'Draft - Draft Duck' }]
-    })
+    head: () =>
+        seoMeta({
+            title: 'Your Fantasy Basketball Draft Board | Draft Duck',
+            description: 'View your personalized fantasy basketball player rankings and category fit.',
+            path: '/draft',
+            noIndex: true
+        })
 });
 
 function DraftPage() {
