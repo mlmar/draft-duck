@@ -198,6 +198,39 @@ export function nearestNamedBuild(
     return best;
 }
 
+// Every choice contributes equally to the recommendation. The animated preview
+// remains a recency-weighted blend, which otherwise lets a final Balanced choice
+// erase the specialist preferences expressed in earlier answers.
+export function buildFromWalkAnswers(
+    questionIds: readonly string[],
+    answers: readonly WalkChoiceId[],
+    enabledCats: readonly CatKey[]
+): NamedBuildId {
+    const votes = new Map<NamedBuildId, number>();
+    for (let index = 0; index < Math.min(questionIds.length, answers.length); index++) {
+        const question = walkQuestion(questionIds[index]!);
+        const side = answers[index];
+        if (!question || (side !== 'left' && side !== 'right')) continue;
+        const build = question[side].toward;
+        if (isNamedBuildVisible(build, enabledCats)) votes.set(build, (votes.get(build) ?? 0) + 1);
+    }
+    const preview = previewFromAnswers(questionIds, answers, enabledCats);
+    let best: NamedBuildId = 'balanced';
+    let bestVotes = 0;
+    let bestDist = Number.POSITIVE_INFINITY;
+    for (const id of NAMED_BUILD_IDS) {
+        const count = votes.get(id) ?? 0;
+        if (!count) continue;
+        const dist = distanceSq(preview, tunerVector(id, enabledCats), enabledCats);
+        if (count > bestVotes || (count === bestVotes && dist + NEAREST_TIE_EPS < bestDist)) {
+            best = id;
+            bestVotes = count;
+            bestDist = dist;
+        }
+    }
+    return best;
+}
+
 export function isWalkQuestionEligible(question: WalkQuestion, enabledCats: readonly CatKey[]): boolean {
     return (
         isNamedBuildVisible(question.left.toward, enabledCats) &&

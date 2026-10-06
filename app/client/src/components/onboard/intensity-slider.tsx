@@ -11,9 +11,17 @@ type IntensitySliderProps = {
     value: number;
     onChange: (value: number) => void;
     disabled?: boolean;
+    showHeading?: boolean;
 };
 
-export function IntensitySlider({ id, label, value, onChange, disabled = false }: IntensitySliderProps) {
+export function IntensitySlider({
+    id,
+    label,
+    value,
+    onChange,
+    disabled = false,
+    showHeading = true
+}: IntensitySliderProps) {
     const progress = `${(Math.min(3, Math.max(0, value)) / 3) * 100}%`;
 
     // Vaul ignores drag gestures that begin inside this weight control.
@@ -22,11 +30,13 @@ export function IntensitySlider({ id, label, value, onChange, disabled = false }
             data-vaul-no-drag
             className={cn('grid gap-2 border-b border-border py-3 last:border-b-0', disabled && 'opacity-60')}
         >
-            <div className='flex items-baseline justify-between gap-4'>
+            <div className={showHeading ? 'flex items-baseline justify-between gap-4' : 'sr-only'}>
                 <Label htmlFor={id}>{label}</Label>
-                <output htmlFor={id} className='font-medium tabular-nums'>
-                    {formatTuner(value)}
-                </output>
+                {showHeading ? (
+                    <output htmlFor={id} className='font-medium tabular-nums'>
+                        {formatTuner(value)}
+                    </output>
+                ) : null}
             </div>
             <input
                 id={id}
