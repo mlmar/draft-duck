@@ -77,7 +77,7 @@ export function OnboardQuiz() {
             }
             let next = profile ? profileToQuizDraft(profile) : DEFAULT_QUIZ_DRAFT;
             if (entryStart === 'not-sure') {
-                // Fresh Balanced walk. Keep league size from the saved board. Do not name the old build.
+                // Fresh empty walk. Keep league size from the saved board. Do not name the old build.
                 next = startWalk(next, newWalkSeed());
                 setDraft(next);
                 if ((next.walkQuestionIds?.length ?? 0) === 0) {
