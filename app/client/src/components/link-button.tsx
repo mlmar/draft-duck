@@ -6,9 +6,9 @@ import { forwardRef, type AnchorHTMLAttributes } from 'react';
 type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & VariantProps<typeof buttonVariants>;
 
 // Host is an <a> so createLink can attach href and the Button styles still apply.
-const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(({ variant, size, ...props }, ref) => {
+const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(({ variant, size, className, ...props }, ref) => {
     return (
-        <Button asChild variant={variant} size={size}>
+        <Button asChild variant={variant} size={size} className={className}>
             <a ref={ref} {...props} />
         </Button>
     );

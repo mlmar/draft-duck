@@ -8,7 +8,7 @@ type WalkChoiceCardsProps = {
     onPick: (side: WalkChoiceId) => void;
 };
 
-// Two ink cards with lowercase or between them. Stack until desktop width.
+// Two answers sit side by side on desktop and retain their stacked phone layout.
 export function WalkChoiceCards({ left, right, selected, onPick }: WalkChoiceCardsProps) {
     return (
         <div className='flex flex-col items-stretch gap-3 lg:flex-row lg:items-stretch lg:gap-4'>
