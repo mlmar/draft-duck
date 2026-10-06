@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { NAMED_BUILD_IDS } from './named-builds.ts';
+import { isNamedBuildVisible, NAMED_BUILD_IDS } from './named-builds.ts';
 import { CAT_KEYS, type CatKey } from './types.ts';
 import {
     PLAYER_WALK_IDS,
@@ -11,7 +11,8 @@ import {
     pickWalkQuestions,
     previewFromAnswers,
     tunerVector,
-    walkQuestion
+    walkQuestion,
+    isWalkQuestionEligible
 } from './walk-questions.ts';
 
 const EIGHT_CAT = CAT_KEYS.filter((cat) => cat !== 'tov');
@@ -22,8 +23,8 @@ describe('walk question bank', () => {
         const ids = Object.keys(WALK_QUESTIONS);
         expect(ids).toHaveLength(12);
         expect(new Set(ids).size).toBe(12);
-        expect(STATIC_WALK_IDS).toHaveLength(6);
-        expect(PLAYER_WALK_IDS).toHaveLength(6);
+        expect(STATIC_WALK_IDS).toHaveLength(4);
+        expect(PLAYER_WALK_IDS).toHaveLength(4);
         expect(STATIC_WALK_IDS.some((id) => (PLAYER_WALK_IDS as readonly string[]).includes(id))).toBe(false);
         for (const question of Object.values(WALK_QUESTIONS)) {
             expect(NAMED_BUILD_IDS).toContain(question.left.toward);
@@ -35,16 +36,16 @@ describe('walk question bank', () => {
 });
 
 describe('pickWalkQuestions', () => {
-    it('keeps the six static ids then one player id on 9-cat', () => {
+    it('keeps the four static ids then one player id on 9-cat', () => {
         const picked = pickWalkQuestions(CAT_KEYS, 1);
-        expect(picked.slice(0, 6)).toEqual([...STATIC_WALK_IDS]);
-        expect(PLAYER_WALK_IDS).toContain(picked[6]);
-        expect(picked).toHaveLength(7);
+        expect(picked.slice(0, 4)).toEqual([...STATIC_WALK_IDS]);
+        expect(PLAYER_WALK_IDS).toContain(picked[4]);
+        expect(picked).toHaveLength(5);
     });
 
-    it('returns the same seven ids for the same seed and can change only the last id', () => {
+    it('returns the same five ids for the same seed and can change only the last id', () => {
         expect(pickWalkQuestions(CAT_KEYS, 42)).toEqual(pickWalkQuestions(CAT_KEYS, 42));
-        const lastIds = new Set(Array.from({ length: 40 }, (_, index) => pickWalkQuestions(CAT_KEYS, index + 1)[6]));
+        const lastIds = new Set(Array.from({ length: 40 }, (_, index) => pickWalkQuestions(CAT_KEYS, index + 1)[4]));
         expect(lastIds.size).toBeGreaterThan(1);
     });
 
@@ -52,14 +53,9 @@ describe('pickWalkQuestions', () => {
         const picked = pickWalkQuestions(NO_FT, 7);
         expect(picked.includes('bigs-or-guards')).toBe(false);
         expect(picked.includes('dunks-or-free-throws')).toBe(false);
-        expect(picked.slice(0, 4)).toEqual([
-            'points-or-stocks',
-            'and-ones-or-post-ups',
-            'inside-or-roaming',
-            'lock-down-or-all-around'
-        ]);
+        expect(picked.slice(0, 2)).toEqual(['points-or-stocks', 'and-ones-or-post-ups']);
         expect(PLAYER_WALK_IDS.filter((id) => id !== 'giannis-or-embiid' && id !== 'giannis-or-draymond')).toContain(
-            picked[4]
+            picked[2]
         );
         expect(picked.includes('giannis-or-embiid')).toBe(false);
         expect(picked.includes('giannis-or-draymond')).toBe(false);
@@ -85,13 +81,13 @@ describe('walk lerp and nearest', () => {
         }
     });
 
-    it('recomputes from Balanced so Back to no answers is all 1s', () => {
+    it('starts empty and uses the first answer without a Balanced prior', () => {
         const ids = ['bigs-or-guards'];
         const one = previewFromAnswers(ids, ['left'], CAT_KEYS);
-        expect(one.pts).toBeCloseTo(1.2);
+        expect(one).toEqual(tunerVector('puntFt', CAT_KEYS));
         const none = previewFromAnswers(ids, [], CAT_KEYS);
         for (const cat of CAT_KEYS) {
-            expect(none[cat]).toBe(1);
+            expect(none[cat]).toBe(0);
         }
     });
 
@@ -114,9 +110,43 @@ describe('walk lerp and nearest', () => {
     });
 });
 
+// Enumerate every offered answer path, rather than testing a few favorable examples.
+describe('walk recommendations', () => {
+    it('offers every specialist and never defaults a completed standard walk to Balanced', () => {
+        for (const cats of [CAT_KEYS, EIGHT_CAT, NO_FT]) {
+            const results = new Set();
+            for (const extra of PLAYER_WALK_IDS) {
+                const ids = [...pickWalkQuestions(cats, 1).slice(0, -1), extra];
+                if (!ids.every((id) => isWalkQuestionEligible(WALK_QUESTIONS[id]!, cats))) continue;
+                for (let mask = 0; mask < 2 ** ids.length; mask++) {
+                    const answers = ids.map((_, i) => (mask & (1 << i) ? ('left' as const) : ('right' as const)));
+                    results.add(buildFromWalkAnswers(ids, answers, cats));
+                }
+            }
+            expect(results.has('balanced')).toBe(false);
+            for (const id of NAMED_BUILD_IDS.filter((id) => id !== 'balanced' && isNamedBuildVisible(id, cats))) {
+                expect(results.has(id)).toBe(true);
+            }
+        }
+    });
+    it('keeps earlier majority preferences when the last answer differs', () => {
+        expect(
+            buildFromWalkAnswers(
+                ['bigs-or-guards', 'dunks-or-free-throws', 'giannis-or-embiid'],
+                ['left', 'left', 'right'],
+                CAT_KEYS
+            )
+        ).toBe('puntFt');
+    });
+    it('falls back safely when no eligible answer exists', () => {
+        expect(buildFromWalkAnswers([], [], CAT_KEYS)).toBe('balanced');
+    });
+});
+
+// Retained bank entries still support explicit legacy answers.
 describe('walk recommendation considers every answer', () => {
     it('does not always return Balanced for the Jokic/Shai question set', () => {
-        const ids = pickWalkQuestions(CAT_KEYS, 7);
+        const ids = [...STATIC_WALK_IDS, 'inside-or-roaming', 'lock-down-or-all-around', 'jokic-or-shai'];
         expect(ids.at(-1)).toBe('jokic-or-shai');
         const results = new Set();
         for (let mask = 0; mask < 2 ** ids.length; mask++) {

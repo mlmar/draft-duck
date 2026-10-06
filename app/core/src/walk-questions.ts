@@ -27,20 +27,17 @@ function question(id: string, prompt: string, left: WalkChoice, right: WalkChoic
     return { id, prompt, left, right };
 }
 
+// Keep legacy questions in the bank, but only offer concrete specialist comparisons.
 export const STATIC_WALK_IDS = [
     'bigs-or-guards',
     'points-or-stocks',
     'dunks-or-free-throws',
-    'and-ones-or-post-ups',
-    'inside-or-roaming',
-    'lock-down-or-all-around'
+    'and-ones-or-post-ups'
 ] as const;
 
 export const PLAYER_WALK_IDS = [
-    'jokic-or-shai',
     'giannis-or-embiid',
     'ad-or-draymond',
-    'jokic-or-ad',
     'embiid-or-shai',
     'giannis-or-draymond'
 ] as const;
@@ -143,23 +140,22 @@ export function lerpTuners(
     return next;
 }
 
-function balancedTuners(enabledCats: readonly CatKey[]): Partial<Record<CatKey, number>> {
-    return tunerVector('balanced', enabledCats);
-}
-
-// Fold from Balanced every time so Back is exact, not an inverse lerp.
+// Replay answers so Back restores the exact preview. No build is selected initially.
 export function previewFromAnswers(
     questionIds: readonly string[],
     answers: readonly WalkChoiceId[],
     enabledCats: readonly CatKey[]
 ): Partial<Record<CatKey, number>> {
-    let preview = balancedTuners(enabledCats);
+    let preview: Partial<Record<CatKey, number>> = Object.fromEntries(enabledCats.map((cat) => [cat, 0]));
+    let hasAnswer = false;
     const count = Math.min(questionIds.length, answers.length);
     for (let index = 0; index < count; index++) {
         const question = walkQuestion(questionIds[index]!);
         const side = answers[index];
         if (!question || (side !== 'left' && side !== 'right')) continue;
-        preview = lerpTuners(preview, tunerVector(question[side].toward, enabledCats), WALK_LERP_ALPHA, enabledCats);
+        const target = tunerVector(question[side].toward, enabledCats);
+        preview = hasAnswer ? lerpTuners(preview, target, WALK_LERP_ALPHA, enabledCats) : target;
+        hasAnswer = true;
     }
     return preview;
 }
