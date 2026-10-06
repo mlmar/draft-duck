@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { useDebouncedValue } from '@/hooks/use-debounce';
 import { rankPlayers } from '@/lib/api';
 import { readBoardView, writeBoardView } from '@/lib/board-view';
+import { readDisplayStatsMode, writeDisplayStatsMode } from '@/lib/display-stats';
 import { applyDisplayCap } from '@/lib/display-cap';
 import { canPersist, profileToQuizDraft, quizDraftToProfile, type QuizDraft } from '@/lib/quiz';
 import { cn } from '@/lib/utils';
@@ -21,6 +22,7 @@ import {
     partitionByRound,
     profileHeadline,
     stanceSummary,
+    type DataMode,
     type RankedPlayer
 } from '@draft-duck/core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
@@ -91,6 +93,7 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
     const [playerDetailsOpen, setPlayerDetailsOpen] = useState(false);
     const [showRest, setShowRest] = useState(false);
     const [simpleView, setSimpleView] = useState(() => readBoardView() === 'simple');
+    const [displayStatsMode, setDisplayStatsMode] = useState<DataMode>(() => readDisplayStatsMode());
     const [selectedDetails, setSelectedDetails] = useState<{
         playerId: string;
         profile: NonNullable<typeof profile>;
@@ -287,9 +290,14 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                 simpleView={simpleView}
                 assist={assist}
                 valueMode={valueMode}
+                displayStatsMode={displayStatsMode}
                 onApply={(nextDraft, settings) => {
-                    handleDiscreteChange(nextDraft);
+                    if (nextDraft !== draft) handleDiscreteChange(nextDraft);
                     if (settings.simpleView !== simpleView) handleSimpleViewChange(settings.simpleView);
+                    if (settings.displayStatsMode !== displayStatsMode) {
+                        setDisplayStatsMode(settings.displayStatsMode);
+                        writeDisplayStatsMode(settings.displayStatsMode);
+                    }
                     if (settings.assist !== assist || settings.valueMode !== valueMode) {
                         onTableSettingsChange({ assist: settings.assist, valueMode: settings.valueMode });
                     }
@@ -394,6 +402,7 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                                 highlight={highlight}
                                 // Raw / +/- is unmounted here. Keep the selected dataset's stats.
                                 valueMode='raw'
+                                displayStatsMode={displayStatsMode}
                                 yourOverallPicks={yourPickSet}
                                 onPlayerSelect={handlePlayerSelect}
                                 playerDetailsDisabled={rankQuery.isPlaceholderData}
@@ -409,6 +418,7 @@ export function DraftBoard({ assist, valueMode, onTableSettingsChange }: DraftBo
                             profile={profile}
                             highlight={highlight}
                             valueMode={valueMode}
+                            displayStatsMode={displayStatsMode}
                             yourOverallPicks={yourPickSet}
                             onPlayerSelect={handlePlayerSelect}
                             playerDetailsDisabled={rankQuery.isPlaceholderData}
