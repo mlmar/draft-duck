@@ -52,9 +52,9 @@ export {
     isWalkQuestionEligible,
     lerpTuners,
     nearestNamedBuild,
+    buildFromWalkAnswers,
     pickWalkQuestions,
     previewFromAnswers,
-    buildFromWalkAnswers,
     tunerVector,
     walkQuestion
 } from './walk-questions.ts';

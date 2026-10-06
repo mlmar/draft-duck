@@ -1,6 +1,6 @@
 # Settings UX consolidation
 
-Status: proposed; the unified editor is not implemented in this PR.
+Status: implemented using the recommended category row editor. Build settings and Edit weights share CategoryPriorityEditor; Apply and Cancel preserve local edits.
 
 ## Problem
 
@@ -32,7 +32,7 @@ This is straightforward to implement and keeps bulk numerical editing fast. It s
 
 ## Implementation sequence
 
-1. Choose the recommended inline editor or one alternative. Confirm whether existing complement boosts and Custom semantics remain unchanged.
+1. Implemented the recommended inline editor, retaining complement boosts and Custom semantics.
 2. Build one shared editor around setCatStance and setCatTuner; retain the profile schema and core calculations.
 3. Replace the separate priority and weight sections in ProfileSettings, and reuse that editor in WeightsDrawer.
 4. Verify preset → value, custom slider → Custom, complement boosts across rows, saved Custom values, disabled categories, and Apply / Cancel. Test keyboard navigation and narrow phone layouts.
