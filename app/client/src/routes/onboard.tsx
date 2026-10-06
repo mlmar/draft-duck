@@ -1,6 +1,7 @@
 import { OnboardQuiz } from '@/components/onboard/onboard-quiz';
 import { isOnboardStepId } from '@/components/onboard/steps';
 import { PageShell } from '@/components/page-shell';
+import { seoMeta } from '@/lib/seo';
 import { searchString } from '@/lib/search';
 import { ARCHETYPE_IDS, type ArchetypeId } from '@draft-duck/core';
 import { createFileRoute } from '@tanstack/react-router';
@@ -30,15 +31,14 @@ export const Route = createFileRoute('/onboard')({
         };
     },
     component: OnboardPage,
-    head: () => ({
-        meta: [
-            { title: 'Onboard - draft duck' },
-            {
-                name: 'description',
-                content: "Get your ducks in a row. Pick a punt, we'll rank it."
-            }
-        ]
-    })
+    head: () =>
+        seoMeta({
+            title: 'Build Your Fantasy Basketball Categories | Draft Duck',
+            description:
+                'Choose a fantasy basketball category build and set priorities for your personalized player board.',
+            path: '/onboard',
+            noIndex: true
+        })
 });
 
 function OnboardPage() {
