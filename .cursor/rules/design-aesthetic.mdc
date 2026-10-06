@@ -37,7 +37,7 @@ alwaysApply: false
 - Use rem for type and spacing; use px for border widths and radii. Main radius is 8px. Avoid pills.
 - No uppercase kickers, colored eyebrows, gradients, or ornamental charts.
 - Use semantic tokens instead of one-off component colors. Positive/negative colors encode actual category strength, never brand decoration.
-- Mobile defaults to compact player rows; desktop uses a dense table. Responsive layout may change structure to serve each screen.
+- Use the statistics table on mobile and desktop, with horizontal scrolling contained inside the table. Mobile presentation controls live in the Board view sheet.
 - Detailed weight editing opens on demand. Quiz category charts stay visible, above walkthrough answers and expanded in the Closest build panel.
 - Use the existing Lucide React icons for action buttons; keep visible text labels.
 - Local imports use @/. Cross-package imports use @draft-duck/core.

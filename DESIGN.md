@@ -105,10 +105,6 @@ components:
         textColor: '{colors.foreground}'
         rounded: '{rounded.xl}'
         padding: '16px'
-    player-row:
-        backgroundColor: '{colors.card}'
-        textColor: '{colors.foreground}'
-        padding: '12px'
     weight-chart:
         backgroundColor: '{colors.muted}'
         textColor: '{colors.muted-foreground}'
@@ -173,9 +169,9 @@ Headings are direct and compact; regular-weight prose and quieter metadata suppo
 
 Use a four-pixel spacing rhythm with common gaps and insets drawn from the frontmatter scale. Page gutters grow from compact phone space (16px) to wider space at medium width (32px). Reading shells cap at 48rem, focused/home shells at 72rem, and the shared wide shell at 88rem. Keep flex and grid children able to shrink.
 
-The medium breakpoint (768px) changes board presentation and drawer direction. The large breakpoint (1024px) changes quiz composition. Described choice rows begin wrapping horizontally at the small breakpoint (640px). Do not equate every desktop adaptation with one shared cutoff.
+The medium breakpoint (768px) changes board control placement, pinned identity columns, and drawer direction. The large breakpoint (1024px) changes quiz composition. Described choice rows begin wrapping horizontally at the small breakpoint (640px). Do not equate every desktop adaptation with one shared cutoff.
 
-The board's build header and search share a sticky block at the safe-area top. Phones use compact player rows and a **Board view** bottom sheet for presentation controls; the full statistics table remains available there. Desktop shows the table toolbar inline. The table pans horizontally in its own container while the page scrolls vertically: rank pins at the left, and name joins it from medium width. Column headings travel with the page.
+The board's build header and search share a sticky block at the safe-area top. The full statistics table is always shown on phones and desktop. Phones use a **Board view** bottom sheet for presentation controls, while desktop shows the toolbar inline. There is no alternate compact player view or Stats table toggle. The table pans horizontally in its own container while the page scrolls vertically: rank pins at the left, and name joins it from medium width. Column headings travel with the page.
 
 Quiz category weights stay expanded at every step, including **Closest build**. Walkthrough charts precede answers at every size: compact vertical bars and stacked answers on phones, taller vertical bars and side-by-side answers at large width. Editable priorities use horizontal rows below large width and vertical bars above it. The quiz action footer is fixed with reserved content space and safe-area padding.
 
@@ -189,7 +185,7 @@ Depth comes from white surfaces on cool ground, hairline borders, subdued fills,
 
 ## Shapes
 
-The base corner is restrained (8px). Small chart bars, segmented controls, and larger card/sheet surfaces use the derived radius scale in frontmatter. Shared cards and bottom sheets use the extra-large derivative, rather than making every surface exactly the base radius. Player rows join edge to edge without individual rounded corners. Rounded slider tracks and circular thumbs are functional exceptions.
+The base corner is restrained (8px). Small chart bars, segmented controls, and larger card/sheet surfaces use the derived radius scale in frontmatter. Shared cards and bottom sheets use the extra-large derivative, rather than making every surface exactly the base radius. Table rows share a rounded container without individual rounded corners. Rounded slider tracks and circular thumbs are functional exceptions.
 
 Lucide icons use simple stroked SVGs, usually at compact control size (16px), with accessible text or control labels. Keep the wordmark as **draft duck**, without punctuation or an illustrated logo. Native select chevrons sit inside the right edge (12px), with enough right padding (40px) to keep text clear; forced-colors mode restores native select appearance.
 
@@ -217,7 +213,7 @@ The white header carries a lowercase text wordmark and quiet navigation links wi
 
 ### Data and overlays
 
-Compact phone rows show rank, player name, team/position, concise fit evidence, and a Lucide drawer cue. The full table uses tabular numerals, restrained row fills, score heat, and horizontally pinned identity columns. Player explanations pair signed strengths and exact values with explicit **No attempts** / **Unavailable** states and weighted contribution text.
+The full player table serves every screen size, using tabular numerals, restrained row fills, score heat, and horizontally pinned identity columns. Player-name buttons carry a Lucide cue for the explanation drawer. Player explanations pair signed strengths and exact values with explicit **No attempts** / **Unavailable** states and weighted contribution text.
 
 Settings, numerical weights, and player explanations use white Vaul drawers: a bottom sheet on phones and a right-side panel from medium width (28rem, capped at 90vw). **Board view** is a content-height bottom sheet. Preserve labelled dialogs and dismissal focus behavior. Existing settings still expose separate priority and numerical controls; the proposed consolidation in `docs/plans/settings-ux.md` is not implemented.
 
