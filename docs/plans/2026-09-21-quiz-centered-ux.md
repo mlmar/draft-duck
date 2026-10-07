@@ -20,7 +20,7 @@ The differentiator should be: you answer CAT questions, the board is the consequ
 
 - No accounts. Profile stays `dd.draftProfile`.
 - Ranker formulas, operator weights, and `POST /rank` stay put. Rank order is fit (punt-weighted) while the consensus floor is off. The three passes must not blend fit with consensus or fake ADP from this board.
-- Public Sans, light theme, no pills, no uppercase kickers. See the design-aesthetic rule. Token roles (ink buttons, `#78A3CF` as accent) are in [design-system.md](design-system.md).
+- Public Sans, light theme, no pills, no uppercase kickers. See the design-aesthetic rule. Token roles (ink buttons, `#78A3CF` as accent) are in [2026-09-22-design-system.md](2026-09-22-design-system.md).
 - v1 still has no taken list, Yahoo, auction, or AI copy.
 - Quiz step modules stay data-driven (`STEPS`). Reorder and chrome can change without rewriting each screen.
 
@@ -279,7 +279,7 @@ Banned:
 
 The board should read as "this list exists because of your quiz," not "here is a spreadsheet, settings are in the drawer."
 
-Visual chrome, the draft Settings drawer, and the quiz funnel shell live in [design-system.md](design-system.md). That pass keeps the profile headline in chrome and moves Need / Neutral / Punt into a `/draft`-only drawer. The quiz does not use drawers.
+Visual chrome, the draft Settings drawer, and the quiz funnel shell live in [2026-09-22-design-system.md](2026-09-22-design-system.md). That pass keeps the profile headline in chrome and moves Need / Neutral / Punt into a `/draft`-only drawer. The quiz does not use drawers.
 
 ### 1. Put the profile in the chrome
 
@@ -288,7 +288,7 @@ Replace the Edit profile `<details>` dump as the only place answers live.
 Always-visible, compact:
 
 - Build + league: `Fortress · 12-team snake · pick 7`
-- A one-line stance summary that opens Settings. The Need / Neutral / Punt editor is in that drawer, not a full bar on the board. See [design-system.md](design-system.md). Changing a chip still persists and re-ranks.
+- A one-line stance summary that opens Settings. The Need / Neutral / Punt editor is in that drawer, not a full bar on the board. See [2026-09-22-design-system.md](2026-09-22-design-system.md). Changing a chip still persists and re-ranks.
 - Intensity and custom cats stay in the same Settings drawer.
 
 Tapping a stance **is** retaking a slice of the quiz without leaving the board. On the current tree that is an always-visible bar. The design-system pass keeps the loop (open Settings, change a cat, board updates) and clears nine rows of chips off the list.
@@ -421,7 +421,7 @@ Pass 1 is copy and routing. Pass 2 is `/onboard` plus a small schema add (`draft
 
 Pass 3 is where the card vs spreadsheet contrast actually ships. Pass 2 is where the quiz stops feeling like an Excel sheet.
 
-Visual system, mobile chrome, and the draft Settings drawer are a separate pass: [design-system.md](design-system.md). Do that before later board work (3-name window, ADP chips). Quiz order does not change.
+Visual system, mobile chrome, and the draft Settings drawer are a separate pass: [2026-09-22-design-system.md](2026-09-22-design-system.md). Do that before later board work (3-name window, ADP chips). Quiz order does not change.
 
 ## Out of scope for this direction
 
@@ -458,5 +458,5 @@ Checks:
 - [2026-09-16-onboarding-quiz.md](../changes/2026-09-16-onboarding-quiz.md)
 - [2026-09-20-draft-board-heatmap.md](../changes/2026-09-20-draft-board-heatmap.md)
 - [2026-09-22-ranking-availability.md](../changes/2026-09-22-ranking-availability.md)
-- [design-system.md](design-system.md)
+- [2026-09-22-design-system.md](2026-09-22-design-system.md)
 - PR #4 change note (on that branch): `docs/changes/2026-09-21-tanstack-start.md`

@@ -30,23 +30,23 @@ A first-time user (no account) should be able to:
 
 ## How to read these docs
 
-| Doc                                                                    | When to open it                                        |
-| ---------------------------------------------------------------------- | ------------------------------------------------------ |
-| [00-product-and-stack.md](00-product-and-stack.md)                     | Stack, repo layout, API sketch, non-goals              |
-| [M1-foundation.md](M1-foundation.md)                                   | Workspaces, client home, Fastify health, CSV ingest    |
-| [M2-ranking-engine.md](M2-ranking-engine.md)                           | Current scoring formula and rank contract              |
-| [experiments/ranking/README.md](experiments/ranking/README.md)         | Frozen five-season ranking experiments and results     |
-| [M3-onboarding.md](M3-onboarding.md)                                   | Quiz and `DraftProfile`                                |
-| [M4-draft-assistant.md](M4-draft-assistant.md)                         | Ranked table and optional round sections               |
-| [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md)             | M4 implementation plan (current tree)                  |
-| [plans/quiz-centered-ux.md](plans/quiz-centered-ux.md)                 | Quiz-first onboarding and board UX direction           |
-| [plans/design-system.md](plans/design-system.md)                       | Visual system, mobile chrome, draft Settings drawer    |
-| [M5-extensibility.md](M5-extensibility.md)                             | NBA adapter, suggestion hook, Yahoo seams              |
-| [deploy.md](deploy.md)                                                 | Pages + Cloud Run, WIF, GitHub Actions                 |
-| [plans/deploy-review.md](plans/deploy-review.md)                       | Review follow-up for the first public deploy           |
-| [plans/punt-complement-reweight.md](plans/punt-complement-reweight.md) | Tuner 0–3, stance presets, onboarding chart mix        |
-| [plans/onboarding-chart.md](plans/onboarding-chart.md)                 | Weight chart, two opens, locked Not sure question bank |
-| [plans/onboarding-g-review.md](plans/onboarding-g-review.md)           | Review follow-up: comments, walk guards, no migrate    |
+| Doc                                                                                          | When to open it                                        |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| [00-product-and-stack.md](00-product-and-stack.md)                                           | Stack, repo layout, API sketch, non-goals              |
+| [M1-foundation.md](M1-foundation.md)                                                         | Workspaces, client home, Fastify health, CSV ingest    |
+| [M2-ranking-engine.md](M2-ranking-engine.md)                                                 | Current scoring formula and rank contract              |
+| [experiments/ranking/README.md](experiments/ranking/README.md)                               | Frozen five-season ranking experiments and results     |
+| [M3-onboarding.md](M3-onboarding.md)                                                         | Quiz and `DraftProfile`                                |
+| [M4-draft-assistant.md](M4-draft-assistant.md)                                               | Ranked table and optional round sections               |
+| [plans/M4-draft-assistant.md](plans/M4-draft-assistant.md)                                   | M4 implementation plan (current tree)                  |
+| [plans/2026-09-21-quiz-centered-ux.md](plans/2026-09-21-quiz-centered-ux.md)                 | Quiz-first onboarding and board UX direction           |
+| [plans/2026-09-22-design-system.md](plans/2026-09-22-design-system.md)                       | Visual system, mobile chrome, draft Settings drawer    |
+| [M5-extensibility.md](M5-extensibility.md)                                                   | NBA adapter, suggestion hook, Yahoo seams              |
+| [deploy.md](deploy.md)                                                                       | Pages + Cloud Run, WIF, GitHub Actions                 |
+| [plans/2026-09-25-deploy-review.md](plans/2026-09-25-deploy-review.md)                       | Review follow-up for the first public deploy           |
+| [plans/2026-09-26-punt-complement-reweight.md](plans/2026-09-26-punt-complement-reweight.md) | Tuner 0–3, stance presets, onboarding chart mix        |
+| [plans/2026-09-26-onboarding-chart.md](plans/2026-09-26-onboarding-chart.md)                 | Weight chart, two opens, locked Not sure question bank |
+| [plans/2026-09-28-onboarding-g-review.md](plans/2026-09-28-onboarding-g-review.md)           | Review follow-up: comments, walk guards, no migrate    |
 
 Each milestone has **goal, in scope, out of scope, stack/touchpoints, acceptance checks, suggested build order**. M1–M4 are sequential. M5 is “do not paint into a corner” plus later optional work.
 
