@@ -1,5 +1,9 @@
 # Implementation plans and roadmaps
 
+## Filename convention
+
+Non-milestone plans use `YYYY-MM-DD-topic.md`, with a lowercase kebab-case topic. The date records creation and stays fixed across later revisions. For existing plans, use the first-add date in the repository history. Keep milestone plan names such as `M4-draft-assistant.md` and index names such as `README.md` unchanged.
+
 ## Active roadmaps
 
 - [Player visualizations](2026-10-02-player-visualizations.md): player detail drawer, authoritative category contributions, and mini build charts. Specification v5 approved on 2026-10-02; contribution-data implementation is next and has not begun.
