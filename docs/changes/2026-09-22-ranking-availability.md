@@ -57,4 +57,4 @@ One z-score pass feeds two composites: profile-weighted fit, and all-neutral con
 
 - [M2-ranking-engine.md](../M2-ranking-engine.md)
 - [M4-draft-assistant.md](../M4-draft-assistant.md)
-- [plans/quiz-centered-ux.md](../plans/quiz-centered-ux.md)
+- [plans/2026-09-21-quiz-centered-ux.md](../plans/2026-09-21-quiz-centered-ux.md)

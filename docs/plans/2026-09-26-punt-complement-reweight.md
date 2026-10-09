@@ -217,7 +217,7 @@ Zod `intensity` max becomes 3. Slider `max={3}`. Migrate uses 0–3.
 
 ## Onboarding chart
 
-Vision: one bar chart on every quiz step. X = enabled cats. Y = tuner 0–3 (punt to need). Each step writes the same G tuners the ranker uses. League last. Extends [quiz-centered-ux.md](quiz-centered-ux.md) without a second weight model.
+Vision: one bar chart on every quiz step. X = enabled cats. Y = tuner 0–3 (punt to need). Each step writes the same G tuners the ranker uses. League last. Extends [2026-09-21-quiz-centered-ux.md](2026-09-21-quiz-centered-ux.md) without a second weight model.
 
 Today Home is the stance picker; `/onboard` is league then review. Custom skips to chips. There is no Not sure path and no live weight chart.
 
@@ -237,7 +237,7 @@ Home: named build | Custom | Not sure
 
 Each question is a pair: bigs or guards, points or stocks, dunks or free throws, and-ones or post-ups, inside or roaming, lock down or all-around, then one player vs player. Answers **vote for named builds**, not raw leftover numbers. Chart can show the current leader. End snap is that card’s G presets.
 
-Bank: six static category pairs, then one draw from a six-pair player pool, seeded so Back does not reshuffle. Details in [onboarding-chart.md](onboarding-chart.md).
+Bank: six static category pairs, then one draw from a six-pair player pool, seeded so Back does not reshuffle. Details in [2026-09-26-onboarding-chart.md](2026-09-26-onboarding-chart.md).
 
 This is the discrete version of Not sure. [Walk then snap](#3-walk-then-snap-not-sure-engine) is the same landing, with motion in between.
 
@@ -298,12 +298,12 @@ Balanced (all 1)
 
 League does not write tuners. Review shows the same chart plus pick preview. Board: chips stay a stance editor (Custom / Settings). Chart tap is sliders only.
 
-Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId`). Steps lerp toward that card’s G tuner vector. Do not store free-form per-cat deltas. The locked pairs (6 category + 6 player), session picker, and chart chrome live in [onboarding-chart.md](onboarding-chart.md).
+Keep the bank in data (`id`, `prompt`, `left`, `right`, `toward: NamedBuildId`). Steps lerp toward that card’s G tuner vector. Do not store free-form per-cat deltas. The locked pairs (6 category + 6 player), session picker, and chart chrome live in [2026-09-26-onboarding-chart.md](2026-09-26-onboarding-chart.md).
 
 ### Passes
 
 1. **Weights (this PR).** Approach G, tuner 0–3, Settings sliders = weight. No chart yet.
-2. **Chart quiz (follow-up).** [onboarding-chart.md](onboarding-chart.md). Shared `WeightChart` (display only). Tap chart → in-page sliders. Custom home card → Need / Neutral / Punt. Not sure is walk-then-snap: six category questions, then one random player vs player. Two ink cards with **or** between them (row from `md:`, stack on a phone). No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
+2. **Chart quiz (follow-up).** [2026-09-26-onboarding-chart.md](2026-09-26-onboarding-chart.md). Shared `WeightChart` (display only). Tap chart → in-page sliders. Custom home card → Need / Neutral / Punt. Not sure is walk-then-snap: six category questions, then one random player vs player. Two ink cards with **or** between them (row from `md:`, stack on a phone). No bar dragging. Walk may share the saved-chart style at first. Design-aesthetic: ink bars, no neon, no pills, Public Sans.
 3. **Walk preview chrome (later).** Optional second look so the sketch is obviously not the board (muted/dashed/caption). Same tuners, no new ranker.
 
 Pass 2 only writes `stances` + tuners. Same ranker.
@@ -341,7 +341,7 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. Custom home card opens chips, not sliders. Chart tap opens sliders, max 3; Fine-tune expand gone.
 4. M2 + Scoring.
 5. `npm run format` and `npm test`. Browser: Custom punt FT% moves FG% to 1.25; drag to 3 is Custom; Neutral click snaps back; Fortress Need thumbs sit at 1.5.
-6. Later PR: [onboarding-chart.md](onboarding-chart.md). WeightChart (tap → in-page sliders), Custom → chips, Not sure walk-then-snap (6 category + 1 player). No drag on bars.
+6. Later PR: [2026-09-26-onboarding-chart.md](2026-09-26-onboarding-chart.md). WeightChart (tap → in-page sliders), Custom → chips, Not sure walk-then-snap (6 category + 1 player). No drag on bars.
 7. Later PR: walk-preview chart style, distinct from the saved board chart.
 
 ## Out of scope
@@ -352,7 +352,7 @@ Core + Settings wiring. Chart quiz is pass 2.
 - Auto-selecting Need when the user punts.
 - Availability floor, ADP, VORP, remaining-pool re-z.
 - why-copy / Need-fit / heat teaching Neutral-at-1.25 this pass.
-- Chart quiz UI (pass 2). See [onboarding-chart.md](onboarding-chart.md).
+- Chart quiz UI (pass 2). See [2026-09-26-onboarding-chart.md](2026-09-26-onboarding-chart.md).
 - Walk-preview visual treatment (pass 3). One chart style is enough until then.
 
 ## How to verify later
@@ -362,5 +362,5 @@ Core + Settings wiring. Chart quiz is pass 2.
 3. Settings: those thumbs read 1.25. Drag REB to 3, chip Custom, weight 3. Neutral click returns 1.25.
 4. Unpunt FT%: Neutral complements 1.0. A Custom REB stays 3.
 5. Scoring: slider 0-3 is the weight. 3 is the top of the axis.
-6. (Pass 2) Custom: chips. Chart tap: in-page sliders. Not sure: 6 category + 1 player, two ink cards with **or**, wiggle then snap. No dragging bars. Do not rank the unsnapped mix. See [onboarding-chart.md](onboarding-chart.md).
+6. (Pass 2) Custom: chips. Chart tap: in-page sliders. Not sure: 6 category + 1 player, two ink cards with **or**, wiggle then snap. No dragging bars. Do not rank the unsnapped mix. See [2026-09-26-onboarding-chart.md](2026-09-26-onboarding-chart.md).
 7. (Pass 3) Walk bars read as preview, snapped bars read as the board.

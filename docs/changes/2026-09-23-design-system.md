@@ -2,7 +2,7 @@
 
 ## Intent of the changes
 
-Ship the UI pass in [design-system.md](../plans/design-system.md): ink buttons with duck-blue as accent, mobile chrome that thumbs can reach, a quiz that reads as a funnel, and a draft board that uses a Settings drawer plus pick cards instead of a 452-row spreadsheet on a phone.
+Ship the UI pass in [2026-09-22-design-system.md](../plans/2026-09-22-design-system.md): ink buttons with duck-blue as accent, mobile chrome that thumbs can reach, a quiz that reads as a funnel, and a draft board that uses a Settings drawer plus pick cards instead of a 452-row spreadsheet on a phone.
 
 ## What did not change
 
@@ -58,6 +58,6 @@ Browser-check the open drawer over the grid on a phone. Tune `--board-table-max`
 
 ## Reference docs
 
-- [design-system.md](../plans/design-system.md)
-- [quiz-centered-ux.md](../plans/quiz-centered-ux.md)
+- [2026-09-22-design-system.md](../plans/2026-09-22-design-system.md)
+- [2026-09-21-quiz-centered-ux.md](../plans/2026-09-21-quiz-centered-ux.md)
 - [2026-09-21-tanstack-start.md](2026-09-21-tanstack-start.md)

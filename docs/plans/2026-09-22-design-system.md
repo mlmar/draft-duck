@@ -4,7 +4,7 @@ UI-only pass before the next product phase. Quiz order stays play, league, revie
 
 Color: **ink buttons, duck-blue as accent only.** `#78A3CF` remains the brand wash (progress, your-pick, links). Primary actions are dark ink on paper. Light theme and Public Sans stay locked.
 
-This pass overrides one line in [quiz-centered-ux.md](quiz-centered-ux.md): stances are not an always-visible bar on the board. They live in a Settings drawer on `/draft` only. The quiz never opens a drawer.
+This pass overrides one line in [2026-09-21-quiz-centered-ux.md](2026-09-21-quiz-centered-ux.md): stances are not an always-visible bar on the board. They live in a Settings drawer on `/draft` only. The quiz never opens a drawer.
 
 ## Why it looks generic today
 
@@ -187,7 +187,7 @@ Quiz order, ranker formulas, availability floor, ADP, taken list, dark mode, sec
 
 ## Reference
 
-- [quiz-centered-ux.md](quiz-centered-ux.md)
+- [2026-09-21-quiz-centered-ux.md](2026-09-21-quiz-centered-ux.md)
 - [M3-onboarding.md](../M3-onboarding.md)
 - [M4-draft-assistant.md](../M4-draft-assistant.md)
 - [00-product-and-stack.md](../00-product-and-stack.md)

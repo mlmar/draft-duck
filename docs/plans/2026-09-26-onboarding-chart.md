@@ -29,7 +29,7 @@ Same lock as G. Restated here because the sheet vs page choice was still loose.
 
 The chart is **read-only**. No dragging bars. A slider off the current preset marks that cat Custom.
 
-**In-page, not a drawer.** [design-system.md](design-system.md) keeps `/onboard` a funnel: sticky Back / Continue, no Sheet / Drawer / Dialog. Tap the chart expands native range inputs **under the chart** on the same step. A Done / collapse control hides them. Settings on `/draft` may still stack chips then sliders in the existing drawer.
+**In-page, not a drawer.** [2026-09-22-design-system.md](2026-09-22-design-system.md) keeps `/onboard` a funnel: sticky Back / Continue, no Sheet / Drawer / Dialog. Tap the chart expands native range inputs **under the chart** on the same step. A Done / collapse control hides them. Settings on `/draft` may still stack chips then sliders in the existing drawer.
 
 ## Chart
 
