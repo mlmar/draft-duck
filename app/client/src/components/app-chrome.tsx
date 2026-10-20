@@ -35,6 +35,9 @@ export function AppHeader({ focused = false }: { focused?: boolean }) {
                                 Board
                             </Link>
                         ) : null}
+                        <Link to='/team' className={linkClass} activeProps={{ className: 'font-medium text-primary' }}>
+                            Team
+                        </Link>
                         <Link
                             to='/how-it-works'
                             className={linkClass}
