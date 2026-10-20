@@ -71,6 +71,33 @@ export type { SuggestionHook } from './suggestion-hook.ts';
 export { partitionByRound } from './partition.ts';
 export type { RoundSection } from './partition.ts';
 export {
+    TEAM_ROSTER_STORAGE_KEY,
+    TEAM_ROSTER_VERSION,
+    aggregateTeamStrength,
+    appendTeamLabRow,
+    applyTeamLabPreview,
+    createTeamLabState,
+    createTeamRosterRecord,
+    displayedTeamLabPlayerIds,
+    isTeamLabRowSwapped,
+    parseTeamRosterRecord,
+    rankTeamLabUniverse,
+    resetTeamLabPreview,
+    serializeTeamRosterRecord,
+    setTeamLabCandidate,
+    setTeamLabRosterPlayer,
+    swapTeamLabRow,
+    toggleTeamLabBulkSwap
+} from './team-lab.ts';
+export type {
+    TeamLabRow,
+    TeamLabState,
+    TeamRawTotals,
+    TeamRosterParseResult,
+    TeamRosterRecord,
+    TeamStrengthResult
+} from './team-lab.ts';
+export {
     CAT_HIGHLIGHT_MODES,
     CAT_HIGHLIGHT_STRATEGIES,
     DEFAULT_CAT_HIGHLIGHT_MODE,

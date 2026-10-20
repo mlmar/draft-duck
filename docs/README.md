@@ -6,6 +6,8 @@ This folder describes the shipped CSV-backed draft helper and its historical mil
 
 ## Active feature roadmaps
 
+- [Team lab](plans/2026-10-06-team-lab.md): responsive roster and candidate workspace, average/total category chart, and reversible row/bulk swap previews. Implementation is complete on `feat/team-lab`; final PR review is pending.
+
 - [Player visualizations](plans/2026-10-02-player-visualizations.md): player detail drawer, category score contributions, and mini build charts. Specification v5 approved on 2026-10-02; no implementation or shipping acceptance is recorded.
 
 ## Status

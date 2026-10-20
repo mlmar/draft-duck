@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as DraftRouteImport } from './routes/draft'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as OnboardRouteImport } from './routes/onboard'
+import { Route as TeamRouteImport } from './routes/team'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const OnboardRoute = OnboardRouteImport.update({
   path: '/onboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/draft': typeof DraftRoute
   '/how-it-works': typeof HowItWorksRoute
   '/onboard': typeof OnboardRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/draft': typeof DraftRoute
   '/how-it-works': typeof HowItWorksRoute
   '/onboard': typeof OnboardRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,21 @@ export interface FileRoutesById {
   '/draft': typeof DraftRoute
   '/how-it-works': typeof HowItWorksRoute
   '/onboard': typeof OnboardRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/draft' | '/how-it-works' | '/onboard'
+  fullPaths: '/' | '/about' | '/draft' | '/how-it-works' | '/onboard' | '/team'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/draft' | '/how-it-works' | '/onboard'
-  id: '__root__' | '/' | '/about' | '/draft' | '/how-it-works' | '/onboard'
+  to: '/' | '/about' | '/draft' | '/how-it-works' | '/onboard' | '/team'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/draft'
+    | '/how-it-works'
+    | '/onboard'
+    | '/team'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +93,7 @@ export interface RootRouteChildren {
   DraftRoute: typeof DraftRoute
   HowItWorksRoute: typeof HowItWorksRoute
   OnboardRoute: typeof OnboardRoute
+  TeamRoute: typeof TeamRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +149,7 @@ const rootRouteChildren: RootRouteChildren = {
   DraftRoute: DraftRoute,
   HowItWorksRoute: HowItWorksRoute,
   OnboardRoute: OnboardRoute,
+  TeamRoute: TeamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
