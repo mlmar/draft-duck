@@ -50,7 +50,9 @@ function season(playerId: string, partial: Partial<PlayerSeason> = {}): PlayerSe
 function row(state: ReturnType<typeof createTeamLabState>, rowId: string) {
     // Fail loudly when a transition unexpectedly drops a row from the workspace.
     const found = state.rows.find((entry) => entry.rowId === rowId);
-    if (!found) throw new Error(`Missing row ${rowId}`);
+    if (!found) {
+        throw new Error(`Missing row ${rowId}`);
+    }
     return found;
 }
 
@@ -86,7 +88,9 @@ describe('Team Lab roster and strength contracts', () => {
         // Every bar is the unweighted category z-score mean or sum; raw team rates use aggregate makes and attempts.
         expect(average.status).toBe('ready');
         expect(total.status).toBe('ready');
-        if (average.status !== 'ready' || total.status !== 'ready') throw new Error('Expected ready aggregates');
+        if (average.status !== 'ready' || total.status !== 'ready') {
+            throw new Error('Expected ready aggregates');
+        }
         expect(Object.keys(average.strength)).toHaveLength(9);
         expect(average.strength.pts).toBeCloseTo((ranked[0]!.z.pts! + ranked[1]!.z.pts!) / 2);
         expect(total.strength.tov).toBeCloseTo(ranked[0]!.z.tov! + ranked[1]!.z.tov!);
