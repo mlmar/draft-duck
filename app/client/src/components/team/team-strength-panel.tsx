@@ -154,11 +154,11 @@ function TeamStrengthChart({
                 className='mb-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground'
             >
                 <span className='inline-flex items-center gap-2'>
-                    <span aria-hidden='true' className='size-3 rounded-sm bg-foreground' />
+                    <StrengthLegendSwatch preview={false} />
                     Saved team ({savedCount}) · solid fill
                 </span>
                 <span className='inline-flex items-center gap-2'>
-                    <span aria-hidden='true' className='size-3 rounded-sm bg-foreground opacity-50' />
+                    <StrengthLegendSwatch preview />
                     Preview lineup ({previewCount}) · light overlay
                 </span>
             </div>
@@ -192,6 +192,25 @@ function TeamStrengthChart({
             </div>
             <p className='mb-0 mt-2 text-xs text-muted-foreground'>Shared zero line · scale ±{scale.toFixed(0)} z</p>
         </div>
+    );
+}
+
+/** Reflect the chart's signed green/red fills and preview opacity in the legend marker. */
+function StrengthLegendSwatch({ preview }: { preview: boolean }) {
+    const opacity = preview ? 0.45 : 1;
+
+    return (
+        <span aria-hidden='true' className='relative size-3 overflow-hidden rounded-sm bg-muted'>
+            <span
+                className='absolute inset-y-0 left-0 w-1/2'
+                style={{ backgroundColor: 'var(--strength-bad)', opacity }}
+            />
+            <span
+                className='absolute inset-y-0 right-0 w-1/2'
+                style={{ backgroundColor: 'var(--strength-good)', opacity }}
+            />
+            <span className='absolute inset-y-0 left-1/2 z-10 w-px bg-foreground/40' />
+        </span>
     );
 }
 
