@@ -6,6 +6,8 @@ Non-milestone plans use `YYYY-MM-DD-topic.md`, with a lowercase kebab-case topic
 
 ## Active roadmaps
 
+- [Team lab](2026-10-06-team-lab.md): responsive roster and candidate workspace, average/total category chart, and reversible row/bulk swap previews. Implementation is complete on `feat/team-lab`; final PR review is pending.
+
 - [Player visualizations](2026-10-02-player-visualizations.md): player detail drawer, authoritative category contributions, and mini build charts. Specification v5 approved on 2026-10-02; contribution-data implementation is next and has not begun.
 
 ## Historical implementation plans
