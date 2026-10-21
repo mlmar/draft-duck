@@ -5,6 +5,7 @@ import type { TeamLabSearchTarget } from '@/components/team/team-lab-ui-types';
 import type { PlayerSeason } from '@draft-duck/core';
 import { useEffect, useMemo, useState } from 'react';
 import { Plus, Search } from 'lucide-react';
+import { useMobileDrawerViewport } from '@/components/team/use-mobile-drawer-viewport';
 
 /** Search the fixed historical player catalog and prevent any selected identity from being added twice. */
 export function PlayerSearchDrawer({
@@ -31,6 +32,7 @@ export function PlayerSearchDrawer({
     onSelect: (player: PlayerSeason) => void;
 }) {
     const [query, setQuery] = useState('');
+    const viewport = useMobileDrawerViewport(open && !isDesktop);
     const filtered = useMemo(() => {
         const normalized = query.trim().toLocaleLowerCase();
         const available = players.filter((player) => !selectedIds.has(player.playerId));
@@ -57,8 +59,24 @@ export function PlayerSearchDrawer({
                 }
             }}
             direction={isDesktop ? 'right' : 'bottom'}
+            repositionInputs={isDesktop}
         >
-            <DrawerContent aria-labelledby='team-player-search-title' aria-describedby='team-player-search-description'>
+            <DrawerContent
+                aria-labelledby='team-player-search-title'
+                aria-describedby='team-player-search-description'
+                className={isDesktop ? undefined : 'overflow-y-auto'}
+                style={
+                    !isDesktop && viewport
+                        ? {
+                              top: `calc(10svh + ${viewport.offsetTop}px)`,
+                              bottom: 'auto',
+                              marginTop: 0,
+                              height: `calc(${viewport.height}px - 10svh)`,
+                              maxHeight: `calc(${viewport.height}px - 10svh)`
+                          }
+                        : undefined
+                }
+            >
                 <div className='grid shrink-0 gap-2 border-b border-border px-5 py-4'>
                     <DrawerTitle id='team-player-search-title'>
                         {target?.side === 'team' ? 'Add teammate' : 'Find candidate'}
