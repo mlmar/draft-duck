@@ -74,21 +74,38 @@ function HomePage() {
                     </h2>
                     <p className='mb-0 text-sm text-muted-foreground'>Choose a starting point. Fine-tune it later.</p>
                 </div>
-                <div className='grid gap-3 md:grid-cols-3'>
-                    {NAMED_BUILD_IDS.map((id) => (
-                        <LinkButton
-                            key={id}
-                            to='/onboard'
-                            search={{ build: id }}
-                            variant='outline'
-                            className='h-auto min-h-28 w-full items-start justify-between gap-3 bg-card p-5 text-left whitespace-normal hover:border-primary/40 hover:bg-card'
-                        >
-                            <span className='grid min-w-0 gap-2'>
-                                <BuildCardFace id={id} enabledCats={CAT_KEYS} />
-                            </span>
-                            <ArrowRight aria-hidden='true' className='mt-1 text-muted-foreground' />
-                        </LinkButton>
-                    ))}
+                <div className='grid gap-3 md:grid-cols-2 lg:grid-cols-3'>
+                    {NAMED_BUILD_IDS.map((id) => {
+                        // Keep the link name concise and announce exact category weights as its description.
+                        const titleId = `build-${id}-title`;
+                        const helperId = `build-${id}-helper`;
+                        const weightSummaryId = `build-${id}-weights`;
+                        return (
+                            <LinkButton
+                                key={id}
+                                to='/onboard'
+                                search={{ build: id }}
+                                variant='outline'
+                                aria-labelledby={`${titleId} ${helperId}`}
+                                aria-describedby={weightSummaryId}
+                                className='relative h-auto min-h-28 w-full flex-col items-start gap-3 bg-card p-4 text-left whitespace-normal hover:border-primary/40 hover:bg-card'
+                            >
+                                <div className='grid min-w-0 w-full gap-2'>
+                                    <BuildCardFace
+                                        id={id}
+                                        enabledCats={CAT_KEYS}
+                                        titleId={titleId}
+                                        helperId={helperId}
+                                        weightSummaryId={weightSummaryId}
+                                    />
+                                </div>
+                                <ArrowRight
+                                    aria-hidden='true'
+                                    className='absolute right-4 top-4 text-muted-foreground'
+                                />
+                            </LinkButton>
+                        );
+                    })}
                 </div>
             </section>
         </PageShell>
