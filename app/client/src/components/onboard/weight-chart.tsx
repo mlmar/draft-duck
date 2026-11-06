@@ -24,6 +24,7 @@ type WeightChartProps = {
     tuners: Partial<Record<CatKey, number>>;
     stances?: Partial<Record<CatKey, CatStance>>;
     variant?: 'default' | 'mini';
+    compact?: boolean;
 };
 
 function tunerOf(tuners: Partial<Record<CatKey, number>>, cat: CatKey): number {
@@ -36,15 +37,16 @@ function isPunt(stances: Partial<Record<CatKey, CatStance>> | undefined, cat: Ca
     return value === TUNER_PUNT;
 }
 
-export function WeightChart({ enabledCats, tuners, stances, variant = 'default' }: WeightChartProps) {
+export function WeightChart({ enabledCats, tuners, stances, variant = 'default', compact = false }: WeightChartProps) {
     const summary = enabledCats.map((cat) => `${CAT_LABELS[cat]} ${formatTuner(tunerOf(tuners, cat))}`).join(', ');
 
     if (variant === 'mini') {
+        // Compact is opt-in for preset cards so onboarding retains its responsive mini-chart sizing.
         return (
             <div
                 role='img'
                 aria-label={summary}
-                className='grid h-20 gap-x-1 lg:h-48 lg:gap-x-3'
+                className={cn('grid gap-x-1', compact ? 'h-20' : 'h-20 lg:h-48 lg:gap-x-3')}
                 style={{ gridTemplateColumns: `repeat(${enabledCats.length}, minmax(0, 1fr))` }}
             >
                 {enabledCats.map((cat) => {
@@ -53,7 +55,12 @@ export function WeightChart({ enabledCats, tuners, stances, variant = 'default' 
                     const pct = Math.max(0, Math.min(100, (value / TUNER_MAX) * 100));
                     return (
                         <div key={cat} className='flex min-w-0 flex-col items-center justify-end gap-1'>
-                            <div className='relative h-12 w-full overflow-hidden rounded-sm bg-muted lg:h-40'>
+                            <div
+                                className={cn(
+                                    'relative w-full overflow-hidden rounded-sm bg-muted',
+                                    compact ? 'h-12' : 'h-12 lg:h-40'
+                                )}
+                            >
                                 <div
                                     className={cn(
                                         'absolute inset-x-0 bottom-0 rounded-sm',
@@ -62,7 +69,13 @@ export function WeightChart({ enabledCats, tuners, stances, variant = 'default' 
                                     style={{ height: `${pct}%` }}
                                 />
                             </div>
-                            <span className='max-w-full truncate text-sm leading-none text-muted-foreground'>
+                            <span
+                                className={cn(
+                                    'max-w-full truncate text-muted-foreground',
+                                    compact ? 'text-xs' : 'text-sm',
+                                    'leading-none'
+                                )}
+                            >
                                 {CAT_LABELS[cat]}
                             </span>
                         </div>

@@ -12,11 +12,11 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 
 ## Requirements
 
-- Behavior: show a vertical strength chart with positive bars rising above zero and negative bars falling below it, followed by textual explanations below the whole chart.
-- Entry: open player details from names in draft-board full/simple views only.
+- Behavior: retain the current signed horizontal strength chart centered on zero, with negative bars extending left and positive bars right, followed by textual explanations below the whole chart. This user decision on 2026-11-06 supersedes the earlier vertical-chart requirement; historical records below remain unchanged.
+- Entry: open player details from names in the current full statistics draft board only. Simple view has been removed; historical full/simple references below are not current acceptance requirements.
 - Specification: behavior and implementation defaults in v5 were accepted by the user on 2026-10-02.
-- Phase order: execute 1 → 2.1 → 2.2 → 2.3 → parent 2 integration review.
-- Completion gates: require actual human acceptance of each current artifact before advancing.
+- Phase order: execute 1 → 2.1 → 2.2 → 2.3 → parent 2 integration review. On 2026-11-06 the user explicitly authorized Phase 2.3 implementation before Phase 2.2 browser validation and acceptance; those criteria remain pending.
+- Completion gates: require actual human acceptance of each current artifact before marking it accepted. The 2026-11-06 sequence exception permits mini-chart implementation while drawer/browser validation and final acceptance remain pending.
 - Review provenance: distinguish specification approval, implementation authorization, and implementation acceptance.
 - Code readability: all logical blocks of code must be commented for human readability
 
@@ -27,8 +27,8 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 - Persistence: do not add saved-profile fields.
 - Process: do not install global rules, hooks, or automations.
 - Scope: do not deploy or add onboarding player drawers.
-- Local changes: preserve the pre-existing package-lock.json modification.
-- Current state: Phase 2.1 is accepted; the latest Phase 2.2 feedback fixes are implemented and await re-review.
+- Local changes: preserve unrelated changes. The 2026-11-06 implementation baseline was clean; earlier package-lock.json references describe the historical working tree.
+- Current state: Phase 2.1 is accepted; Phase 2.2 and Phase 2.3 are implemented and await browser validation and human acceptance. Mini charts are on `feat/finish-player-visualizations`, not yet merged or deployed.
 
 ## Tests
 
@@ -40,16 +40,17 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 
 ## Phase overview
 
-| ID  | Reviewable outcome                   | Status          | Depends on                                           |
-| --- | ------------------------------------ | --------------- | ---------------------------------------------------- |
-| 1   | Roadmap specification                | Complete        | User accepted v5 on 2026-10-02                       |
-| 2.1 | Authoritative category contributions | Complete        | User accepted PR #19 phase 2.1 on 2026-10-02         |
-| 2.2 | Player detail drawer                 | Awaiting review | 2.1 accepted                                         |
-| 2.3 | Mini build charts                    | Draft           | 2.2 complete                                         |
-| 2   | Integrated feature review            | Draft           | All children complete; parent acceptance is separate |
+| ID  | Reviewable outcome                   | Status                              | Depends on                                           |
+| --- | ------------------------------------ | ----------------------------------- | ---------------------------------------------------- |
+| 1   | Roadmap specification                | Complete                            | User accepted v5 on 2026-10-02                       |
+| 2.1 | Authoritative category contributions | Complete                            | User accepted PR #19 phase 2.1 on 2026-10-02         |
+| 2.2 | Player detail drawer                 | Awaiting review                     | 2.1 accepted                                         |
+| 2.3 | Mini build charts                    | Implemented; browser/review pending | Sequence exception accepted 2026-11-06               |
+| 2   | Integrated feature review            | Draft                               | All children complete; parent acceptance is separate |
 
 ## Handoff
 
+- Current checkpoint: see the 2026-11-06 execution checkpoint below; it supersedes stale revision, presentation, and next-action references in this historical handoff.
 - Next leaf: 2.2 re-review.
 - Status: Phase 2.1 accepted; Phase 2.2 feedback fixes and self-review are complete, with desktop hover appearance awaiting a wide-viewport visual check.
 - Accepted phases: 1; user accepted roadmap v5 with “approved” on 2026-10-02.
@@ -64,6 +65,26 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 - Record policy: retain the filename and append actual decisions; never infer acceptance from silence.
 - Parent index: [Draft Duck roadmap](../README.md).
 - Local index: [Implementation plans and roadmaps](README.md).
+
+## Execution checkpoint — 2026-11-06
+
+- Baseline: `main` at `996e87598185386a1eca19dc60a31de3ecab1a6c`; clean working tree. Current branch: `feat/finish-player-visualizations`.
+- Authorization: the user requested implementation of the expanded Sol–Luna plan, then answered “yes” to implementing mini charts before drawer browser validation and Phase 2.2 acceptance. This changes the implementation sequence only; browser validation and final acceptance remain pending. No merge, deployment, or new PR was requested in this execution.
+- Accepted adaptation: the user selected “Keep current horizontal” for signed player strengths. Preserve the shared ±3 scale, exact signed values, endpoint clipping, explicit no-attempt/unavailable states, and authoritative contribution explanations. Existing vertical-direction requirements and simple-view demonstrations below are historical and superseded for this execution.
+- Scope: validate the current player drawer through available checks, implement compact charts on all six named build cards under the explicit sequence exception, and update the existing plans and indexes without inferring acceptance from implementation or merge status.
+- Current implementation: authoritative contributions and the horizontal player drawer are present on `main`; Phase 2.3 is implemented in `BuildCardFace`, `WeightChart`, and the home route on `feat/finish-player-visualizations`. `WeightChart` adds an optional `compact` flag, default false and used only for mini-card sizing. No ranking, API, persistence, or dependency changes were needed.
+- Card behavior: all six home cards derive authoritative tuners and stances, show nine labelled 0–3 weight bars with muted punts, and retain their existing onboarding links. Shared cards filter to canonical enabled categories. Stable title/helper IDs label each single link; its description includes exact formatted weights while the redundant plot is hidden from accessibility. Compact tracks stay 48px at all widths; existing quiz sizing and supplied category order remain unchanged.
+- Layout adaptation: keep one column on phones and three on desktop, with two columns at the medium breakpoint to give labels room. Put the decorative arrow at the top-right so charts use full card width, and reserve two helper-text lines to align charts. This bounded adaptation was selected during implementation to avoid crowding nine category labels; rendered fidelity remains unverified.
+- Workflow: `/Users/marcus/.codex/skills/sol-luna-workflow/SKILL.md`. One bounded executor requested through direct controls as `gpt-6-luna`, effort `high`; no custom role loading or effective model/effort verification is claimed. Nested delegation is prohibited by assignment; runtime enforcement is unverified. Lead session effective model/effort are not exposed.
+- Validation access: API and client were already listening on ports 3300 and 3000. The in-app browser was unavailable, browser inventory was empty, and permission to use native Google Chrome was denied. No alternative UI tooling was used. Current desktop/phone rendered behavior, hover/focus appearance, dismissal/focus restoration, and dynamic reduced motion remain unverified.
+- Technical checks (lead-run on the unchanged application baseline): `npm test` passed (114 core and 42 client tests); `npx tsc --noEmit -p app/core/tsconfig.json` passed. The production Pages build (`PUBLIC_BASE_PATH=/draft-duck/ PUBLIC_API_URL=https://example-run.app npm run build -w @draft-duck/client`) initially failed to start its prerender server inside the sandbox, then passed after permission to run outside it, prerendering five pages and copying `_shell.html` to `404.html`. Existing bundle-size and Node filesystem externalization warnings remain; no unrelated dependency/bundling changes were made.
+- Executor-reported checks: `npx tsc --noEmit -p app/client/tsconfig.json` passed; `npm run test -w @draft-duck/client -- src/lib/player-strength-chart.test.ts` passed (10 tests). Source inspection found no defect warranting a code change. These checks do not establish current rendered behavior.
+- Final application checks: lead-run `npm test` passed again after chart implementation (114 core and 42 client tests); executor-run client TypeScript passed after the final helper/comment corrections. Core TypeScript evidence above remains applicable because core code is unchanged. The production Pages build passed after those corrections, prerendered five pages, and created both SPA artifacts. Final formatting was whitespace-only.
+- Generated-output checks: lead inspected the prerendered home HTML for all six single links, unique name/description IDs, unchanged destinations, exact descriptions and nine bar heights matching onboarding presets, compact sizing, and helper-alignment classes. SSR checks passed for a two-category card subset, canonical filtering, and unchanged default mini-chart sizing/order. All six helper outputs also matched onboarding for nine- and eight-category inputs. Initial ad hoc inspection assertions were corrected to respect existing `formatTuner(0)` output (`0.0`) and strip React HTML comment separators; these were inspection harness errors, not product defects.
+- Review status: the combined technical source/evidence review is complete. Its one bounded correction batch aligned helpers, updated stale comments, and removed an unnecessary alias without changing behavior; targeted client TypeScript, production build, SSR, and generated-output confirmation passed. Browser-dependent criteria remain pending, not passed by source inspection. Separate Phase 2.2, Phase 2.3, and parent acceptance remain pending.
+- Recovery: no product correction failures are recorded. Unavailable browser access is an environment/permission blocker, not evidence of a product failure. Resume with approved browser access and the existing validation matrix rather than repeating unchanged blocked commands.
+- Delivery status: not ready with named blockers — implementation and available technical checks are complete, but desktop/phone rendered layout, keyboard/accessibility interaction, drawer focus/closing behavior, and dynamic reduced motion lack current browser evidence. No commit, merge, PR, or deployment was performed.
+- Next action: obtain browser access and run the planned 390px/1440px interaction and layout checks, fix any concrete findings, and obtain the remaining user acceptances. Reuse executor `/root/luna_executor_high` for bounded corrections if needed. No failed product correction attempts are recorded; do not restart the general technical review or repeat unaffected checks without new evidence.
 
 ## Phase 1 — Reviewable specification
 
@@ -657,8 +678,8 @@ Make a player's strengths, weaknesses, and fit for saved priorities understandab
 ## Phase 2.3 — Mini charts on named build cards
 
 - ID: 2.3.
-- Status: draft.
-- Depends on: 2.2 complete (review sequence).
+- Status: implemented; browser validation and human acceptance pending.
+- Depends on: 2.1 data contracts. The user authorized implementation before Phase 2.2 acceptance on 2026-11-06; that acceptance remains pending.
 - Parent: 2.
 - Children: none.
 
@@ -672,14 +693,14 @@ Show the same category-priority shape at build selection that users later see in
 
 ### Requirements
 
-- [ ] R1: All six home build cards contain the existing WeightChart mini presentation, derived from tunersForArchetype and stancesForArchetype, including complement weights; no duplicated preset definitions.
-- [ ] R2: Home previews show all nine categories; shared BuildCardFace respects enabledCats.
+- [x] R1: All six home build cards contain the existing WeightChart mini presentation, derived from tunersForArchetype and stancesForArchetype, including complement weights; no duplicated preset definitions.
+- [x] R2: Home previews show all nine categories; shared BuildCardFace respects enabledCats.
     - Labels and scale: Keep fixed category order, the existing 0–3 scale, muted punt treatment, and accessible descriptions naming categories and weights.
 - [ ] R3: Keep the title and Need/Punt helper copy, consistent card heights and spacing, readable category labels, and the existing single link target with no nested interactive chart.
     - Other controls: Custom and Not sure retain their existing controls.
 - [ ] R4: Home build selection still applies the same preset; every preview agrees with the resulting onboarding chart.
     - Prerendering: Home prerendering and phone/desktop layout continue to work.
-- [ ] R5: all logical blocks of code must be commented for human readability
+- [x] R5: all logical blocks of code must be commented for human readability
 
 ### Constraints
 
@@ -690,23 +711,23 @@ Show the same category-priority shape at build selection that users later see in
 
 ### Self review
 
-- Status: pending.
-- Reviewed revision: pending.
-- Evidence: no implementation or executed checks yet.
-- Findings: not assessed.
+- Status: source, automated, and generated-output review complete; browser-dependent checks pending. R3/R4 remain unchecked until rendered layout/navigation are demonstrated.
+- Reviewed revision: working-tree changes on `feat/finish-player-visualizations`, based on `996e875`.
+- Evidence: see the 2026-11-06 execution checkpoint for exact checks, outcomes, and limitations.
+- Findings: preserve label space with two tablet columns, full-width plots, and reserved helper height; retain explicit line-height after class merging. Bounded corrections applied; no unresolved source defect identified.
 - Readability gate: passing behavior tests does not replace comment inspection.
 
-| ID  | Check                                                                                                      | Actual result | Evidence |
-| --- | ---------------------------------------------------------------------------------------------------------- | ------------- | -------- |
-| R1  | Inspect helper usage and all six preview values, including complement weights.                             | Not run       | Pending  |
-| R2  | Verify nine-cat home previews, restricted enabledCats, scale, category order, and accessible descriptions. | Not run       | Pending  |
-| R3  | Inspect phone/desktop card consistency, helper copy, labels, and single-link semantics.                    | Not run       | Pending  |
-| R4  | Demonstrate build selection into matching onboarding weights and run the production build.                 | Not run       | Pending  |
-| R5  | Inspect accurate comments on each changed logical block.                                                   | Not run       | Pending  |
-| C1  | Inspect imports and dependencies for duplicated chart/preset logic.                                        | Not run       | Pending  |
-| C2  | Verify rendering creates no API request or profile write.                                                  | Not run       | Pending  |
-| C3  | Inspect the diff for incidental drawer, ranking, or archetype changes.                                     | Not run       | Pending  |
-| C4  | Inspect the link accessible name and keyboard behavior.                                                    | Not run       | Pending  |
+| ID  | Check                                                                                                      | Actual result | Evidence                                                                                         |
+| --- | ---------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------ |
+| R1  | Inspect helper usage and all six preview values, including complement weights.                             | Pass          | Shared resolvers; generated heights and descriptions match all six onboarding presets.           |
+| R2  | Verify nine-cat home previews, restricted enabledCats, scale, category order, and accessible descriptions. | Pass          | Nine bars per home card; SSR subset filters categories and retains canonical order/exact values. |
+| R3  | Inspect phone/desktop card consistency, helper copy, labels, and single-link semantics.                    | Partial       | Source/HTML checks pass; rendered layout and label readability remain pending.                   |
+| R4  | Demonstrate build selection into matching onboarding weights and run the production build.                 | Partial       | Destinations, preset equality, and production prerender pass; navigation awaits browser access.  |
+| R5  | Inspect accurate comments on each changed logical block.                                                   | Pass          | Purpose comments cover preset resolution, accessibility IDs/descriptions, and compact sizing.    |
+| C1  | Inspect imports and dependencies for duplicated chart/preset logic.                                        | Pass          | Existing WeightChart/core helpers; no dependency change.                                         |
+| C2  | Verify rendering creates no API request or profile write.                                                  | Source pass   | Pure render computation; runtime network/storage observation remains pending.                    |
+| C3  | Inspect the diff for incidental drawer, ranking, or archetype changes.                                     | Pass          | Application edits limited to three chart/card/home files.                                        |
+| C4  | Inspect the link accessible name and keyboard behavior.                                                    | Partial       | Explicit name/description IDs and no nested controls verified in HTML; keyboard checks pending.  |
 
 ### Human review
 
@@ -723,7 +744,7 @@ Show the same category-priority shape at build selection that users later see in
 
 ### Documented misses, deviations
 
-- Assessment: Not assessed; implementation and review have not begun.
+- Assessment: implementation and technical source/generated-output review are complete. Browser-dependent criteria lack current evidence because Chrome permission was denied; they are not marked passed. The user explicitly authorized implementation before drawer acceptance.
 - Finding record: document each discovered miss separately.
     - Impact: identify affected behavior or requirement.
     - Cause: record why the gap occurred.
@@ -744,7 +765,7 @@ Show the same category-priority shape at build selection that users later see in
 
 ### Decisions, assumptions, and questions
 
-- A1 — Chart variant: reuse the existing vertical mini chart within BuildCardFace; specification acceptance pending.
+- A1 — Chart variant: existing vertical mini weight bars in BuildCardFace, with compact opt-in sizing. This is independent of the accepted horizontal player-strength chart. Final result acceptance remains pending.
 - Acceptance owner: user reviews the preview behavior and code readability.
 - Implementation owner: implementer ensures layout consistency and collects evidence.
 - Material questions: none after phase 1 acceptance.
@@ -760,12 +781,12 @@ Show the same category-priority shape at build selection that users later see in
 ### Handoff checkpoint
 
 - Active phase: 2.3.
-- Status: draft.
-- Reviewed revision: pending.
-- Evidence: pending implementation and validation.
-- Outstanding work: implementation, checks, and required acceptance.
+- Status: implemented; browser validation and human acceptance pending.
+- Reviewed revision: working-tree changes on `feat/finish-player-visualizations`, based on `996e875`.
+- Evidence: passing available automated and generated-output checks; see current execution checkpoint.
+- Outstanding work: desktop/phone browser checks and required acceptance.
 - Pending decision: user acceptance of this phase after concrete review.
-- Next action: after 2.2 acceptance, implement build-card charts and collect actual validation evidence.
+- Next action: obtain browser access and complete missing layout, keyboard, navigation, network/storage, and reduced-motion checks; obtain Phase 2.2, Phase 2.3, and parent acceptance. Implementation proceeded under the explicit 2026-11-06 sequence exception.
 - Gate: advance only after requirements, constraints, self review, human acceptance, misses, and readability all pass.
 - Parent update: refresh phase 2 and the global handoff in the same pass as acceptance records.
 - Following step: perform parent 2 integration checks and request separate parent acceptance.
