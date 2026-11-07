@@ -4,7 +4,9 @@ Draft Duck is a CSV-backed fantasy basketball category draft helper. The onboard
 
 ## Run locally
 
-Node.js 22 or newer is required. Install with `npm ci`, copy `.env.example` to `.env`, then run `npm run dev:api` and `npm run dev:client` in separate terminals. The client defaults to `http://localhost:3000` and the API to `http://localhost:3300`. Run `npm test` for the workspace tests.
+Node.js 22 or newer is required. Install with `npm ci`, copy `.env.example` to `.env`, and create the trusted local certificates described in the [HTTPS setup](docs/yahoo.md#local-https-without-a-tunnel). Run `npm run dev:api` and `npm run dev:client` in separate terminals. The client defaults to `http://localhost:3000` and the API to `https://localhost:3300`. Run `npm test` for the workspace tests.
+
+For HTTP development, use `npm run dev:api:http` and set `PUBLIC_API_URL=http://localhost:3300` before restarting the client. Run one API mode at a time.
 
 ## Current ranking and research
 
@@ -20,4 +22,10 @@ Five consecutive season sets, including advanced-stat CSVs, support reproducible
 - `app/data`: season CSV exports
 - `docs`: [roadmap](docs/README.md), milestone history, experiment records, and [deployment guide](docs/deploy.md)
 
-The saved browser profile uses `dd.draftProfile`. There are no accounts, live league imports, or market ADP.
+The saved browser profile uses `dd.draftProfile`. There are no app accounts, roster imports, or market ADP.
+
+## Optional Yahoo league comparison
+
+The `/league` workspace compares actual weekly category results across a connected Yahoo basketball league. It is independent of onboarding, CSV ranking, and the manually saved Team Lab roster. The API feature is disabled by default; [setup and verification](docs/yahoo.md) cover the dedicated Supabase schema, temporary sessions, and server-only configuration. Roster imports and scheduled player-stat ingestion remain deferred.
+
+For local Yahoo testing, `npm run dev:api` serves the API at `https://localhost:3300` using trusted mkcert certificates. The `dev:api:https` alias also remains available. Set the callback and client API URL as described in the setup guide, then run `npm run dev:client` in a separate terminal.

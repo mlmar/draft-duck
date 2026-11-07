@@ -22,7 +22,10 @@ export function AppHeader({ focused = false }: { focused?: boolean }) {
                     <span className='text-xl'>draft duck</span>
                 </Link>
                 {!focused ? (
-                    <nav aria-label='Main navigation' className='flex items-center gap-4 text-sm md:gap-6'>
+                    <nav
+                        aria-label='Main navigation'
+                        className='flex max-w-full min-w-0 flex-wrap items-center justify-end gap-x-2 text-sm sm:gap-x-4 md:gap-x-6'
+                    >
                         <Link to='/' className={linkClass} activeProps={{ className: 'font-medium text-primary' }}>
                             Home
                         </Link>
@@ -37,6 +40,13 @@ export function AppHeader({ focused = false }: { focused?: boolean }) {
                         ) : null}
                         <Link to='/team' className={linkClass} activeProps={{ className: 'font-medium text-primary' }}>
                             Team
+                        </Link>
+                        <Link
+                            to='/league'
+                            className={linkClass}
+                            activeProps={{ className: 'font-medium text-primary' }}
+                        >
+                            League
                         </Link>
                         <Link
                             to='/how-it-works'

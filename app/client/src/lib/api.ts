@@ -2,7 +2,7 @@ import type { DraftProfile, PlayerSeason, RankedPlayer } from '@draft-duck/core'
 
 // Thin POST /rank. The draft query owns loading and error UI.
 
-const API_URL = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:3300';
+const API_URL = import.meta.env.PUBLIC_API_URL ?? 'https://localhost:3300';
 
 export async function rankPlayers(profile: DraftProfile): Promise<RankedPlayer[]> {
     const response = await fetch(`${API_URL}/rank`, {

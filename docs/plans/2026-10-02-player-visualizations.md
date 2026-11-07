@@ -28,7 +28,7 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 - Process: do not install global rules, hooks, or automations.
 - Scope: do not deploy or add onboarding player drawers.
 - Local changes: preserve unrelated changes. The 2026-11-06 implementation baseline was clean; earlier package-lock.json references describe the historical working tree.
-- Current state: Phase 2.1 is accepted; Phase 2.2 and Phase 2.3 are implemented and await browser validation and human acceptance. Mini charts are on `feat/finish-player-visualizations`, not yet merged or deployed.
+- Current state: Phase 2.1 is accepted; Phase 2.2 and Phase 2.3 are implemented and await browser validation and human acceptance. Mini charts are on `main` at `b345808`; deployment has not been verified. Branch references below preserve the implementation history.
 
 ## Tests
 
@@ -49,6 +49,8 @@ Let a drafter inspect player strengths and understand how saved priorities affec
 | 2   | Integrated feature review            | Draft                               | All children complete; parent acceptance is separate |
 
 ## Handoff
+
+- Current-state correction (2026-11-06): `b345808` added the six compact build charts to `main`. The older branch and no-commit statements below describe the prior execution checkpoint, not the current repository. This correction establishes implementation presence only; browser evidence, user acceptance, and deployment remain pending.
 
 - Current checkpoint: see the 2026-11-06 execution checkpoint below; it supersedes stale revision, presentation, and next-action references in this historical handoff.
 - Next leaf: 2.2 re-review.

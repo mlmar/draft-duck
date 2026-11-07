@@ -2,13 +2,15 @@
 
 Category-league fantasy basketball helper: quiz for CAT preferences, rank players with weighted z-scores, then optionally group that board into draft-round buckets.
 
-This folder describes the shipped CSV-backed draft helper and its historical milestones. M1–M4 are complete; M5 records extension seams. The client and API deployment setup is in [deploy.md](deploy.md). Yahoo, auth, live NBA fetch, and AI remain future work.
+This folder describes the CSV-backed draft helper and its historical milestones. M1–M4 are complete; M5 records extension seams. The client and API deployment setup is in [deploy.md](deploy.md). The optional Yahoo weekly comparison is tracked separately; accounts, live player-stat ingestion, and AI remain future work.
 
 ## Active feature roadmaps
 
+- [Yahoo weekly league comparison](plans/2026-11-06-yahoo-league-comparison.md): implemented on `feat/yahoo-league-comparison`, disabled by default. The plan records current regression checks and review corrections. The user confirmed local OAuth; Fantasy reads remain blocked by Yahoo 403. Weekly-value accuracy, hosted permissions, rendered browser acceptance, and Docker validation remain pending. This correction pass performs no hosted migration or deployment.
+
 - [Team lab](plans/2026-10-06-team-lab.md): responsive roster and candidate workspace, average/total category chart, and reversible row/bulk swap previews are implemented on `main` as of `996e875`. Final user acceptance and deployment have not been verified in this review.
 
-- [Player visualizations](plans/2026-10-02-player-visualizations.md): authoritative category contributions and the player detail drawer are implemented on `main`. Compact charts on all six named build cards are implemented on `feat/finish-player-visualizations`; tests, type checks, production prerendering, and generated-output checks pass. The user retained horizontal player strengths and authorized mini-chart implementation before drawer acceptance on 2026-11-06. Browser validation and Phase 2.2, Phase 2.3, and final acceptance remain pending; shipping is not recorded.
+- [Player visualizations](plans/2026-10-02-player-visualizations.md): authoritative category contributions, the player detail drawer, and compact charts on all six named build cards are implemented on `main` as of `b345808`. Previous automated and generated-output evidence is recorded in the plan. Browser validation, Phase 2.2/2.3 acceptance, and final acceptance remain pending; deployment has not been verified.
 
 ## Status
 
@@ -58,6 +60,6 @@ Product specs stay in `docs/M1`–`docs/M5`. [`docs/plans/`](plans/README.md) co
 
 TanStack Start SPA with selective prerender (`app/client`) → Fastify (`app/api`) → shared TypeScript ranker (`app/core`). Details in [00-product-and-stack.md](00-product-and-stack.md).
 
-## Second half (live season, not this deploy)
+## Later live-season work
 
-Yahoo OAuth, accounts, live NBA stats, injury/news, auction drafts, AI writeups. Recorded only as seams in [M5-extensibility.md](M5-extensibility.md). Do not start those until the draft helper is public.
+Yahoo roster/settings import, persistent visitor connections, scheduled player statistics, accounts, injury/news, auction drafts, and AI writeups remain deferred. The [weekly comparison](plans/2026-11-06-yahoo-league-comparison.md) is a narrower, independently enabled feature and does not change CSV ranking.

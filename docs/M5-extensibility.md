@@ -1,6 +1,6 @@
 # M5 — Extensibility
 
-**Status: seams only.** `PlayerStatsProvider` and the identity `SuggestionHook` exist. `NbaApiProvider`, Yahoo integration, auth, live stats, and AI suggestions are not implemented; the optional stub and environment switch below remain proposals.
+**Status: provider/suggestion seams exist; Yahoo weekly comparison is a separate active slice.** `PlayerStatsProvider` and the identity `SuggestionHook` exist. The [weekly comparison roadmap](plans/2026-11-06-yahoo-league-comparison.md) authorizes temporary Yahoo connections and credited team-stat reads, with Supabase session storage. It supersedes the Yahoo/Supabase exclusions below only for that slice. `NbaApiProvider`, roster/settings imports, app accounts, live player-stat ingestion, and AI suggestions remain deferred. The sections below retain the original M5 scope.
 
 ## Goal
 
