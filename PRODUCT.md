@@ -16,7 +16,7 @@ Turn category priorities into a ranked player board. Help users find a build, co
 
 ## Capabilities and Constraints
 
-CSV-backed season statistics, weighted category z-scores, named and custom builds, guided build discovery, optional draft-slot references, and player explanations. Rankings and displayed raw-stat modes are independent. Profiles stay on the device; no accounts, live league imports, pick tracking, or availability predictions. TanStack Start, React, Fastify, and the shared TypeScript core remain the stack.
+CSV-backed season statistics, weighted category z-scores, named and custom builds, guided build discovery, optional draft-slot references, and player explanations. Rankings and displayed raw-stat modes are independent. Profiles stay on the device. An optional Yahoo connection adds a weekly league comparison using actual credited team statistics; it does not import rosters or alter draft profiles. There are no app accounts, pick tracking, or availability predictions. TanStack Start, React, Fastify, and the shared TypeScript core remain the stack; the API uses a dedicated Supabase schema for temporary Yahoo sessions.
 
 ## Brand Commitments
 

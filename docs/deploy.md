@@ -1,6 +1,6 @@
 # Deploy the draft helper
 
-Public loop is GitHub Pages for the client and Cloud Run for Fastify. Yahoo, auth, live NBA fetch, and AI stay the later live-season half.
+Public loop is GitHub Pages for the client and Cloud Run for Fastify. The optional [Yahoo weekly comparison](yahoo.md) uses temporary server-side connections and a dedicated Supabase schema. Accounts, roster imports, live player-stat ingestion, and AI remain deferred. Yahoo is disabled by default and needs its own migration/configuration and live acceptance before rollout.
 
 ```text
 https://mlmar.github.io/draft-duck/  →  POST {Cloud Run}/rank
@@ -8,16 +8,16 @@ https://mlmar.github.io/draft-duck/  →  POST {Cloud Run}/rank
 
 ## Local vs production
 
-| Variable            | Local                   | Production                              |
-| ------------------- | ----------------------- | --------------------------------------- |
-| `PUBLIC_BASE_PATH`  | `/`                     | `/draft-duck/` (Pages project path)     |
-| `PUBLIC_API_URL`    | `http://localhost:3300` | Cloud Run origin, no trailing slash     |
-| `CLIENT_ORIGIN`     | `http://localhost:3000` | `https://mlmar.github.io`               |
-| `API_PORT` / `PORT` | `API_PORT=3300`         | Cloud Run injects `PORT` (usually 8080) |
-| `HOST`              | `127.0.0.1` (default)   | image sets `HOST=0.0.0.0`               |
-| `CSV_PATH`          | default `app/data/` CSV | same path inside the image              |
+| Variable            | Local                    | Production                              |
+| ------------------- | ------------------------ | --------------------------------------- |
+| `PUBLIC_BASE_PATH`  | `/`                      | `/draft-duck/` (Pages project path)     |
+| `PUBLIC_API_URL`    | `https://localhost:3300` | Cloud Run origin, no trailing slash     |
+| `CLIENT_ORIGIN`     | `http://localhost:3000`  | `https://mlmar.github.io`               |
+| `API_PORT` / `PORT` | `API_PORT=3300`          | Cloud Run injects `PORT` (usually 8080) |
+| `HOST`              | `127.0.0.1` (default)    | image sets `HOST=0.0.0.0`               |
+| `CSV_PATH`          | default `app/data/` CSV  | same path inside the image              |
 
-Local: `npm run dev:api` and `npm run dev:client` from the repo root. `.env` can copy [`.env.example`](../.env.example).
+Local: `npm run dev:api` and `npm run dev:client` from the repo root. The API uses trusted mkcert certificates for HTTPS; see [local HTTPS setup](yahoo.md#local-https-without-a-tunnel). `.env` can copy [`.env.example`](../.env.example). `npm run dev:api:http` explicitly selects HTTP for development; production `npm start` remains HTTP behind Cloud Run TLS termination.
 
 ## Do not regress
 

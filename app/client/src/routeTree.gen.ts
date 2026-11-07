@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as DraftRouteImport } from './routes/draft'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as LeagueRouteImport } from './routes/league'
 import { Route as OnboardRouteImport } from './routes/onboard'
 import { Route as TeamRouteImport } from './routes/team'
 
@@ -36,6 +37,11 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
   path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeagueRoute = LeagueRouteImport.update({
+  id: '/league',
+  path: '/league',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardRoute = OnboardRouteImport.update({
   id: '/onboard',
   path: '/onboard',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/draft': typeof DraftRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/league': typeof LeagueRoute
   '/onboard': typeof OnboardRoute
   '/team': typeof TeamRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/draft': typeof DraftRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/league': typeof LeagueRoute
   '/onboard': typeof OnboardRoute
   '/team': typeof TeamRoute
 }
@@ -69,20 +77,36 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/draft': typeof DraftRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/league': typeof LeagueRoute
   '/onboard': typeof OnboardRoute
   '/team': typeof TeamRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/draft' | '/how-it-works' | '/onboard' | '/team'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/draft'
+    | '/how-it-works'
+    | '/league'
+    | '/onboard'
+    | '/team'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/draft' | '/how-it-works' | '/onboard' | '/team'
+  to:
+    | '/'
+    | '/about'
+    | '/draft'
+    | '/how-it-works'
+    | '/league'
+    | '/onboard'
+    | '/team'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/draft'
     | '/how-it-works'
+    | '/league'
     | '/onboard'
     | '/team'
   fileRoutesById: FileRoutesById
@@ -92,6 +116,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   DraftRoute: typeof DraftRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  LeagueRoute: typeof LeagueRoute
   OnboardRoute: typeof OnboardRoute
   TeamRoute: typeof TeamRoute
 }
@@ -126,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/league': {
+      id: '/league'
+      path: '/league'
+      fullPath: '/league'
+      preLoaderRoute: typeof LeagueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboard': {
       id: '/onboard'
       path: '/onboard'
@@ -148,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   DraftRoute: DraftRoute,
   HowItWorksRoute: HowItWorksRoute,
+  LeagueRoute: LeagueRoute,
   OnboardRoute: OnboardRoute,
   TeamRoute: TeamRoute,
 }

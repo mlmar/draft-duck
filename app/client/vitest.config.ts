@@ -9,7 +9,7 @@ export default defineConfig({
     },
     test: {
         environment: 'node',
-        // Path helpers and bake-time URL checks only. No DOM, no ranker.
-        include: ['src/**/*.test.ts', 'scripts/**/*.test.ts']
+        // Tests default to Node; mounted workspace tests opt into jsdom per file.
+        include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts']
     }
 });

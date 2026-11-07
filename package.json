@@ -10,7 +10,9 @@
     "scripts": {
         "dev:client": "npm run dev -w @draft-duck/client",
         "dev:api": "npm run dev -w @draft-duck/api",
-        "test": "npm run test -w @draft-duck/core && npm run test -w @draft-duck/client",
+        "dev:api:https": "npm run dev:https -w @draft-duck/api",
+        "dev:api:http": "npm run dev:http -w @draft-duck/api",
+        "test": "npm run test -w @draft-duck/core && npm run test -w @draft-duck/client && npm run test -w @draft-duck/api",
         "format": "prettier --write .",
         "prepare": "husky"
     },

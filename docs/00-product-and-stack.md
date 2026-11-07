@@ -1,5 +1,7 @@
 # 00 — Product and stack
 
+The original CSV-backed v1 architecture below remains the ranking baseline. The separately enabled [Yahoo weekly comparison](plans/2026-11-06-yahoo-league-comparison.md) adds temporary server-side sessions in Supabase and team-stat reads in Fastify. It does not replace the ranker, add vendor fields to `DraftProfile`, or add app accounts. Original no-database/Yahoo exclusions apply to the original v1 loop, not that authorized slice.
+
 ## Goal
 
 Lock the product loop, TypeScript stack, repo layout, and HTTP sketch so later milestones do not re-litigate architecture.

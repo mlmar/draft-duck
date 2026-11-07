@@ -4,17 +4,26 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "node --env-file-if-exists=../../.env --import tsx --watch src/index.ts",
-        "start": "node --env-file-if-exists=../../.env --import tsx src/index.ts"
+        "dev": "API_HTTPS=true node --env-file-if-exists=../../.env --import tsx --watch src/index.ts",
+        "dev:https": "npm run dev",
+        "dev:http": "API_HTTPS=false node --env-file-if-exists=../../.env --import tsx --watch src/index.ts",
+        "start": "node --env-file-if-exists=../../.env --import tsx src/index.ts",
+        "test": "vitest run",
+        "test:sql": "node --import tsx scripts/test-sql.ts",
+        "typecheck": "tsc --noEmit",
+        "cleanup:yahoo": "node --env-file-if-exists=../../.env --import tsx src/cleanup.ts"
     },
     "dependencies": {
-        "@fastify/cors": "^11.1.0",
         "@draft-duck/core": "*",
+        "@fastify/cors": "^11.1.0",
+        "@fastify/formbody": "^9.0.1",
+        "@supabase/supabase-js": "^2.119.0",
         "fastify": "^5.6.1",
         "tsx": "^4.20.5"
     },
     "devDependencies": {
         "@types/node": "^24.5.2",
+        "vitest": "^5.0.2",
         "typescript": "^5.9.2"
     }
 }

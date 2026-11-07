@@ -22,6 +22,15 @@ jobs:
             - name: Unit tests
               run: npm test
 
+            - name: Yahoo migration tests (isolated PostgreSQL)
+              run: npm run test:sql -w @draft-duck/api
+
+            - name: Workspace TypeScript checks
+              run: |
+                  npx tsc --noEmit -p app/core/tsconfig.json
+                  npx tsc --noEmit -p app/api/tsconfig.json
+                  npx tsc --noEmit -p app/client/tsconfig.json
+
             - name: Production client build
               run: npm run build -w @draft-duck/client
               env:

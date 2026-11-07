@@ -1,5 +1,12 @@
 // Public surface for the core package. Apps import from here, not the files below.
 export type { ArchetypeId, CatKey, CatStance, DataMode, DraftProfile, PlayerSeason, RankedPlayer } from './types.ts';
+export { competitionRanks, formatComparisonValue, rankComparison, sortComparisonTeams } from './league-comparison.ts';
+export type {
+    ComparisonCategory,
+    ComparisonTeam,
+    LeagueComparison,
+    RankedComparisonTeam
+} from './league-comparison.ts';
 export { ARCHETYPE_IDS, CAT_KEYS, CAT_LABELS, DATA_MODES } from './types.ts';
 export {
     ARCHETYPE_LABELS,

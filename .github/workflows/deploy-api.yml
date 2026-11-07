@@ -53,5 +53,9 @@ jobs:
                   service: ${{ env.SERVICE }}
                   region: ${{ env.REGION }}
                   image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/draft-duck-api:${{ github.sha }}
+                  # Preserve optional Yahoo configuration and Secret Manager bindings
+                  # applied during a separately authorized feature rollout.
+                  env_vars_update_strategy: merge
+                  secrets_update_strategy: merge
                   env_vars: CLIENT_ORIGIN=https://mlmar.github.io
                   flags: --allow-unauthenticated --max-instances=3 --memory=512Mi --timeout=60 --startup-probe=httpGet.path=/health,httpGet.port=8080

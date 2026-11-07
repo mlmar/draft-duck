@@ -14,7 +14,11 @@ Board has a sticky build header and search area. Phones and desktop open directl
 
 Signature interaction: quiz choices update the category-weight visualization and lead to a matched build, followed by a ranked board and player explanation. Responsive composition prioritizes the current task and preserves access to numerical detail.
 
-## Quality bar
+## League comparison — Operate
+
+The optional League workspace extends the Analysis Desk with actual weekly category results from Yahoo. A plain page heading and brief explanation lead into league/week selectors and Refresh/Disconnect controls, followed by one dense comparison table. Use existing typography, cobalt controls, and green/rose heat tokens. Keep raw values and category ranks visible together; mark owned teams with text and a restrained highlight. Pin team identity while category columns scroll on phones. Current-week and fetch-time labels explain the data's meaning. Sorting uses labelled keyboard controls and semantic sort state. Connection, empty, unsupported, expired, loading, and retry states replace the table only when appropriate; failed refresh preserves the previous results with a warning. No decorative metrics, dashboard tiles, generated assets, or new chart system. This separately authorized route reads team statistics; it does not import rosters or change the existing ranking/Team Lab behavior.
+
+## Shared quality bar
 
 Readable text and contrast; real keyboard/focus controls; generous targets; no 320px page overflow; loading, retry, empty search, and saved states; precise statistical copy. Preserve ranking formulas, API contracts, persistence schema, and real CSV content. Do not add accounts, imports, pick tracking, availability claims, logos, or raster assets.
 
